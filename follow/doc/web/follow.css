@@ -1,0 +1,35 @@
+/* 
+Style Sheet for 'Greg Merrill's Internet Resources'
+http://gregmerrill.imagineis.com
+*/
+   
+BODY { 
+  background:white;
+}
+
+P {
+  margin-left:5;
+}
+
+.notice { 
+  color:red; 
+}
+
+.title { 
+  font-size:x-large; 
+}
+
+.header {
+  font-size:large;
+}
+
+.footer {
+  font-size:x-small;
+}
+
+/* A:hover seems to be supported by IE only.
+A:hover { 
+  color:silver; 
+}
+*/
+

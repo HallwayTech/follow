@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
 
 /**
 Window which displays a progress bar during startup.
@@ -48,25 +49,29 @@ class StartupStatus extends JWindow {
 
     BorderLayout borderLayout = new BorderLayout();
     borderLayout.setVgap(6);
-    JPanel contentPane = new JPanel(borderLayout);
-    contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+    JPanel panel = new JPanel(borderLayout);
+    panel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
     JLabel label = new JLabel(resourceBundle.getString("startupStatus.label"));
     label.setHorizontalAlignment(JLabel.CENTER);
-    contentPane.add(label, BorderLayout.NORTH);
-    contentPane.add(progressBar_, BorderLayout.SOUTH);
-    this.setContentPane(contentPane);
+    panel.add(label, BorderLayout.NORTH);
+    panel.add(progressBar_, BorderLayout.SOUTH);
+    this.getContentPane().add(panel);
   }
   private int currentTask_;
   
-  void markDone (Task task) {
-    if (allTasks_.indexOf(task) != currentTask_) { throw new RuntimeException(
-      "Programmatic error: tasks should be marked done sequentially"
-    );}
-    progressBar_.setValue(progressBar_.getValue() + task.weight_);
-    currentTask_++;
-    if (currentTask_ < allTasks_.size()) { progressBar_.setString(
-      ((Task)allTasks_.get(currentTask_)).inProgressMessage_
-    );}
+  void markDone (final Task task) {
+    SwingUtilities.invokeLater(new Runnable () {
+      public void run () {
+if (allTasks_.indexOf(task) != currentTask_) { throw new RuntimeException(
+  "Programmatic error: tasks should be marked done sequentially"
+);}
+progressBar_.setValue(progressBar_.getValue() + task.weight_);
+currentTask_++;
+if (currentTask_ < allTasks_.size()) { progressBar_.setString(
+  ((Task)allTasks_.get(currentTask_)).inProgressMessage_
+);}
+      }
+    });
   }
   
   private JProgressBar progressBar_ = new JProgressBar();

@@ -251,7 +251,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   }
   private StartupStatus startupStatus_;
   
-  void show () throws InterruptedException { frame_.setVisible(true); }
+  void show () { frame_.setVisible(true); }
 
   /* 
   Warning: This method should be called only from (1) the FollowApp 
@@ -404,10 +404,14 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   @param args ignored
   */  
   public static void main (String[] args) 
-  throws IOException, InterruptedException {
-    FollowApp followApp = new FollowApp();
-    followApp.show();
-    followApp.startupStatus_.dispose();
+  throws IOException {
+    final FollowApp followApp = new FollowApp();
+    SwingUtilities.invokeLater(new Runnable () {
+      public void run () {
+        followApp.show();
+        followApp.startupStatus_.dispose();
+      }
+    });
   }
   
 }

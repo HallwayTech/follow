@@ -406,11 +406,9 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   public static void main (String[] args) 
   throws IOException {
     final FollowApp followApp = new FollowApp();
+    followApp.show();
     SwingUtilities.invokeLater(new Runnable () {
-      public void run () {
-        followApp.show();
-        followApp.startupStatus_.dispose();
-      }
+      public void run () { followApp.startupStatus_.dispose(); }
     });
   }
   

@@ -14,22 +14,21 @@
 to monitor several log files concurrently.
 The name and behavior of this application are inspired by the "f" (follow) 
 flag of the UNIX command "tail".
-<p>Follow has been <a href="http://www.gnu.org/copyleft/gpl.html">GNU GPL</a>'d to 
-promote code reuse & enhancement among the developers of free software. For 
-more information on the GNU GPL & free software, go to 
+<p>Follow is licensed under the <a href="http://www.gnu.org/copyleft/gpl.html">GNU GPL</a>.  
+For more information on the GNU GPL & <a href="http://www.fsf.org/philosophy/free-sw.html">free software</a>, please visit
 <a href="http://www.gnu.org">wwww.gnu.org</a>.
 
 <p align=center>
 [ <a href="#Features">Features</a>
 | <a href="#Screenshots">Screenshots</a>
-| <a href="#VersionHistory">Version History</a>
 | <a href="#Download">Download</a>
 | <a href="#Install">Install</a>
 | <a href="#Uninstall">Uninstall</a>
-| <a href="docs/index.html">Javadocs</a>
-| <a href="http://sf.net/projects/follow">SourceForge Project Page</a>
-| <a href="#Accolades">Accolades</a>
+| <a href="#VersionHistory">Version History</a>
 | <a href="#Acknowledgements">Acknowledgements</a>
+]<br>
+[ <a href="docs/index.html">Javadocs</a>
+| <a href="http://sf.net/projects/follow">SourceForge Project Page</a>
 | <a href="mailto:greghmerrill@yahoo.com">Feedback</a>
 ]
 
@@ -56,9 +55,44 @@ more information on the GNU GPL & free software, go to
 <li><a href="configurationDialog.jpg">Configuration dialog</a> (36KB)
 </ul>
 
+<a name="Download"><p></a>
+<span class=header>Download</span>
+<p>
+<tt><a href="http://prdownloads.sourceforge.net/follow/follow1.4.2.jar">follow1.4.2.jar</a></tt>
+(115KB - contains classes & source code)<br>
+Additionally, you will need the Java 2 Runtime Environment (v1.2 or better) to run Follow.
+To download a free copy of the latest Java 2 Runtime Environment, visit Sun's
+Java site at <a href="http://java.sun.com">java.sun.com</a>.
+
+<a name="Install"><p></a>
+<span class=header>Install</span>
+<p>Once you have downloaded Follow, and assuming you have installed Java, no
+installation is necessary. To start Follow, simple invoke:
+<pre>
+     java -jar follow1.4.2.jar
+</pre>
+<p>Depending on how your environment is set up, you may have to type the absolute
+path to the java executable (for example 
+<tt>"c:\Program Files\JavaSoft\JRE\1.2\bin\java.exe" -jar follow1.4.2.jar</tt>).
+
+<a name="Uninstall"><p></a>
+<span class=header>Uninstall</span>
+<p>
+To "uninstall" Follow:
+<ol>
+<li>Remove <tt>follow1.4.2.jar</tt> from your machine
+<li>Go to your user directory (<tt>~</tt> in unix/linux, <tt>c:\Windows</tt> on Win9x) and delete the file called <tt>.followApp.properties</tt>.  This file  contains your preference settings for Follow.  (It is created the first time you start the application.) 
+</ol>
+
 <a name="VersionHistory"><p></a>
 <span class=header>Version History</span>
 <dl>
+<dt><b>1.4.2</b> (July 1, 2003)
+<dd>"Auto-reload" functionality (restart if the file was deleted and recreated) added.
+<dd>Configurable external editor capability added.
+<dd>Workaround implemented for a Solaris swing bug.
+<dd>Now only the end of the file is initially loaded (like 'tail' does it).
+<dd>
 <dt><b>1.4.1</b> (August 25, 2001)
 <dd>Documentation/Copyright/License update; no functional change from version 1.4.
 <dt><b>1.4</b> (June 21, 2001)
@@ -95,42 +129,6 @@ on each followed file)
 <dd>Initial release
 </dl>
 
-<a name="Download"><p></a>
-<span class=header>Download</span>
-<p>
-<tt><a href="http://prdownloads.sourceforge.net/follow/follow1.4.1.jar">follow1.4.1.jar</a></tt>
-(115KB - contains classes & source code)<br>
-Additionally, you will need the Java 2 Runtime Environment (v1.2 or better) to run Follow.
-To download a free copy of the latest Java 2 Runtime Environment, visit Sun's
-Java site at <a href="http://java.sun.com">java.sun.com</a>.
-
-<a name="Install"><p></a>
-<span class=header>Install</span>
-<p>Once you have downloaded Follow, and assuming you have installed Java, no
-installation is necessary. To start Follow, simple invoke:
-<pre>
-     java -jar follow1.4.1.jar
-</pre>
-<p>Depending on how your environment is set up, you may have to type the absolute
-path to the java executable (for example 
-<tt>"c:\Program Files\JavaSoft\JRE\1.2\bin\java.exe" -jar follow1.4.1.jar</tt>).
-
-<a name="Uninstall"><p></a>
-<span class=header>Uninstall</span>
-<p>
-To "uninstall" Follow:
-<ol>
-<li>Remove <tt>follow1.4.1.jar</tt> from your machine
-<li>Go to your user directory (<tt>~</tt> in unix/linux, <tt>c:\Windows</tt> on Win9x) and delete the file called <tt>.followApp.properties</tt>.  This file  contains your preference settings for Follow.  (It is created the first time you start the application.) 
-</ol>
-
-<a name="Accolades"><p></a>
-<span class=header>Accolades</span>
-<p>
-<a href="http://www.jars.com"><img src="jarsTop25.gif" border=0></a> Jars
-Top 25% may not quite qualify as an <i>accolade</i>, but it's probably about 
-as close as this app is gonna get.
-
 <a name="Acknowledgements"><p></a>
 <span class=header>Acknowledgements</span>
 <p>
@@ -143,9 +141,7 @@ version control, and distribution. Be sure to visit Follow's
 <a href="http://sourceforge.net/projects/follow">SourceForge project 
 page</a>.
 <p>
-<a href="http://www.gnu.org/software/java/java-software.html"
- ><img src="http://www.gnu.org/graphics/gnu-head-sm.jpg" border=0></a>
- Also, thanks to the GNU project for putting a link to Follow on their
+ Also, thanks to the <a href="http://www.gnu.org">GNU project</a> for putting a link to Follow on their
  <a href="http://www.gnu.org/software/java/java-software.html">Java Software</a>
  page.
 <script language="javascript" src="footer.js"></script>

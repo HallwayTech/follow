@@ -34,6 +34,7 @@ public class FileFollowingPane extends JScrollPane {
   */
   public FileFollowingPane (File file, int bufferSize, int latency) {
     textArea_ = new JTextArea();
+    textArea_.setEditable(false);
     fileFollower_ = new FileFollower(
       file,
       bufferSize,

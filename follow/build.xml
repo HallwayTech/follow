@@ -1,6 +1,6 @@
 <project name="follow" default="jar" basedir=".">
 
-  <property name="version" value="1.4.1"/>
+  <property name="version" value="1.5"/>
   <property name="jar" value="follow${version}.jar"/>
 
   <target name="compile">
@@ -33,9 +33,10 @@
 
   <target name="test" depends="jar">
     <mkdir dir="build/test/classes"/>
-    <javac srcdir="testsrc" destdir="build/test/classes"
-     classpath="lib/junit3.2.jar;build/${jar}"/>
+    <javac srcdir="testsrc" destdir="build/test/classes" classpath="build/${jar}"
+     deprecation="yes"/>
     <junit fork="yes" haltonfailure="yes" haltonerror="yes">
+      <jvmarg value="-Dsun.java2d.noddraw=true"/>
       <classpath>
         <pathelement path="${java.class.path}"/>
         <pathelement location="build/${jar}"/>

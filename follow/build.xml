@@ -1,6 +1,7 @@
 <project name="follow" default="jar" basedir=".">
 
-  <property name="version" value="1.4"/>
+  <property name="version" value="1.5"/>
+  <property name="jar" value="follow${version}.jar"/>
 
   <target name="compile">
     <mkdir dir="build/classes"/>
@@ -15,7 +16,7 @@
   </target>
 
   <target name="jar" depends="compile">
-    <jar jarfile="build/follow${version}.jar" manifest="src/follow.aux">
+    <jar jarfile="build/${jar}" manifest="src/follow.aux">
       <fileset dir="build/classes"/>
       <fileset dir="src" includes="**/*.java"/>
     </jar>
@@ -29,7 +30,23 @@
      doctitle="Generated documentation for the Follow application"/>
   </target>
 
-  <target name="all" depends="jar,doc"/>
+  <target name="test" depends="jar">
+    <mkdir dir="build/test/classes"/>
+    <javac srcdir="testsrc" destdir="build/test/classes"
+     classpath="lib/junit3.2.jar;build/${jar}"/>
+    <junit fork="yes" haltonfailure="yes" haltonerror="yes">
+      <classpath>
+        <pathelement path="${java.class.path}"/>
+        <pathelement location="build/${jar}"/>
+        <pathelement path="build/test/classes"/>
+      </classpath>
+      <formatter type="plain" usefile="false"/>
+      <batchtest unless="test">
+        <fileset dir="testsrc" includes="**/*Test.java"/>
+      </batchtest>
+      <test if="test" name="${test}"/>
+    </junit>
+  </target>
 
   <target name="clean">
     <delete dir="build"/>

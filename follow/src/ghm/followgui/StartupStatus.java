@@ -60,18 +60,22 @@ class StartupStatus extends JWindow {
   private int currentTask_;
   
   void markDone (final Task task) {
-    SwingUtilities.invokeLater(new Runnable () {
-      public void run () {
-if (allTasks_.indexOf(task) != currentTask_) { throw new RuntimeException(
-  "Programmatic error: tasks should be marked done sequentially"
-);}
-progressBar_.setValue(progressBar_.getValue() + task.weight_);
-currentTask_++;
-if (currentTask_ < allTasks_.size()) { progressBar_.setString(
-  ((Task)allTasks_.get(currentTask_)).inProgressMessage_
-);}
-      }
-    });
+    try {
+      SwingUtilities.invokeAndWait(new Runnable () {
+        public void run () {
+  if (allTasks_.indexOf(task) != currentTask_) { throw new RuntimeException(
+    "Programmatic error: tasks should be marked done sequentially"
+  );}
+  progressBar_.setValue(progressBar_.getValue() + task.weight_);
+  currentTask_++;
+  if (currentTask_ < allTasks_.size()) { progressBar_.setString(
+    ((Task)allTasks_.get(currentTask_)).inProgressMessage_
+  );}
+        }
+      });
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage());
+    }
   }
   
   private JProgressBar progressBar_ = new JProgressBar();

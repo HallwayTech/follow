@@ -80,7 +80,10 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     deleteAll_ = new DeleteAll(this);
     configure_ = new Configure(this);
     about_ = new About(this);
-    
+
+    // initialize SystemInterface
+    systemInterface_ = new DefaultSystemInterface(this);
+
     // initialize menubar
     Menu fileMenu = new Menu(
       resBundle_.getString("menu.File.name"), 
@@ -395,7 +398,9 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   DeleteAll deleteAll_;
   Configure configure_;
   About about_;
-    
+
+  SystemInterface systemInterface_;
+
   static final String fileSeparator = System.getProperty("file.separator");
   static final String messageLineSeparator = "\n";
 
@@ -415,17 +420,18 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   */  
   public static void main (String[] args) 
   throws IOException, InterruptedException, InvocationTargetException {
-    final FollowApp followApp = new FollowApp();
+    instance_ = new FollowApp();
     SwingUtilities.invokeAndWait(new Runnable() { public void run () {
       // ensure all widgets inited before opening files
-      followApp.show();
-      followApp.startupStatus_.markDone(followApp.startupStatus_.CREATE_WIDGETS);
+      instance_.show();
+      instance_.startupStatus_.markDone(instance_.startupStatus_.CREATE_WIDGETS);
     }});
-    followApp.startupStatus_.dispose();
-    for (int i=0; i < followApp.tabbedPane_.getTabCount(); i++) {
-      ((FileFollowingPane)followApp.tabbedPane_.getComponentAt(i)).startFollowing();
+    instance_.startupStatus_.dispose();
+    for (int i=0; i < instance_.tabbedPane_.getTabCount(); i++) {
+      ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
     }
   }
+  static FollowApp instance_;
 
 }
 

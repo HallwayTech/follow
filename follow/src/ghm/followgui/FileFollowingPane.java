@@ -32,14 +32,15 @@ public class FileFollowingPane extends JScrollPane {
     used to follow the supplied file
   @param latency latency of the FileFollower used to follow the supplied file
   */
-  public FileFollowingPane (File file, int bufferSize, int latency) {
+  public FileFollowingPane (File file, int bufferSize, int latency, boolean autoPositionCaret) {
     textArea_ = new JTextArea();
     textArea_.setEditable(false);
+    destination_ = new JTextAreaDestination(textArea_, autoPositionCaret);
     fileFollower_ = new FileFollower(
       file,
       bufferSize,
       latency,
-      new OutputDestination [] { new JTextAreaDestination(textArea_) }
+      new OutputDestination [] { destination_ }
     );
     this.getViewport().setView(textArea_);
   }
@@ -49,6 +50,22 @@ public class FileFollowingPane extends JScrollPane {
   @return text area containing followed file's contents
   */
   public JTextArea getTextArea () { return textArea_; }
+
+  /**
+  Returns whether caret is automatically repositioned to the end of the text area when
+  text is appended to the followed file
+  @return whether caret is automatically repositioned on append
+  */
+  public boolean autoPositionCaret () { return destination_.autoPositionCaret(); }
+
+  /**
+  Sets whether caret is automatically repositioned to the end of the text area when
+  text is appended to the followed file
+  @param value whether caret is automatically repositioned on append
+  */
+  public void setAutoPositionCaret (boolean value) {
+    destination_.setAutoPositionCaret(value);
+  }
 
   /**
   Returns the FileFollower which is being used to print information in this
@@ -118,6 +135,9 @@ public class FileFollowingPane extends JScrollPane {
   
   /** Text area into which followed file's contents are printed */
   protected JTextArea textArea_;
-  
+
+  /** OutputDestination used w/FileFollower */
+  protected JTextAreaDestination destination_;
+
 }
 

@@ -59,7 +59,11 @@ application.
 */
 public class FollowApp {
 
-  FollowApp () throws IOException, InterruptedException, InvocationTargetException {
+  /**
+   * @param fileNames names of files to be opened
+   */
+  FollowApp (String[] fileNames) 
+    throws IOException, InterruptedException, InvocationTargetException {
     // Create & show startup status window
     startupStatus_ = new StartupStatus(resBundle_);
     centerWindowInScreen(startupStatus_);
@@ -74,12 +78,18 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     SwingUtilities.invokeAndWait(new Runnable() { public void run () {
       startupStatus_.markDone(startupStatus_.LOAD_SYSTEM_FONTS);
     }});
-    
+
     // create frame first
     frame_ = new JFrame(resBundle_.getString("frame.title"));
-    
+
     // initialize attributes
     attributes_ = new FollowAppAttributes(this);
+    for (int i=0; i < fileNames.length; i++) {
+      File file = new File(fileNames[i]);
+      if (!attributes_.followedFileListContains(file)) {
+        attributes_.addFollowedFile(file);
+      }
+    }
 
     // initialize actions
     open_ = new Open(this);
@@ -143,7 +153,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     popupMenu_.addFollowAppAction(deleteAll_);
     popupMenu_.addSeparator();
     popupMenu_.addFollowAppAction(configure_);
-    
+
     // initialize toolbar
     toolBar_ = new ToolBar();
     toolBar_.addFollowAppAction(open_);
@@ -198,7 +208,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
           ioe.printStackTrace(System.err);
         }
         finally {
-          System.exit(0);
+          systemInterface_.exit(0);
         }
       }
     });
@@ -210,7 +220,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     // before frame creation (as in v1.0), frame creation may take longer
     // because there are more threads (spawned in the course of open())
     // contending for processor time.
-    Iterator i = attributes_.getFollowedFiles().iterator();
+    Iterator i = attributes_.getFollowedFiles();
     StringBuffer nonexistentFilesBuffer = null;
     int nonexistentFileCount = 0;
     File file;
@@ -427,13 +437,14 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   }
 
   /**
-  Invoke this method to start the Follow application. The arguments to this
-  method are ignored.
-  @param args ignored
+  Invoke this method to start the Follow application.  If any command-line
+  arguments are passed in, they are assume to be filenames and are opened
+  in the Follow application
+  @param args files to be opened
   */  
   public static void main (String[] args) 
   throws IOException, InterruptedException, InvocationTargetException {
-    instance_ = new FollowApp();
+    instance_ = new FollowApp(args);
     SwingUtilities.invokeAndWait(new Runnable() { public void run () {
       // ensure all widgets inited before opening files
       instance_.show();

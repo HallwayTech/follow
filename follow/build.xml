@@ -1,0 +1,43 @@
+<project name="follow" default="jar" basedir=".">
+
+  <property name="version" value="1.4"/>
+
+  <target name="compile">
+    <mkdir dir="build/classes"/>
+    <javac srcdir="src" destdir="build/classes"/>
+    <copy todir="build/classes/ghm/followgui">
+      <fileset dir="src/ghm/followgui" includes="*.gif"/>
+    </copy>
+    <filter token="version" value="${version}"/>
+    <copy todir="build/classes/ghm/followgui" filtering="yes">
+      <fileset dir="src/ghm/followgui" includes="*.properties,*.prototype"/>
+    </copy>
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar jarfile="build/follow${version}.jar" basedir="build/classes"
+     manifest="src/follow.aux"/>
+  </target>
+
+  <target name="doc">
+    <mkdir dir="build/javadoc"/>
+    <javadoc sourcepath="src" destdir="build/javadoc"
+     packagenames="ghm.follow,ghm.followgui"
+     windowtitle="Follow API"
+     doctitle="Generated documentation for the Follow application"/>
+  </target>
+
+  <target name="all" depends="jar,doc"/>
+
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+
+  <target name="pristine" depends="clean">
+    <delete>
+      <fileset dir="${basedir}" includes="**/*~" defaultexcludes="no"/>
+    </delete>
+  </target>
+
+</project>
+

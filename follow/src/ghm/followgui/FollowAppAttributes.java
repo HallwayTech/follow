@@ -63,7 +63,19 @@ class FollowAppAttributes {
             app.resBundle_.getString("v1.3.warning.title"),
             JOptionPane.WARNING_MESSAGE
           );
-          
+        case v1_3:
+        case v1_3_2:
+          // Migrate 1.3 attributes to 1.4 attributes
+          System.out.println("Migrating v1.3 properties to v1.4.");
+          setAttributesVersion(v1_4);
+          setAutoScroll(true);
+          // Inform the user of the new AutoScroll feature
+          JOptionPane.showMessageDialog(
+            null, 
+            app.resBundle_.getString("v1.4.info.text"),
+            app.resBundle_.getString("v1.4.info.title"),
+            JOptionPane.INFORMATION_MESSAGE
+          );
       }
     }
   }
@@ -185,6 +197,9 @@ class FollowAppAttributes {
     setBoolean(confirmDeleteAllKey, value);
   }
 
+  public boolean autoScroll () { return getBoolean(autoScrollKey); }
+  public void setAutoScroll (boolean value) { setBoolean(autoScrollKey, value); }
+
   void store () throws IOException {
     properties_.store(
       new BufferedOutputStream(new FileOutputStream(propertyFileName)), 
@@ -286,13 +301,16 @@ availableFontFamilyNames[0] + " instead."
   static final String fontSizeKey = "fontSize";
   static final String confirmDeleteKey = "confirmDelete";
   static final String confirmDeleteAllKey = "confirmDeleteAll";
+  static final String autoScrollKey = "autoScroll";
 
   // Versions
   static final int UNVERSIONED = 0;
   static final int v1_1 = 1;
   static final int v1_2 = 2;
   static final int v1_3 = 3;
-    
+  static final int v1_3_2 = 4;
+  static final int v1_4 = 5;
+
 }
 
 class NoTabSelectedException extends RuntimeException {} 

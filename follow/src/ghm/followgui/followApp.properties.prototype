@@ -5,10 +5,11 @@ y=0
 tabs.placement=1
 bufferSize=32768
 latency=1000
-attributesVersion=3
+attributesVersion=5
 fontFamily=Times New Roman
 fontStyle=0
 fontSize=14
 confirmDelete=true
 confirmDeleteAll=true
+autoScroll=true
 

@@ -204,7 +204,6 @@ public class FileFollower {
   protected boolean continueRunning_;  
   protected boolean needsRestart_;  
   protected Thread runnerThread_;
-  protected long lastLength_ = 0;
   
   /*
   Instances of this class are used to run a thread which follows
@@ -223,41 +222,42 @@ public class FileFollower {
       try {
         clear();
         needsRestart_ = false;
-        FileInputStream fis = new FileInputStream(file_);
-        BufferedInputStream bis = new BufferedInputStream(fis);
         byte[] byteArray = new byte[bufferSize_];
         int numBytesRead;
+        long lastActivityTime = 0;
+
+        FileInputStream fis = new FileInputStream(file_);
+        BufferedInputStream bis = new BufferedInputStream(fis);
+
         while (continueRunning_ && !needsRestart_) {
           numBytesRead = bis.read(byteArray, 0, byteArray.length);
-          if (numBytesRead > 0) {
+
+          boolean dataWasFound = (numBytesRead > 0);
+          if (dataWasFound) {
             print(new String(byteArray, 0, numBytesRead));
+            lastActivityTime = System.currentTimeMillis();
+          } else {
+              // Now check if the filehandle has become stale (file was
+              // modified, but no data could be read).
+              needsRestart_ = file_.exists() &&
+                  (file_.lastModified() > lastActivityTime);
           }
-          if (numBytesRead < byteArray.length) {
+
+          boolean noDataLeft = (numBytesRead < byteArray.length);
+          if (noDataLeft && !needsRestart_) {
             try {
-              checkIfFileWasReset();
               Thread.sleep(latency_);
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
               // Interrupt may be thrown manually by stop()
             }
           }
         }
         bis.close();
         fis.close();
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
         e.printStackTrace(System.err);
       }
     }
-
-
-      protected void checkIfFileWasReset() {
-          if (file_.exists()) {
-              long length = file_.length();
-              needsRestart_ = (length < lastLength_);
-              lastLength_ = length;
-          }
-      }
 
 
     /* send the supplied string to all OutputDestinations */

@@ -58,6 +58,7 @@ class Configure extends FollowAppAction {
     );
     dialog_.confirmDelete_.setValue(app_.attributes_.confirmDelete());
     dialog_.confirmDeleteAll_.setValue(app_.attributes_.confirmDeleteAll());
+    dialog_.autoScroll_.setValue(app_.attributes_.autoScroll());
     dialog_.fontSelectionPanel_.setSelectedFont(app_.attributes_.getFont());
     // Quasi-kludge to get around font repainting issue
     dialog_.setLocationRelativeTo(app_.frame_);
@@ -216,6 +217,35 @@ app_.resBundle_.getString("dialog.Configure.confirmDeleteAll.no.displayValue")
       gbc.fill = GridBagConstraints.NONE;
       configPanel.add(confirmDeleteAllInfo, gbc);
 
+      // autoscroll
+      gbc.gridx = 0;
+      gbc.gridy++;
+      gbc.ipadx = 4;
+      configPanel.add(
+  new JLabel(
+    app_.resBundle_.getString("dialog.Configure.autoScroll.label")
+  ),
+  gbc
+      );
+      autoScroll_ = new BooleanComboBox(
+app_.resBundle_.getString("dialog.Configure.autoScroll.yes.displayValue"),
+app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
+      );
+      gbc.gridx = 1;
+      gbc.weightx = 1;
+      gbc.ipadx = 0;
+      gbc.fill = GridBagConstraints.HORIZONTAL;
+      configPanel.add(autoScroll_, gbc);
+      JButton autoScrollInfo = new WhatIsThis(
+        app_,
+        app_.resBundle_.getString("WhatIsThis.autoScroll.title"),
+        app_.resBundle_.getString("WhatIsThis.autoScroll.text")
+      );
+      gbc.gridx = 2;
+      gbc.weightx = 0;
+      gbc.fill = GridBagConstraints.NONE;
+      configPanel.add(autoScrollInfo, gbc);
+
       // font selection
       fontSelectionPanel_ = new CfgFontSelectionPanel();
       // Must change border to top=0 because of default top in titled border
@@ -285,6 +315,7 @@ app_.resBundle_.getString("dialog.Configure.confirmDeleteAll.no.displayValue")
             );
             app_.attributes_.setConfirmDelete(confirmDelete_.getValue());
             app_.attributes_.setConfirmDeleteAll(confirmDeleteAll_.getValue());
+            app_.attributes_.setAutoScroll(autoScroll_.getValue());
             Font selectedFont;
             try { selectedFont = fontSelectionPanel_.getSelectedFont(); }
             catch (FontSelectionPanel.InvalidFontException ife) {
@@ -305,6 +336,7 @@ app_.resBundle_.getString("dialog.Configure.confirmDeleteAll.no.displayValue")
               );
               pane.getFileFollower().setLatency(app_.attributes_.getLatency());
               pane.getTextArea().setFont(selectedFont);
+              pane.setAutoPositionCaret(app_.attributes_.autoScroll());
               app_.tabbedPane_.invalidate();
               app_.tabbedPane_.repaint();
             }
@@ -340,6 +372,9 @@ app_.resBundle_.getString("dialog.Configure.confirmDeleteAll.no.displayValue")
   );
   confirmDeleteAll_.setValue(
     app_.attributes_.getDefaultAttributes().confirmDeleteAll()
+  );
+  autoScroll_.setValue(
+    app_.attributes_.getDefaultAttributes().autoScroll()
   );
   fontSelectionPanel_.setSelectedFont(
     app_.attributes_.getDefaultAttributes().getFont()
@@ -388,6 +423,7 @@ app_.resBundle_.getString("dialog.Configure.confirmDeleteAll.no.displayValue")
     JComboBox tabPlacement_;
     BooleanComboBox confirmDelete_;
     BooleanComboBox confirmDeleteAll_;
+    BooleanComboBox autoScroll_;
     CfgFontSelectionPanel fontSelectionPanel_;
   }
 

@@ -19,5 +19,11 @@ interface SystemInterface {
   */
   public File getFileFromUser () ;
 
+  /**
+  Used in lieu of System.exit();
+  @param code exit status code
+  */
+  public void exit (int code) ;
+
 }
 

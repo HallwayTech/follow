@@ -26,7 +26,7 @@ public abstract class BaseTestCase extends TestCase {
   protected void writeToFollowedFileAndWait (String string) throws Exception {
     followedFileWriter_.write(string);
     followedFileWriter_.flush();
-    Thread.sleep(follower_.getLatency());
+    Thread.sleep(follower_.getLatency()+100);
   }
 
   protected FileFollower follower_;

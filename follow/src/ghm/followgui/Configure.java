@@ -72,6 +72,7 @@ class Configure extends FollowAppAction {
     dialog_.confirmDelete_.setValue(app_.attributes_.confirmDelete());
     dialog_.confirmDeleteAll_.setValue(app_.attributes_.confirmDeleteAll());
     dialog_.autoScroll_.setValue(app_.attributes_.autoScroll());
+    dialog_.editor_.setText(String.valueOf(app_.attributes_.getEditor()));
     dialog_.fontSelectionPanel_.setSelectedFont(app_.attributes_.getFont());
     // Quasi-kludge to get around font repainting issue
     dialog_.setLocationRelativeTo(app_.frame_);
@@ -259,6 +260,33 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
       gbc.fill = GridBagConstraints.NONE;
       configPanel.add(autoScrollInfo, gbc);
 
+      // external editor
+      gbc.gridx = 0;
+      gbc.gridy++;
+      gbc.ipadx = 4;
+      configPanel.add(
+  new JLabel(
+    app_.resBundle_.getString("dialog.Configure.editor.label")
+  ),
+  gbc
+      );
+      editor_ = new JTextField();
+      editor_.setHorizontalAlignment(JTextField.LEFT);
+      gbc.gridx = 1;
+      gbc.weightx = 1;
+      gbc.ipadx = 0;
+      gbc.fill = GridBagConstraints.HORIZONTAL;
+      configPanel.add(editor_, gbc);
+      JButton editorInfo = new WhatIsThis(
+        app_,
+        app_.resBundle_.getString("WhatIsThis.editor.title"),
+        app_.resBundle_.getString("WhatIsThis.editor.text")
+      );
+      gbc.gridx = 2;
+      gbc.weightx = 0;
+      gbc.fill = GridBagConstraints.NONE;
+      configPanel.add(editorInfo, gbc);
+
       // font selection
       fontSelectionPanel_ = new CfgFontSelectionPanel();
       // Must change border to top=0 because of default top in titled border
@@ -329,6 +357,7 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
             app_.attributes_.setConfirmDelete(confirmDelete_.getValue());
             app_.attributes_.setConfirmDeleteAll(confirmDeleteAll_.getValue());
             app_.attributes_.setAutoScroll(autoScroll_.getValue());
+            app_.attributes_.setEditor(editor_.getText());
             Font selectedFont;
             try { selectedFont = fontSelectionPanel_.getSelectedFont(); }
             catch (FontSelectionPanel.InvalidFontException ife) {
@@ -389,6 +418,9 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
   autoScroll_.setValue(
     app_.attributes_.getDefaultAttributes().autoScroll()
   );
+  editor_.setText(
+    String.valueOf(app_.attributes_.getDefaultAttributes().getEditor())
+  );
   fontSelectionPanel_.setSelectedFont(
     app_.attributes_.getDefaultAttributes().getFont()
   );
@@ -437,6 +469,7 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
     BooleanComboBox confirmDelete_;
     BooleanComboBox confirmDeleteAll_;
     BooleanComboBox autoScroll_;
+    JTextField editor_;
     CfgFontSelectionPanel fontSelectionPanel_;
   }
 

@@ -231,6 +231,16 @@ class FollowAppAttributes {
   public boolean autoScroll () { return getBoolean(autoScrollKey); }
   public void setAutoScroll (boolean value) { setBoolean(autoScrollKey, value); }
 
+  public String getEditor () {
+      String result = properties_.getProperty(editorKey);
+      if (result == null) {
+          result = "";
+      }
+
+      return (result);
+  }
+  public void setEditor (String value) { properties_.setProperty(editorKey, value); }
+
   void store () throws IOException {
     BufferedOutputStream bos = 
       new BufferedOutputStream(new FileOutputStream(propertyFileName));
@@ -333,6 +343,7 @@ availableFontFamilyNames[0] + " instead."
   static final String confirmDeleteKey = "confirmDelete";
   static final String confirmDeleteAllKey = "confirmDeleteAll";
   static final String autoScrollKey = "autoScroll";
+  static final String editorKey = "editor";
 
   // Versions
   static final int UNVERSIONED = 0;

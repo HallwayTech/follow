@@ -52,6 +52,7 @@ public class FileFollowerTest extends BaseTestCase {
 
   class Testination implements OutputDestination {
     public void print (String s) { strBuf_.append(s); }
+    public void clear () { strBuf_.delete(0, strBuf_.length()); }
     StringBuffer strBuf_ = new StringBuffer();
   }
 

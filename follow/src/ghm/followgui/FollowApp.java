@@ -102,6 +102,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     open_ = new Open(this);
     close_ = new Close(this);
     reload_ = new Reload(this);
+    edit_ = new Edit(this);
     exit_ = new Exit(this);
     top_ = new Top(this);
     bottom_ = new Bottom(this);
@@ -138,6 +139,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     toolsMenu.addFollowAppAction(deleteAll_);
     toolsMenu.addSeparator();
     toolsMenu.addFollowAppAction(configure_);
+    toolsMenu.addFollowAppAction(edit_);
     Menu helpMenu = new Menu(
       resBundle_.getString("menu.Help.name"),
       resBundle_.getString("menu.Help.mnemonic")
@@ -163,6 +165,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     popupMenu_.addFollowAppAction(deleteAll_);
     popupMenu_.addSeparator();
     popupMenu_.addFollowAppAction(configure_);
+    popupMenu_.addFollowAppAction(edit_);
 
     // initialize toolbar
     toolBar_ = new ToolBar();
@@ -281,6 +284,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     else {
       close_.setEnabled(false);
       reload_.setEnabled(false);
+      edit_.setEnabled(false);
       top_.setEnabled(false);
       bottom_.setEnabled(false);
       clear_.setEnabled(false);
@@ -330,6 +334,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       if (!close_.isEnabled()) { 
         close_.setEnabled(true);
         reload_.setEnabled(true);
+        edit_.setEnabled(true);
         top_.setEnabled(true);
         bottom_.setEnabled(true);
         clear_.setEnabled(true);
@@ -425,6 +430,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   Open open_;
   Close close_;
   Reload reload_;
+  Edit edit_;
   Exit exit_;
   Top top_;
   Bottom bottom_;

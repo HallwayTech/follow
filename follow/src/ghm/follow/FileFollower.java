@@ -101,6 +101,10 @@ public class FileFollower {
     runnerThread_.start();
   }
 
+  public synchronized void restart () {
+    needsRestart_ = true;
+  }
+
   /**
   Cause this FileFollower to stop following the file supplied in the constructor
   after it flushes the characters it's currently reading to all its
@@ -197,6 +201,7 @@ public class FileFollower {
   protected File file_;
   protected List outputDestinations_;
   protected boolean continueRunning_;  
+  protected boolean needsRestart_;  
   protected Thread runnerThread_;
   
   /*
@@ -206,12 +211,20 @@ public class FileFollower {
   class Runner implements Runnable {
 
     public void run () {
+      while (continueRunning_) {
+        runAction();
+      }
+    }
+
+
+    public void runAction () {
       try {
+        needsRestart_ = false;
         FileReader fileReader = new FileReader(file_);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         char[] charArray = new char[bufferSize_];
         int numCharsRead;
-        while (continueRunning_) {
+        while (continueRunning_ && !needsRestart_) {
           numCharsRead = bufferedReader.read(charArray, 0, charArray.length);
           if (numCharsRead > 0) {
             print(new String(charArray, 0, numCharsRead));

@@ -103,6 +103,11 @@ public class FileFollowingPane extends JScrollPane {
   public void stopFollowing () { fileFollower_.stop(); }
 
   /**
+  Convenience method; equivalent to calling getFileFollower().restart()
+  */  
+  public void restartFollowing () { fileFollower_.restart(); }
+
+  /**
   Convenience method; equivalent to calling getFileFollower().stopAndWait()
   */  
   public void stopFollowingAndWait () throws InterruptedException { 

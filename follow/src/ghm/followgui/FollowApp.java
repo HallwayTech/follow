@@ -101,6 +101,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     // initialize actions
     open_ = new Open(this);
     close_ = new Close(this);
+    reload_ = new Reload(this);
     exit_ = new Exit(this);
     top_ = new Top(this);
     bottom_ = new Bottom(this);
@@ -121,6 +122,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     );
     fileMenu.addFollowAppAction(open_);
     fileMenu.addFollowAppAction(close_);
+    fileMenu.addFollowAppAction(reload_);
     fileMenu.addSeparator();
     fileMenu.addFollowAppAction(exit_);
     Menu toolsMenu = new Menu(
@@ -150,6 +152,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     popupMenu_ = new PopupMenu();
     popupMenu_.addFollowAppAction(open_);
     popupMenu_.addFollowAppAction(close_);
+    popupMenu_.addFollowAppAction(reload_);
     popupMenu_.addSeparator();
     popupMenu_.addFollowAppAction(top_);    
     popupMenu_.addFollowAppAction(bottom_);
@@ -277,6 +280,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     }
     else {
       close_.setEnabled(false);
+      reload_.setEnabled(false);
       top_.setEnabled(false);
       bottom_.setEnabled(false);
       clear_.setEnabled(false);
@@ -325,6 +329,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       tabbedPane_.setSelectedIndex(tabbedPane_.getTabCount() - 1);
       if (!close_.isEnabled()) { 
         close_.setEnabled(true);
+        reload_.setEnabled(true);
         top_.setEnabled(true);
         bottom_.setEnabled(true);
         clear_.setEnabled(true);
@@ -419,6 +424,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   // Actions
   Open open_;
   Close close_;
+  Reload reload_;
   Exit exit_;
   Top top_;
   Bottom bottom_;

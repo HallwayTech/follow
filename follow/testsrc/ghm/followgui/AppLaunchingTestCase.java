@@ -15,6 +15,10 @@ public abstract class AppLaunchingTestCase extends TestCase {
       FollowAppAttributes.propertyFile.delete();
     }
     FollowApp.main(new String[0]);
+    doPostLaunch();
+  }
+
+  protected void doPostLaunch () throws Exception {
     app_ = FollowApp.instance_;
     systemInterface_ = new TestSystemInterface();
     app_.systemInterface_ = systemInterface_;
@@ -22,7 +26,10 @@ public abstract class AppLaunchingTestCase extends TestCase {
 
   public void tearDown () throws Exception {
     invokeAction(app_.exit_);
-    FollowAppAttributes.propertyFile.delete();
+    while (!systemInterface_.exitCalled()) { Thread.sleep(250); }
+    if (!FollowAppAttributes.propertyFile.delete()) {
+      fail("Couldn't delete property file");
+    }
   }
 
   protected void invokeAndWait (Runnable runnable) {

@@ -19,9 +19,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 package ghm.follow;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -103,6 +103,7 @@ public class FileFollower {
 
   public synchronized void restart () {
     needsRestart_ = true;
+    runnerThread_.interrupt();
   }
 
   /**
@@ -203,6 +204,7 @@ public class FileFollower {
   protected boolean continueRunning_;  
   protected boolean needsRestart_;  
   protected Thread runnerThread_;
+  protected long lastLength_ = 0;
   
   /*
   Instances of this class are used to run a thread which follows
@@ -217,20 +219,22 @@ public class FileFollower {
     }
 
 
-    public void runAction () {
+    protected void runAction () {
       try {
+        clear();
         needsRestart_ = false;
-        FileReader fileReader = new FileReader(file_);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        char[] charArray = new char[bufferSize_];
-        int numCharsRead;
+        FileInputStream fis = new FileInputStream(file_);
+        BufferedInputStream bis = new BufferedInputStream(fis);
+        byte[] byteArray = new byte[bufferSize_];
+        int numBytesRead;
         while (continueRunning_ && !needsRestart_) {
-          numCharsRead = bufferedReader.read(charArray, 0, charArray.length);
-          if (numCharsRead > 0) {
-            print(new String(charArray, 0, numCharsRead));
+          numBytesRead = bis.read(byteArray, 0, byteArray.length);
+          if (numBytesRead > 0) {
+            print(new String(byteArray, 0, numBytesRead));
           }
-          if (numCharsRead < charArray.length) {
+          if (numBytesRead < byteArray.length) {
             try {
+              checkIfFileWasReset();
               Thread.sleep(latency_);
             }
             catch (InterruptedException e) {
@@ -238,18 +242,37 @@ public class FileFollower {
             }
           }
         }
-        bufferedReader.close();
+        bis.close();
+        fis.close();
       }
       catch (IOException e) {
         e.printStackTrace(System.err);
       }
     }
 
+
+      protected void checkIfFileWasReset() {
+          if (file_.exists()) {
+              long length = file_.length();
+              needsRestart_ = (length < lastLength_);
+              lastLength_ = length;
+          }
+      }
+
+
     /* send the supplied string to all OutputDestinations */
     void print (String s) {
       Iterator i = outputDestinations_.iterator();
       while (i.hasNext()) {
         ((OutputDestination)i.next()).print(s);
+      }
+    }
+
+    /* clear all OutputDestinations */
+    void clear () {
+      Iterator i = outputDestinations_.iterator();
+      while (i.hasNext()) {
+        ((OutputDestination)i.next()).clear();
       }
     }
 

@@ -32,6 +32,11 @@ public interface OutputDestination {
   @param s String to be printed
   */
   public void print (String s) ;
+
+  /**
+   * Clear all previous text.
+   */
+  public void clear () ;
   
 }
 

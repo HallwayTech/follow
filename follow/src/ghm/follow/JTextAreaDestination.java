@@ -64,6 +64,13 @@ public class JTextAreaDestination implements OutputDestination {
     }
   }
 
+  public void clear () {
+    jTextArea_.setText("");
+    if (autoPositionCaret_) {
+      jTextArea_.setCaretPosition(0);
+    }
+  }
+
   protected JTextArea jTextArea_;
   protected boolean autoPositionCaret_;
 

@@ -39,7 +39,6 @@ class Reload extends FollowAppAction {
 
   public void actionPerformed (ActionEvent e) {
     FileFollowingPane fileFollowingPane = app_.getSelectedFileFollowingPane();
-    fileFollowingPane.getTextArea().setText("");
     fileFollowingPane.restartFollowing();
   }
 

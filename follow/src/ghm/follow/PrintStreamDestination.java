@@ -44,6 +44,10 @@ public class PrintStreamDestination implements OutputDestination {
     printStream_.print(s);
   }
   
+  public void clear () {
+      // No real 'clear' can be done for a stream.
+  }
+  
   protected PrintStream printStream_;
   
 }

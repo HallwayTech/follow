@@ -26,6 +26,8 @@ class DefaultSystemInterface implements SystemInterface {
     return null;
   }
 
+  public void exit (int code) { System.exit(code); }
+
   protected FollowApp app_;
 }
 

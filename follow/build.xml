@@ -1,6 +1,6 @@
 <project name="follow" default="jar" basedir=".">
 
-  <property name="version" value="1.5"/>
+  <property name="version" value="1.4.1"/>
   <property name="jar" value="follow${version}.jar"/>
 
   <target name="compile">
@@ -19,6 +19,7 @@
     <jar jarfile="build/${jar}" manifest="src/follow.aux">
       <fileset dir="build/classes"/>
       <fileset dir="src" includes="**/*.java"/>
+      <fileset dir="." includes="LICENSE.txt,README.txt"/>
     </jar>
   </target>
 

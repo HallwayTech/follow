@@ -15,8 +15,10 @@
   </target>
 
   <target name="jar" depends="compile">
-    <jar jarfile="build/follow${version}.jar" basedir="build/classes"
-     manifest="src/follow.aux"/>
+    <jar jarfile="build/follow${version}.jar" manifest="src/follow.aux">
+      <fileset dir="build/classes"/>
+      <fileset dir="src" includes="**/*.java"/>
+    </jar>
   </target>
 
   <target name="doc">

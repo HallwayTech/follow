@@ -22,11 +22,11 @@ package ghm.followgui;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Properties;
+
 
 /**
 Implementation of {@link java.awt.event.WindowListener} which writes the
-position and size of a window to a Properties object each time windowClosing()
+position and size of a window to a FollowAppAttributes object each time windowClosing()
 is invoked.
 
 @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
@@ -35,59 +35,33 @@ public class WindowTracker extends WindowAdapter {
 
   /**
   Construct a new WindowTracker which will write window position/size to the 
-  supplied Properties object. The supplied keys will be used when writing 
-  position/size values to the Properties object.
+  supplied FollowAppAttributes object. The supplied keys will be used when writing 
+  position/size values to the FollowAppAttributes object.
   
-  @param properties Properties object to which window size & position should 
+  @param attributes attributes object to which window size & position should 
     be written
-  @param heightKey key for window height
-  @param widthKey key for window width
-  @param xKey key for window position, x-dimension
-  @param yKey key for window position, y-dimension
   */  
-  public WindowTracker (
-    Properties properties,
-    String heightKey,
-    String widthKey,
-    String xKey,
-    String yKey
-  ) {
-    properties_ = properties;
-    heightKey_ = heightKey;
-    widthKey_ = widthKey;
-    xKey_ = xKey;
-    yKey_ = yKey;
+    public WindowTracker (FollowAppAttributes attributes) {
+    attributes_ = attributes;
   }
   
 
   /**
   Each time this method is invoked, the position/size of the window which is
-  closing will be written to the Properties object.
+  closing will be written to the FollowAppAttributes object.
   */
   public void windowClosing (WindowEvent e) {
+      System.out.println("Detected a window close.");
     Window window = (Window)e.getSource();
-    setInt(heightKey_, window.getHeight());
-    setInt(widthKey_, window.getWidth());
-    setInt(xKey_, window.getX());
-    setInt(yKey_, window.getY());
+    attributes_.setWidth(window.getWidth());
+    attributes_.setHeight(window.getHeight());
+    attributes_.setX(window.getX());
+    attributes_.setY(window.getY());
   }
 
-
-  /**
-  Convenience method for setting integer values in an instance of Properties
-  @param key key to use when setting the integer property
-  @param value integer value to be set
-  */
-  protected void setInt (String key, int value) {
-    properties_.setProperty(key, String.valueOf(value));
-  }
 
   
-  protected Properties properties_;
-  protected String heightKey_;
-  protected String widthKey_;
-  protected String xKey_;
-  protected String yKey_;
+  protected FollowAppAttributes attributes_;
   
 }
 

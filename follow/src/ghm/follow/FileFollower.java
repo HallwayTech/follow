@@ -222,11 +222,17 @@ public class FileFollower {
       try {
         clear();
         needsRestart_ = false;
+        long fileSize = file_.length();
         byte[] byteArray = new byte[bufferSize_];
         int numBytesRead;
         long lastActivityTime = 0;
 
         FileInputStream fis = new FileInputStream(file_);
+        // Skip to the end of the file.
+        if (fileSize > bufferSize_) {
+            fis.skip(fileSize - bufferSize_);
+        }
+
         BufferedInputStream bis = new BufferedInputStream(fis);
 
         while (continueRunning_ && !needsRestart_) {

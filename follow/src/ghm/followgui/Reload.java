@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package ghm.followgui;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
 
 /**
 Action which closes the currently followed file.

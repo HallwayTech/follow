@@ -50,7 +50,8 @@ class FollowAppAttributes {
     }
     else {
       properties_ = new EnumeratedProperties();
-      properties_.load(new FileInputStream(propertyFile));
+      FileInputStream fis = new FileInputStream(propertyFile);
+      properties_.load(fis);
       switch (getAttributesVersion()) {
         case UNVERSIONED:
           // Migrate unversioned attributes to 1.1 attributes
@@ -90,6 +91,7 @@ class FollowAppAttributes {
             JOptionPane.INFORMATION_MESSAGE
           );
       }
+      fis.close();
     }
   }
 
@@ -109,14 +111,29 @@ class FollowAppAttributes {
   int getY () { return getInt(yKey); }
   void setY (int y) { setInt(yKey, y); }
 
-  List getFollowedFiles () {
+  Iterator getFollowedFiles () {
     List fileNames = properties_.getEnumeratedProperty(followedFilesKey);
     List files = new ArrayList();
     Iterator i = fileNames.iterator();
     while (i.hasNext()) {
       files.add(new File((String)i.next()));
     }
-    return files;
+    return files.iterator();
+  }
+
+  /**
+   * @return true iff any File in the List of followed Files
+   * (getFollowedFiles()) has the same Canonical Path as the supplied File
+   */
+  boolean followedFileListContains (File file) throws IOException {
+    Iterator i = getFollowedFiles();
+    while (i.hasNext()) {
+      File nextFile = (File)i.next();
+      if (nextFile.getCanonicalPath().equals(file.getCanonicalPath())) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void addFollowedFile (File file) {
@@ -142,10 +159,11 @@ class FollowAppAttributes {
     setInt(tabPlacementKey, tabPlacement);
   }
   
-  int getSelectedTabIndex () { 
+  int getSelectedTabIndex () {
     try { return getInt(selectedTabIndexKey); }
     catch (NumberFormatException e) {
-      throw new NoTabSelectedException();
+      setSelectedTabIndex(0);
+      return 0;
     }
   }
   void setSelectedTabIndex (int selectedTabIndex) {
@@ -214,10 +232,10 @@ class FollowAppAttributes {
   public void setAutoScroll (boolean value) { setBoolean(autoScrollKey, value); }
 
   void store () throws IOException {
-    properties_.store(
-      new BufferedOutputStream(new FileOutputStream(propertyFileName)), 
-      null
-    );
+    BufferedOutputStream bos = 
+      new BufferedOutputStream(new FileOutputStream(propertyFileName));
+    properties_.store(bos, null);
+    bos.close();
   }
   
   private int getInt (String key) {
@@ -325,6 +343,4 @@ availableFontFamilyNames[0] + " instead."
   static final int v1_4 = 5;
 
 }
-
-class NoTabSelectedException extends RuntimeException {} 
 

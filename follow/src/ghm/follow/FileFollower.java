@@ -246,6 +246,7 @@ public class FileFollower {
               // Now check if the filehandle has become stale (file was
               // modified, but no data could be read).
               needsRestart_ = file_.exists() &&
+                  (file_.length() > 0) &&
                   (file_.lastModified() > lastActivityTime);
           }
 

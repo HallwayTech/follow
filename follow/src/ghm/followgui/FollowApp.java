@@ -86,7 +86,14 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     attributes_ = new FollowAppAttributes(this);
     for (int i=0; i < fileNames.length; i++) {
       File file = new File(fileNames[i]);
-      if (!attributes_.followedFileListContains(file)) {
+      if (!file.exists()) {
+        String msg = MessageFormat.format(
+          resBundle_.getString("message.cmdLineFileNotFound.text"),
+          new Object[]{file}
+          );
+        System.out.println(msg);
+      }
+      else if (!attributes_.followedFileListContains(file)) {
         attributes_.addFollowedFile(file);
       }
     }

@@ -55,7 +55,7 @@ public class FileFollowingPane extends JScrollPane {
       latency,
       new OutputDestination [] { destination_ }
     );
-    this.getViewport().setView(textArea_);
+    this.setViewportView(textArea_);
   }
 
   /**

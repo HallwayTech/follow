@@ -1,6 +1,7 @@
 package ghm.follow;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 public class PrintStreamDestinationTest extends BaseTestCase {
 
@@ -12,9 +13,7 @@ public class PrintStreamDestinationTest extends BaseTestCase {
     follower_ = new FileFollower(followedFile_, new OutputDestination[]{dest});
     follower_.start();
     String control = "control";
-    followedFileWriter_.write(control);
-    followedFileWriter_.flush();
-    Thread.sleep(follower_.getLatency());
+    writeToFollowedFileAndWait(control);
     assertEquals(control, new String(byteStream.toByteArray()));
   }
 

@@ -14,12 +14,19 @@ public abstract class BaseTestCase extends TestCase {
     followedFile_ = File.createTempFile("followedFile", null);
     followedFile_.deleteOnExit();
     followedFileWriter_ = new BufferedWriter(new FileWriter(followedFile_));
+    follower_ = new FileFollower(followedFile_, new OutputDestination[0]);
   }
 
   public void tearDown () throws Exception {
-    if (follower_ != null) { follower_.stopAndWait(); }
+    follower_.stopAndWait();
     followedFileWriter_.flush();
     followedFileWriter_.close();
+  }
+
+  protected void writeToFollowedFileAndWait (String string) throws Exception {
+    followedFileWriter_.write(string);
+    followedFileWriter_.flush();
+    Thread.sleep(follower_.getLatency());
   }
 
   protected FileFollower follower_;

@@ -13,14 +13,10 @@ public class FileFollowerTest extends BaseTestCase {
     follower_ = new FileFollower(followedFile_, new OutputDestination[]{testination_});
     follower_.start();
     String control = "control";
-    followedFileWriter_.write(control);
-    followedFileWriter_.flush();
-    Thread.sleep(follower_.getLatency());
+    writeToFollowedFileAndWait(control);
     assertEquals(control, testination_.strBuf_.toString());
     String control2 = "control2";
-    followedFileWriter_.write(control2);
-    followedFileWriter_.flush();
-    Thread.sleep(follower_.getLatency());
+    writeToFollowedFileAndWait(control2);
     assertEquals(control+control2, testination_.strBuf_.toString());
   }
 
@@ -29,9 +25,7 @@ public class FileFollowerTest extends BaseTestCase {
     follower_.setLatency(100);
     follower_.start();
     String control = "control";
-    followedFileWriter_.write(control);
-    followedFileWriter_.flush();
-    Thread.sleep(follower_.getLatency());
+    writeToFollowedFileAndWait(control);
     assertEquals(control, testination_.strBuf_.toString());
   }
 
@@ -40,9 +34,7 @@ public class FileFollowerTest extends BaseTestCase {
     follower_.setBufferSize(8);
     follower_.start();
     String control = "32098jaspfj234-08uewrfiojsad;lfkjqw4poiru2340ruwefkjasd;lkjq2po43iu123-4r098uasdfl;asdclkjasdfasdf9834roaerf";
-    followedFileWriter_.write(control);
-    followedFileWriter_.flush();
-    Thread.sleep(follower_.getLatency());
+    writeToFollowedFileAndWait(control);
     assertEquals(control, testination_.strBuf_.toString());
   }
 
@@ -51,9 +43,7 @@ public class FileFollowerTest extends BaseTestCase {
     follower_ = new FileFollower(followedFile_, new OutputDestination[]{testination_, testination2});
     follower_.start();
     String control = "control";
-    followedFileWriter_.write(control);
-    followedFileWriter_.flush();
-    Thread.sleep(follower_.getLatency());
+    writeToFollowedFileAndWait(control);
     assertEquals(control, testination_.strBuf_.toString());
     assertEquals(control, testination2.strBuf_.toString());
   }

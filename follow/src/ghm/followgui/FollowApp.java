@@ -112,6 +112,9 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     deleteAll_ = new DeleteAll(this);
     configure_ = new Configure(this);
     about_ = new About(this);
+    if (DEBUG) {
+        debug_ = new Debug(this);
+    }
 
     // initialize SystemInterface
     systemInterface_ = new DefaultSystemInterface(this);
@@ -145,6 +148,10 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       resBundle_.getString("menu.Help.mnemonic")
     );
     helpMenu.addFollowAppAction(about_);
+    if (DEBUG) {
+        helpMenu.addSeparator();
+        helpMenu.addFollowAppAction(debug_);
+    }
     JMenuBar jMenuBar = new JMenuBar();
     jMenuBar.add(fileMenu);
     jMenuBar.add(toolsMenu);
@@ -194,17 +201,14 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       attributes_.getWidth(),
       attributes_.getHeight()
     );
-    frame_.setLocation(
-      attributes_.getX(),
-      attributes_.getY()
-    );
-    frame_.addWindowListener(new WindowTracker(
-      attributes_.properties_,
-      FollowAppAttributes.heightKey,
-      FollowAppAttributes.widthKey,
-      FollowAppAttributes.xKey,
-      FollowAppAttributes.yKey
-    ));
+    // This is an ugly hack.  It seems like JFrame.setLocation() is buggy
+    // on Solaris jdk versions before 1.4
+    if (HAS_SOLARIS_BUG) {
+        frame_.setLocation(50, 50);
+    } else {
+        frame_.setLocation(attributes_.getX(), attributes_.getY());
+    }
+    frame_.addWindowListener(new WindowTracker(attributes_));
     frame_.addWindowListener(new WindowAdapter () {
       public void windowClosing (WindowEvent e) {
         if (tabbedPane_.getTabCount() > 0) {
@@ -295,7 +299,10 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   }
   private StartupStatus startupStatus_;
   
-  void show () { frame_.show(); }
+  void show () {
+      frame_.show();
+  }
+
 
   /* 
   Warning: This method should be called only from (1) the FollowApp 
@@ -440,11 +447,36 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   DeleteAll deleteAll_;
   Configure configure_;
   About about_;
+  Debug debug_;
 
   SystemInterface systemInterface_;
 
   static final String fileSeparator = System.getProperty("file.separator");
   static final String messageLineSeparator = "\n";
+    static final boolean DEBUG = Boolean.getBoolean("follow.debug");
+    static boolean HAS_SOLARIS_BUG = false;
+
+    // We should remove this hack once JDK 1.4 gets wide adoption on Solaris.
+    static {
+        boolean isSolaris = "SunOS".equals(System.getProperty("os.name"));
+
+        if (isSolaris) {
+            String version = System.getProperty("java.version");
+            if ((version != null) && version.startsWith("1.")) {
+                String substring = version.substring(2, 3);
+                try {
+                    int minor = Integer.parseInt(substring);
+                    if (minor < 4) {
+                        HAS_SOLARIS_BUG = true;
+                    }
+                    System.out.println("Minor version: " + minor +
+                                       " [" + HAS_SOLARIS_BUG + "]");
+                } catch (NumberFormatException nfe) {
+                    // Nothing else to do.
+                }
+            }
+        }
+    }
 
   static void centerWindowInScreen (Window window) {
     Dimension screenSize = window.getToolkit().getScreenSize();

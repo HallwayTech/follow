@@ -4,7 +4,7 @@ of this application are inspired by the "f" (follow) flag of
 the UNIX command "tail".  For more information about Follow,
 please visit http://follow.sf.net
 
-Copyright (C) 2000, 2001 Greg Merrill (greghmerrill@yahoo.com)
+Copyright (C) 2000-2003 Greg Merrill (greghmerrill@yahoo.com)
 
 Follow is free software; you can redistribute it and/or modify
 it under the terms of version 2 of the GNU General Public

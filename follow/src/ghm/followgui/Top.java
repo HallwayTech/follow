@@ -1,5 +1,5 @@
 /* 
-Copyright (C) 2000, 2001 Greg Merrill (greghmerrill@yahoo.com)
+Copyright (C) 2000-2003 Greg Merrill (greghmerrill@yahoo.com)
 
 This file is part of Follow (http://follow.sf.net).
 

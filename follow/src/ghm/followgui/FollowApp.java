@@ -274,7 +274,8 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       fileFollowingPane = new FileFollowingPane(
         file,
         attributes_.getBufferSize(),
-        attributes_.getLatency()
+        attributes_.getLatency(),
+        attributes_.autoScroll()
       );
       JTextArea ffpTextArea = fileFollowingPane.getTextArea();
       enableDragAndDrop(ffpTextArea);

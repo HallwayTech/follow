@@ -6,12 +6,8 @@
 
 package ghm.followgui;
 
-import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import javax.swing.Action;
-import javax.swing.JFileChooser;
-import javax.swing.JTextArea;
 
 /**
 Action which opens a new file in the Follow application.
@@ -30,14 +26,8 @@ class Open extends FollowAppAction {
   }
 
   public void actionPerformed (ActionEvent e) {
-    app_.setCursor(Cursor.WAIT_CURSOR);
-    JFileChooser chooser = new JFileChooser(
-      app_.attributes_.getLastFileChooserDirectory()
-    );
-    app_.setCursor(Cursor.DEFAULT_CURSOR);
-    int returnVal = chooser.showOpenDialog(app_.frame_);
-    if (returnVal == JFileChooser.APPROVE_OPTION) {
-      File file = chooser.getSelectedFile();
+    File file = app_.systemInterface_.getFileFromUser();
+    if (file != null) {
       app_.attributes_.setLastFileChooserDirectory(file.getParentFile());
       app_.open(file, true);
     }

@@ -51,7 +51,6 @@ public class WindowTracker extends WindowAdapter {
   closing will be written to the FollowAppAttributes object.
   */
   public void windowClosing (WindowEvent e) {
-      System.out.println("Detected a window close.");
     Window window = (Window)e.getSource();
     attributes_.setWidth(window.getWidth());
     attributes_.setHeight(window.getHeight());

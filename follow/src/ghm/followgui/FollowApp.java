@@ -469,8 +469,6 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
                     if (minor < 4) {
                         HAS_SOLARIS_BUG = true;
                     }
-                    System.out.println("Minor version: " + minor +
-                                       " [" + HAS_SOLARIS_BUG + "]");
                 } catch (NumberFormatException nfe) {
                     // Nothing else to do.
                 }

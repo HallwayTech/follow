@@ -21,6 +21,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,17 +46,21 @@ application.
 */
 public class FollowApp {
 
-  FollowApp () throws IOException {
+  FollowApp () throws IOException, InterruptedException, InvocationTargetException {
     // Create & show startup status window
     startupStatus_ = new StartupStatus(resBundle_);
     centerWindowInScreen(startupStatus_);
     startupStatus_.pack();
-    startupStatus_.show();
+    SwingUtilities.invokeAndWait(new Runnable() { public void run () {
+      startupStatus_.show();
+    }});
 
     // Ghastly workaround for bug in Font construction, in review by
     // Sun with review id 108683.
 GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-    startupStatus_.markDone(startupStatus_.LOAD_SYSTEM_FONTS);
+    SwingUtilities.invokeAndWait(new Runnable() { public void run () {
+      startupStatus_.markDone(startupStatus_.LOAD_SYSTEM_FONTS);
+    }});
     
     // create frame first
     frame_ = new JFrame(resBundle_.getString("frame.title"));
@@ -182,7 +187,6 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       }
     });
     enableDragAndDrop(frame_);
-    startupStatus_.markDone(startupStatus_.CREATE_WIDGETS);
 
     // Open files from attributes; this is done after the frame is complete
     // and all components have been added to it to make sure that the frame
@@ -197,7 +201,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     while (i.hasNext()) {
       file = (File)i.next();
       if (file.exists()) {
-        open(file, false);
+        open(file, false, false);
       }
       else {
         // This file has been deleted since the previous execution. Remove it
@@ -247,18 +251,19 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       delete_.setEnabled(false);
       deleteAll_.setEnabled(false);
     }
-    startupStatus_.markDone(startupStatus_.OPEN_FILES);
   }
   private StartupStatus startupStatus_;
   
-  void show () { frame_.setVisible(true); }
+  void show () { frame_.show(); }
 
   /* 
   Warning: This method should be called only from (1) the FollowApp 
   initializer (before any components are realized) or (2) from the event 
   dispatching thread. 
   */
-  void open (File file, boolean addFileToAttributes) {
+  void open (
+    File file, boolean addFileToAttributes, boolean startFollowing
+  ) {
     FileFollowingPane fileFollowingPane = 
       (FileFollowingPane)fileToFollowingPaneMap_.get(file);
     if (fileFollowingPane != null) {
@@ -276,7 +281,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       ffpTextArea.setFont(attributes_.getFont());
       ffpTextArea.addMouseListener(getRightClickListener());
       fileToFollowingPaneMap_.put(file, fileFollowingPane);
-      fileFollowingPane.startFollowing();
+      if (startFollowing) { fileFollowingPane.startFollowing(); }
       tabbedPane_.addTab(
         file.getName(), 
         null,
@@ -295,6 +300,10 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       }
       if (addFileToAttributes) { attributes_.addFollowedFile(file); }
     }
+  }
+
+  void open (File file, boolean addFileToAttributes) {
+    open(file, addFileToAttributes, true);
   }
 
   /**
@@ -404,13 +413,18 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   @param args ignored
   */  
   public static void main (String[] args) 
-  throws IOException {
+  throws IOException, InterruptedException, InvocationTargetException {
     final FollowApp followApp = new FollowApp();
-    followApp.show();
-    SwingUtilities.invokeLater(new Runnable () {
-      public void run () { followApp.startupStatus_.dispose(); }
-    });
+    SwingUtilities.invokeAndWait(new Runnable() { public void run () {
+      // ensure all widgets inited before opening files
+      followApp.show();
+      followApp.startupStatus_.markDone(followApp.startupStatus_.CREATE_WIDGETS);
+    }});
+    followApp.startupStatus_.dispose();
+    for (int i=0; i < followApp.tabbedPane_.getTabCount(); i++) {
+      ((FileFollowingPane)followApp.tabbedPane_.getComponentAt(i)).startFollowing();
+    }
   }
-  
+
 }
 

@@ -34,11 +34,6 @@ class StartupStatus extends JWindow {
     );
     allTasks_.add(CREATE_WIDGETS);
 
-    OPEN_FILES = new Task(
-      2, resourceBundle.getString("startupStatus.openFiles")
-    );
-    allTasks_.add(OPEN_FILES);
-
     int taskWeightSummation = 0;
     for (int i=0; i < allTasks_.size(); i++) {
       taskWeightSummation += ((Task)allTasks_.get(i)).weight_;
@@ -60,22 +55,14 @@ class StartupStatus extends JWindow {
   private int currentTask_;
   
   void markDone (final Task task) {
-    try {
-      SwingUtilities.invokeAndWait(new Runnable () {
-        public void run () {
-  if (allTasks_.indexOf(task) != currentTask_) { throw new RuntimeException(
-    "Programmatic error: tasks should be marked done sequentially"
-  );}
-  progressBar_.setValue(progressBar_.getValue() + task.weight_);
-  currentTask_++;
-  if (currentTask_ < allTasks_.size()) { progressBar_.setString(
-    ((Task)allTasks_.get(currentTask_)).inProgressMessage_
-  );}
-        }
-      });
-    } catch (Exception e) {
-      throw new RuntimeException(e.getMessage());
-    }
+    if (allTasks_.indexOf(task) != currentTask_) { throw new RuntimeException(
+      "Programmatic error: tasks should be marked done sequentially"
+    );}
+    progressBar_.setValue(progressBar_.getValue() + task.weight_);
+    currentTask_++;
+    if (currentTask_ < allTasks_.size()) { progressBar_.setString(
+      ((Task)allTasks_.get(currentTask_)).inProgressMessage_
+    );}
   }
   
   private JProgressBar progressBar_ = new JProgressBar();
@@ -87,7 +74,6 @@ class StartupStatus extends JWindow {
   // Complete set of Tasks which need to be completed to start the Follow app
   final Task LOAD_SYSTEM_FONTS;
   final Task CREATE_WIDGETS;
-  final Task OPEN_FILES;
 
   /** Instances of this class represent significant tasks which must be 
     accomplished in order to start the Follow application. */

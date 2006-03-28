@@ -1,6 +1,6 @@
 <project name="follow" default="jar" basedir=".">
 
-  <property name="version" value="1.4.3"/>
+  <property name="version" value="1.5"/>
   <property name="jar" value="follow${version}.jar"/>
 
   <target name="compile">
@@ -27,20 +27,20 @@
     <mkdir dir="build/javadoc"/>
     <javadoc sourcepath="src" destdir="build/javadoc"
      packagenames="ghm.follow,ghm.followgui"
-     windowtitle="Follow API"
+     windowtitle="Follow ${version} API"
      doctitle="Generated documentation for the Follow application"/>
   </target>
 
   <target name="test" depends="jar">
     <mkdir dir="build/test/classes"/>
-    <javac srcdir="testsrc" destdir="build/test/classes" classpath="build/${jar}"
-     deprecation="yes"/>
+    <javac srcdir="testsrc" destdir="build/test/classes" classpath="build/${jar}" deprecation="yes"/>
     <junit fork="yes" haltonfailure="yes" haltonerror="yes">
       <jvmarg value="-Dsun.java2d.noddraw=true"/>
       <classpath>
         <pathelement path="${java.class.path}"/>
         <pathelement location="build/${jar}"/>
         <pathelement path="build/test/classes"/>
+        <pathelement path="lib/junit3.2.jar"/>
       </classpath>
       <formatter type="plain" usefile="false"/>
       <batchtest unless="test">
@@ -51,7 +51,7 @@
   </target>
 
   <target name="clean">
-    <delete dir="build"/>
+    <delete dir="build" quiet="true"/>
   </target>
 
   <target name="pristine" depends="clean">
@@ -59,6 +59,9 @@
       <fileset dir="${basedir}" includes="**/*~" defaultexcludes="no"/>
     </delete>
   </target>
+  
+  <target name="clean_build" description="Makes a clean build" depends="clean, jar"/>
+
+  <target name="release" description="Makes a release build" depends="clean, test"/>
 
 </project>
-

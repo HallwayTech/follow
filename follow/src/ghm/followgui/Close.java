@@ -51,6 +51,7 @@ class Close extends FollowAppAction {
       app_.clearAll_.setEnabled(false);
       app_.delete_.setEnabled(false);
       app_.deleteAll_.setEnabled(false);
+      app_.pause_.setEnabled(false);
     }
   }
 

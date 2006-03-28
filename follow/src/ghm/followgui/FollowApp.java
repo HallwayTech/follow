@@ -26,7 +26,6 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.awt.dnd.DropTarget;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -42,8 +41,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javax.swing.Action;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
@@ -115,6 +112,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     if (DEBUG) {
         debug_ = new Debug(this);
     }
+    pause_ = new Pause(this);
 
     // initialize SystemInterface
     systemInterface_ = new DefaultSystemInterface(this);
@@ -127,6 +125,8 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     fileMenu.addFollowAppAction(open_);
     fileMenu.addFollowAppAction(close_);
     fileMenu.addFollowAppAction(reload_);
+    fileMenu.addSeparator();
+    fileMenu.addFollowAppAction(pause_);
     fileMenu.addSeparator();
     fileMenu.addFollowAppAction(exit_);
     Menu toolsMenu = new Menu(
@@ -185,6 +185,8 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     toolBar_.addFollowAppAction(clearAll_);
     toolBar_.addFollowAppAction(delete_);
     toolBar_.addFollowAppAction(deleteAll_);
+    toolBar_.addSeparator();
+    toolBar_.addFollowAppAction(pause_);
     toolBar_.addSeparator();
     toolBar_.addFollowAppAction(configure_);
     
@@ -448,6 +450,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   Configure configure_;
   About about_;
   Debug debug_;
+  Pause pause_;
 
   SystemInterface systemInterface_;
 

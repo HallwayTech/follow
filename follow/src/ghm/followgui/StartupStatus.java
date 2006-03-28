@@ -28,7 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
-import javax.swing.SwingUtilities;
 
 /**
 Window which displays a progress bar during startup.

@@ -66,7 +66,6 @@ class ExternalEditor extends Object {
             boolean inQuoteSingle = false;
             boolean inQuoteDouble = false;
             boolean inWhitespace = false;
-            int start = 0;
             StringBuffer buffer = new StringBuffer();
             char[] chArray = string.toCharArray();
             for (int i = 0; i < chArray.length; i++) {

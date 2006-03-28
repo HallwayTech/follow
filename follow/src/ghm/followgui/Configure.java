@@ -40,7 +40,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
 /**
 Action which brings up a dialog allowing one to configure the Follow 

@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package ghm.followgui;
 
 import javax.swing.Action;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
@@ -28,9 +27,9 @@ import javax.swing.JToolBar;
 This class exists as a kludge to get around problems I was having with toolbar
 items being configured by JToolBar in a way that was not to my liking.
 @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
+@author <a href="mailto:chall@cfhdev.com">Carl Hall</a>
 */
 class ToolBar extends JToolBar {
-
   void addFollowAppAction (FollowAppAction a) {
     this.add(a);
     JButton toolBarItem = 
@@ -38,6 +37,4 @@ class ToolBar extends JToolBar {
     toolBarItem.setText(null);
     toolBarItem.setToolTipText((String)a.getValue(Action.NAME));
   }
-
 }
-

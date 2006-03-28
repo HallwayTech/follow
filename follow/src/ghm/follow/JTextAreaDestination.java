@@ -20,8 +20,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package ghm.follow;
 
 import javax.swing.JTextArea;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 
 /**
 Implementation of {@link OutputDestination} which appends Strings to a

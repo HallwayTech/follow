@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package ghm.followgui;
 
 import java.awt.event.ActionEvent;
+import java.util.ResourceBundle;
 
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -35,24 +36,32 @@ class Pause extends FollowAppAction {
       app.resBundle_.getString("action.Pause.name"),
       app.resBundle_.getString("action.Pause.mnemonic"),
       app.resBundle_.getString("action.Pause.accelerator"),
-      getIcon(app)
+      getIcon(app.attributes_.autoScroll(), app.resBundle_)
     );
   }
 
   public void actionPerformed (ActionEvent e) {
-    // update the autoscroll property
-    app_.attributes_.setAutoScroll(!app_.attributes_.autoScroll());
-    // get the icon to be set
-    ImageIcon icon = new ImageIcon(app_.getClass().getResource(Pause.getIcon(app_)));
+    FileFollowingPane pane = (FileFollowingPane) app_.tabbedPane_.getSelectedComponent();
+    if (pane.isFollowing()) {
+      pane.stopFollowing();
+    } else {
+      pane.startFollowing();
+    }
+    setIconByState(pane.isFollowing());
+  }
+
+  public void setIconByState(boolean follow) {
+    //  get the icon to be set
+    ImageIcon icon = new ImageIcon(app_.getClass().getResource(Pause.getIcon(follow, app_.resBundle_)));
     // set the icon in the action.  when updating here, the icon is changed
     // whether the event is caused by menu, button click or key combo
     app_.pause_.putValue(Action.SMALL_ICON, icon);
   }
 
-  private static String getIcon(FollowApp app) {
-    String image = (app.attributes_.autoScroll() 
-        ? app.resBundle_.getString("action.Pause.onIcon")
-        : app.resBundle_.getString("action.Pause.offIcon"));
+  private static String getIcon(boolean following, ResourceBundle resBundle) {
+    String image = (following 
+        ? resBundle.getString("action.Pause.onIcon")
+        : resBundle.getString("action.Pause.offIcon"));
     return image;
   }
 }

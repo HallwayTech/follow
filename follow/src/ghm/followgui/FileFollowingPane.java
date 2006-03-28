@@ -115,6 +115,14 @@ public class FileFollowingPane extends JScrollPane {
   }
 
   /**
+   * Convenience method; equivalent to called getFileFollower().isBeingFollowed()
+   * 
+   * @return
+   */
+  public boolean isFollowing() {
+    return fileFollower_.isBeingFollowed();
+  }
+  /**
   Clears the contents of this FileFollowingPane synchronously.
   */
   public void clear () throws IOException {

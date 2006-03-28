@@ -26,6 +26,8 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.awt.dnd.DropTarget;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -297,6 +299,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       clearAll_.setEnabled(false);
       delete_.setEnabled(false);
       deleteAll_.setEnabled(false);
+      pause_.setEnabled(false);
     }
   }
   private StartupStatus startupStatus_;
@@ -327,6 +330,13 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         attributes_.getLatency(),
         attributes_.autoScroll()
       );
+      // add a listener to set the pause icon correctly
+      fileFollowingPane.addComponentListener(new ComponentAdapter() {
+        public void componentShown(ComponentEvent e)
+        {
+          pause_.setIconByState(((FileFollowingPane)e.getSource()).isFollowing());
+        }
+      });
       JTextArea ffpTextArea = fileFollowingPane.getTextArea();
       enableDragAndDrop(ffpTextArea);
       ffpTextArea.setFont(attributes_.getFont());
@@ -340,7 +350,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         file.getAbsolutePath()
       );
       tabbedPane_.setSelectedIndex(tabbedPane_.getTabCount() - 1);
-      if (!close_.isEnabled()) { 
+      if (!close_.isEnabled()) {
         close_.setEnabled(true);
         reload_.setEnabled(true);
         edit_.setEnabled(true);
@@ -350,13 +360,14 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         clearAll_.setEnabled(true);
         delete_.setEnabled(true);
         deleteAll_.setEnabled(true);
+        pause_.setEnabled(true);
       }
       if (addFileToAttributes) { attributes_.addFollowedFile(file); }
     }
   }
 
   void open (File file, boolean addFileToAttributes) {
-    open(file, addFileToAttributes, true);
+    open(file, addFileToAttributes, attributes_.autoScroll());
   }
 
   /**

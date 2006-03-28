@@ -162,6 +162,15 @@ public class FileFollower {
   }
 
   /**
+   * Returns the following state of a file
+   * 
+   * @return true if being followed, false if not being followed
+   */
+  public boolean isBeingFollowed() {
+    return continueRunning_;
+  }
+
+  /**
   Returns the size of the character buffer used to read characters from the
   followed file. Each time the file is accessed, this buffer is filled. 
   @return size of the character buffer

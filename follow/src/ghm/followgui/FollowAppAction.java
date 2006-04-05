@@ -39,7 +39,7 @@ abstract class FollowAppAction extends AbstractAction {
     super(name);
     init(app, mnemonic, accelerator);
   }
-  
+
   FollowAppAction (
     FollowApp app, 
     String name, 
@@ -50,7 +50,7 @@ abstract class FollowAppAction extends AbstractAction {
     super(name, new ImageIcon(app.getClass().getResource(iconName)));
     init(app, mnemonic, accelerator);
   }
-  
+
   private void init (FollowApp app, String mnemonic, String accelerator) {
     app_ = app;
     setMnemonic(mnemonic);
@@ -58,19 +58,17 @@ abstract class FollowAppAction extends AbstractAction {
       KeyStroke.getKeyStroke(accelerator.charAt(0), KeyEvent.CTRL_MASK)
     );
   }
-  
+
   char getMnemonic () { return mnemonic_; }
   void setMnemonic (char mnemonic) { mnemonic_ = mnemonic; }
   void setMnemonic (String mnemonic) {
     mnemonic_ = mnemonic.charAt(0);
   }
-  
+
   KeyStroke getAccelerator () { return accelerator_; }
-  void setAccelerator (KeyStroke accelerator) { accelerator_ = accelerator; }  
-  
+  void setAccelerator (KeyStroke accelerator) { accelerator_ = accelerator; }
+
   FollowApp app_;
   char mnemonic_;
   KeyStroke accelerator_;
-  
 }
-

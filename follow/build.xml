@@ -40,7 +40,6 @@
         <pathelement path="${java.class.path}"/>
         <pathelement location="build/${jar}"/>
         <pathelement path="build/test/classes"/>
-        <pathelement path="lib/junit3.2.jar"/>
       </classpath>
       <formatter type="plain" usefile="false"/>
       <batchtest unless="test">

@@ -115,83 +115,21 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         debug_ = new Debug(this);
     }
     pause_ = new Pause(this);
+    nextTab_ = new NextTab(this);
+    prevTab_ = new PreviousTab(this);
 
     // initialize SystemInterface
     systemInterface_ = new DefaultSystemInterface(this);
 
     // initialize menubar
-    Menu fileMenu = new Menu(
-      resBundle_.getString("menu.File.name"), 
-      resBundle_.getString("menu.File.mnemonic")
-    );
-    fileMenu.addFollowAppAction(open_);
-    fileMenu.addFollowAppAction(close_);
-    fileMenu.addFollowAppAction(reload_);
-    fileMenu.addSeparator();
-    fileMenu.addFollowAppAction(pause_);
-    fileMenu.addSeparator();
-    fileMenu.addFollowAppAction(exit_);
-    Menu toolsMenu = new Menu(
-      resBundle_.getString("menu.Tools.name"),
-      resBundle_.getString("menu.Tools.mnemonic")
-    );
-    toolsMenu.addFollowAppAction(top_);
-    toolsMenu.addFollowAppAction(bottom_);
-    toolsMenu.addSeparator();
-    toolsMenu.addFollowAppAction(clear_);
-    toolsMenu.addFollowAppAction(clearAll_);
-    toolsMenu.addFollowAppAction(delete_);
-    toolsMenu.addFollowAppAction(deleteAll_);
-    toolsMenu.addSeparator();
-    toolsMenu.addFollowAppAction(configure_);
-    toolsMenu.addFollowAppAction(edit_);
-    Menu helpMenu = new Menu(
-      resBundle_.getString("menu.Help.name"),
-      resBundle_.getString("menu.Help.mnemonic")
-    );
-    helpMenu.addFollowAppAction(about_);
-    if (DEBUG) {
-        helpMenu.addSeparator();
-        helpMenu.addFollowAppAction(debug_);
-    }
-    JMenuBar jMenuBar = new JMenuBar();
-    jMenuBar.add(fileMenu);
-    jMenuBar.add(toolsMenu);
-    jMenuBar.add(helpMenu);
+    JMenuBar jMenuBar = buildMenuBar();
 
     // initialize popupMenu
-    popupMenu_ = new PopupMenu();
-    popupMenu_.addFollowAppAction(open_);
-    popupMenu_.addFollowAppAction(close_);
-    popupMenu_.addFollowAppAction(reload_);
-    popupMenu_.addSeparator();
-    popupMenu_.addFollowAppAction(top_);    
-    popupMenu_.addFollowAppAction(bottom_);
-    popupMenu_.addSeparator();
-    popupMenu_.addFollowAppAction(clear_);
-    popupMenu_.addFollowAppAction(clearAll_);
-    popupMenu_.addFollowAppAction(delete_);
-    popupMenu_.addFollowAppAction(deleteAll_);
-    popupMenu_.addSeparator();
-    popupMenu_.addFollowAppAction(configure_);
-    popupMenu_.addFollowAppAction(edit_);
+    buildPopupMenu();
 
     // initialize toolbar
-    toolBar_ = new ToolBar();
-    toolBar_.addFollowAppAction(open_);
-    toolBar_.addSeparator();
-    toolBar_.addFollowAppAction(top_);
-    toolBar_.addFollowAppAction(bottom_);
-    toolBar_.addSeparator();
-    toolBar_.addFollowAppAction(clear_);
-    toolBar_.addFollowAppAction(clearAll_);
-    toolBar_.addFollowAppAction(delete_);
-    toolBar_.addFollowAppAction(deleteAll_);
-    toolBar_.addSeparator();
-    toolBar_.addFollowAppAction(pause_);
-    toolBar_.addSeparator();
-    toolBar_.addFollowAppAction(configure_);
-    
+    buildToolBar();
+
     // initialize tabbedPane, but wait to open files until after frame
     // initialization
     tabbedPane_ = new TabbedPane(attributes_.getTabPlacement());
@@ -302,6 +240,106 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       pause_.setEnabled(false);
     }
   }
+
+  /**
+   * Builds the menu bar for the application
+   * 
+   * @return reference the constructed menu bar
+   */
+  private JMenuBar buildMenuBar()
+  {
+    Menu fileMenu = new Menu(
+      resBundle_.getString("menu.File.name"), 
+      resBundle_.getString("menu.File.mnemonic")
+    );
+    fileMenu.addFollowAppAction(open_);
+    fileMenu.addFollowAppAction(close_);
+    fileMenu.addFollowAppAction(reload_);
+    fileMenu.addSeparator();
+    fileMenu.addFollowAppAction(pause_);
+    fileMenu.addSeparator();
+    fileMenu.addFollowAppAction(exit_);
+    Menu toolsMenu = new Menu(
+      resBundle_.getString("menu.Tools.name"),
+      resBundle_.getString("menu.Tools.mnemonic")
+    );
+    toolsMenu.addFollowAppAction(top_);
+    toolsMenu.addFollowAppAction(bottom_);
+    toolsMenu.addSeparator();
+    toolsMenu.addFollowAppAction(clear_);
+    toolsMenu.addFollowAppAction(clearAll_);
+    toolsMenu.addFollowAppAction(delete_);
+    toolsMenu.addFollowAppAction(deleteAll_);
+    toolsMenu.addSeparator();
+    toolsMenu.addFollowAppAction(configure_);
+    toolsMenu.addFollowAppAction(edit_);
+    Menu windowMenu = new Menu(
+      resBundle_.getString("menu.Window.name"),
+      resBundle_.getString("menu.Window.mnemonic")
+    );
+    windowMenu.addFollowAppAction(nextTab_);
+    windowMenu.addFollowAppAction(prevTab_);
+    
+    Menu helpMenu = new Menu(
+      resBundle_.getString("menu.Help.name"),
+      resBundle_.getString("menu.Help.mnemonic")
+    );
+    helpMenu.addFollowAppAction(about_);
+    if (DEBUG) {
+        helpMenu.addSeparator();
+        helpMenu.addFollowAppAction(debug_);
+    }
+    JMenuBar jMenuBar = new JMenuBar();
+    jMenuBar.add(fileMenu);
+    jMenuBar.add(toolsMenu);
+    jMenuBar.add(windowMenu);
+    jMenuBar.add(helpMenu);
+    return jMenuBar;
+  }
+
+  /**
+   * Builds the popup menu shown when right clicking in a text area.
+   */
+  private void buildPopupMenu()
+  {
+    popupMenu_ = new PopupMenu();
+    popupMenu_.addFollowAppAction(open_);
+    popupMenu_.addFollowAppAction(close_);
+    popupMenu_.addFollowAppAction(reload_);
+    popupMenu_.addSeparator();
+    popupMenu_.addFollowAppAction(top_);    
+    popupMenu_.addFollowAppAction(bottom_);
+    popupMenu_.addSeparator();
+    popupMenu_.addFollowAppAction(clear_);
+    popupMenu_.addFollowAppAction(clearAll_);
+    popupMenu_.addFollowAppAction(delete_);
+    popupMenu_.addFollowAppAction(deleteAll_);
+    popupMenu_.addSeparator();
+    popupMenu_.addFollowAppAction(configure_);
+    popupMenu_.addFollowAppAction(edit_);
+  }
+
+  /**
+   * Builds the toolbar shown at the top of the application
+   */
+  private void buildToolBar()
+  {
+    toolBar_ = new ToolBar();
+    toolBar_.addFollowAppAction(open_);
+    toolBar_.addSeparator();
+    toolBar_.addFollowAppAction(top_);
+    toolBar_.addFollowAppAction(bottom_);
+    toolBar_.addSeparator();
+    toolBar_.addFollowAppAction(clear_);
+    toolBar_.addFollowAppAction(clearAll_);
+    toolBar_.addFollowAppAction(delete_);
+    toolBar_.addFollowAppAction(deleteAll_);
+    toolBar_.addSeparator();
+    toolBar_.addFollowAppAction(pause_);
+    toolBar_.addSeparator();
+    toolBar_.addFollowAppAction(configure_);
+  }
+
   private StartupStatus startupStatus_;
   
   void show () {
@@ -462,6 +500,8 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   About about_;
   Debug debug_;
   Pause pause_;
+  NextTab nextTab_;
+  PreviousTab prevTab_;
 
   SystemInterface systemInterface_;
 
@@ -519,6 +559,4 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     }
   }
   static FollowApp instance_;
-
 }
-

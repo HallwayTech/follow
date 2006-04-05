@@ -46,7 +46,7 @@ public class FileFollowingPane extends JScrollPane {
   @param latency latency of the FileFollower used to follow the supplied file
   */
   public FileFollowingPane (File file, int bufferSize, int latency, boolean autoPositionCaret) {
-    textArea_ = new JTextArea();
+    textArea_ = new SearchableTextArea();
     textArea_.setEditable(false);
     destination_ = new JTextAreaDestination(textArea_, autoPositionCaret);
     fileFollower_ = new FileFollower(
@@ -160,10 +160,8 @@ public class FileFollowingPane extends JScrollPane {
   protected FileFollower fileFollower_;
   
   /** Text area into which followed file's contents are printed */
-  protected JTextArea textArea_;
+  protected SearchableTextArea textArea_;
 
   /** OutputDestination used w/FileFollower */
   protected JTextAreaDestination destination_;
-
 }
-

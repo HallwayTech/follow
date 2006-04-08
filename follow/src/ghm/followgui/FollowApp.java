@@ -117,6 +117,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     pause_ = new Pause(this);
     nextTab_ = new NextTab(this);
     prevTab_ = new PreviousTab(this);
+    find_ = new Find(this);
 
     // initialize SystemInterface
     systemInterface_ = new DefaultSystemInterface(this);
@@ -259,6 +260,11 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     fileMenu.addFollowAppAction(pause_);
     fileMenu.addSeparator();
     fileMenu.addFollowAppAction(exit_);
+    Menu editMenu = new Menu(
+      resBundle_.getString("menu.Edit.name"),
+      resBundle_.getString("menu.Edit.mnemonic")
+    );
+    editMenu.addFollowAppAction(find_);
     Menu toolsMenu = new Menu(
       resBundle_.getString("menu.Tools.name"),
       resBundle_.getString("menu.Tools.mnemonic")
@@ -291,6 +297,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     }
     JMenuBar jMenuBar = new JMenuBar();
     jMenuBar.add(fileMenu);
+    jMenuBar.add(editMenu);
     jMenuBar.add(toolsMenu);
     jMenuBar.add(windowMenu);
     jMenuBar.add(helpMenu);
@@ -502,6 +509,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   Pause pause_;
   NextTab nextTab_;
   PreviousTab prevTab_;
+  Find find_;
 
   SystemInterface systemInterface_;
 

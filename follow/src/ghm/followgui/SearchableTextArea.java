@@ -79,7 +79,7 @@ public class SearchableTextArea extends JTextArea {
     try {
       Document doc = getDocument();
       String text = doc.getText(0, doc.getLength());
-  
+
       // Search for pattern
       lastSearchPos = text.indexOf(term, 0);
       lastSearchTerm = term;

@@ -14,7 +14,7 @@ public class SearchableTextArea extends JTextArea {
 
   private static DefaultHighlightPainter painter = new DefaultHighlightPainter(Color.YELLOW);
 
-  public void highlight(String term) throws BadLocationException {
+  public void highlight(String term) {
     // First remove all old highlights
     removeHighlights();
 
@@ -22,9 +22,15 @@ public class SearchableTextArea extends JTextArea {
     int pos = 0;
 
     // Search for pattern
-    while ((pos = search(term, pos)) > -1) {
-      // Create highlighter using private painter and apply around pattern
-      hilite.addHighlight(pos, pos+term.length(), painter);
+    try {
+      while ((pos = search(term, pos)) > -1) {
+        // Create highlighter using private painter and apply around pattern
+        hilite.addHighlight(pos, pos+term.length(), painter);
+        pos += term.length();
+      }
+    }
+    catch (BadLocationException e) {
+      // don't worry about it
     }
   }
 
@@ -49,11 +55,8 @@ public class SearchableTextArea extends JTextArea {
    *    If the term is null, empty or not found, -1 is returned.
    */
   public int search(String term) {
-    int foundPos = -1;
     if (term != null && term.length() > 0) {
-      if (!term.equals(lastSearchTerm)) {
-        foundPos = search(term, 0);
-      } else {
+      if (term.equals(lastSearchTerm)) {
         // assume to start at the beginning
         int pos = 0;
         // if there is a previous search position, start there plus the length
@@ -61,10 +64,19 @@ public class SearchableTextArea extends JTextArea {
         if (lastSearchPos != -1) {
           pos = lastSearchPos + lastSearchTerm.length();
         }
-        foundPos = search(lastSearchTerm, pos);
+        lastSearchPos = search(lastSearchTerm, pos);
+      } else {
+        lastSearchPos = search(term, 0);
       }
     }
-    return foundPos;
+    // remember the term if it was found
+    if (lastSearchPos == -1) {
+      lastSearchTerm = null;
+    }
+    else {
+      lastSearchTerm = term;
+    }
+    return lastSearchPos;
   }
 
   /**
@@ -76,17 +88,17 @@ public class SearchableTextArea extends JTextArea {
    *    If the term is null, empty or not found, -1 is returned.
    */
   public int search(String term, int startPos) {
+    int pos = 0;
     try {
       Document doc = getDocument();
       String text = doc.getText(0, doc.getLength());
 
       // Search for pattern
-      lastSearchPos = text.indexOf(term, 0);
-      lastSearchTerm = term;
+      pos = text.indexOf(term, startPos);
     } catch (BadLocationException e) {
       // just return -1;
-      lastSearchPos = -1;
+      pos = -1;
     }
-    return lastSearchPos;
+    return pos;
   }
 }

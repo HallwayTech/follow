@@ -45,6 +45,28 @@ class Pause extends FollowAppAction {
    */
   public void actionPerformed (ActionEvent e) {
     FileFollowingPane pane = (FileFollowingPane) app_.tabbedPane_.getSelectedComponent();
+    playPausePane(pane);
+  }
+  
+  /**
+   * Pauses a pane if it is following.
+   * 
+   * @param pane
+   */
+  public void pausePane(FileFollowingPane pane) {
+    if (pane.isFollowing()) {
+      pane.stopFollowing();
+      setIconByState(pane.isFollowing());
+    }
+  }
+  
+  /**
+   * Plays or pauses a pane depending on it's current state.  If following, it
+   * pauses.  If not following, it plays.
+   * 
+   * @param pane
+   */
+  public void playPausePane(FileFollowingPane pane) {
     if (pane.isFollowing()) {
       pane.stopFollowing();
     } else {

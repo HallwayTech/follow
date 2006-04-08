@@ -48,7 +48,7 @@ public class Find extends FollowAppAction
       super(
           Find.this.app_.frame_, 
           Find.this.app_.resBundle_.getString("dialog.Find.title"), 
-          true
+          false
       );
       JComponent contentPane = (JComponent)getContentPane();
       contentPane.setBorder(
@@ -81,8 +81,7 @@ public class Find extends FollowAppAction
           FileFollowingPane pane = (FileFollowingPane) app_.tabbedPane_.getSelectedComponent();
           // search the tab with the given text
           SearchableTextArea textArea = (SearchableTextArea) pane.getTextArea();
-          int findPos = textArea.search(find_.getText());
-          System.out.println("Found it here: " + findPos);
+          textArea.highlight(find_.getText());
         }
       });
       JButton btnCancel = new JButton(app_.resBundle_.getString("dialog.Find.cancelButton.label"));

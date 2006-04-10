@@ -41,7 +41,6 @@ class Open extends FollowAppAction {
   public void actionPerformed (ActionEvent e) {
     File file = app_.systemInterface_.getFileFromUser();
     if (file != null) {
-      app_.attributes_.setLastFileChooserDirectory(file.getParentFile());
       app_.open(file, app_.attributes_.autoScroll());
     }
   }

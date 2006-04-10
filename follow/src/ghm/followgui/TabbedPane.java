@@ -21,6 +21,7 @@ package ghm.followgui;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.io.File;
 import javax.swing.JTabbedPane;
 
 /**
@@ -31,7 +32,14 @@ all but the first tab.
 */
 class TabbedPane extends JTabbedPane {
 
-  TabbedPane (int tabPlacement) { super(tabPlacement); }
+  private FollowAppAttributes attributes_ = null;
+
+
+  TabbedPane (FollowAppAttributes attributes) {
+      super(attributes.getTabPlacement());
+      attributes_ = attributes;
+  }
+
 
   /** sqrrrl's fix */
   public Component findComponentAt (int x, int y) {
@@ -58,6 +66,31 @@ class TabbedPane extends JTabbedPane {
     }
     return this;
   }
+
+
+    public void setSelectedIndex(int index) {
+        super.setSelectedIndex(index);
+        handleSelectedFile();
+    }
+
+
+    public void setSelectedComponent(FileFollowingPane pane) {
+        super.setSelectedComponent(pane);
+        handleSelectedFile();
+    }
     
+
+    public void removeTabAt(int index) {
+        super.removeTabAt(index);
+        handleSelectedFile();
+    }
+
+
+    private void handleSelectedFile() {
+        FileFollowingPane pane = (FileFollowingPane) getSelectedComponent();
+        File parent = pane.getFollowedFile().getParentFile();
+        attributes_.setLastFileChooserDirectory(parent);
+    }
+
 }
 

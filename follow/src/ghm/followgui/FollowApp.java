@@ -135,7 +135,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
     // initialize tabbedPane, but wait to open files until after frame
     // initialization
-    tabbedPane_ = new TabbedPane(attributes_.getTabPlacement());
+    tabbedPane_ = new TabbedPane(attributes_);
     enableDragAndDrop(tabbedPane_);
 
     // initialize frame

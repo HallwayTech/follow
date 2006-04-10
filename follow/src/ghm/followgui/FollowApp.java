@@ -118,6 +118,8 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     nextTab_ = new NextTab(this);
     prevTab_ = new PreviousTab(this);
     find_ = new Find(this);
+    clearHighlights_ = new ClearHighlights(this);
+    clearAllHighlights_ = new ClearAllHighlights(this);
 
     // initialize SystemInterface
     systemInterface_ = new DefaultSystemInterface(this);
@@ -137,13 +139,8 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     enableDragAndDrop(tabbedPane_);
 
     // initialize frame
-    frame_.setJMenuBar(jMenuBar);
-    frame_.getContentPane().add(toolBar_, BorderLayout.NORTH);
-    frame_.getContentPane().add(tabbedPane_, BorderLayout.CENTER);
-    frame_.setSize(
-      attributes_.getWidth(),
-      attributes_.getHeight()
-    );
+    initFrame(jMenuBar);
+
     // This is an ugly hack.  It seems like JFrame.setLocation() is buggy
     // on Solaris jdk versions before 1.4
     if (HAS_SOLARIS_BUG) {
@@ -187,7 +184,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     while (i.hasNext()) {
       file = (File)i.next();
       if (file.exists()) {
-        open(file, false, false);
+        open(file, false);
       }
       else {
         // This file has been deleted since the previous execution. Remove it
@@ -243,12 +240,27 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   }
 
   /**
+   * @param jMenuBar
+   */
+  private void initFrame(JMenuBar jMenuBar)
+  {
+    frame_.setJMenuBar(jMenuBar);
+    frame_.getContentPane().add(toolBar_, BorderLayout.NORTH);
+    frame_.getContentPane().add(tabbedPane_, BorderLayout.CENTER);
+    frame_.setSize(
+      attributes_.getWidth(),
+      attributes_.getHeight()
+    );
+  }
+
+  /**
    * Builds the menu bar for the application
    * 
    * @return reference the constructed menu bar
    */
   private JMenuBar buildMenuBar()
   {
+    // file menu
     Menu fileMenu = new Menu(
       resBundle_.getString("menu.File.name"), 
       resBundle_.getString("menu.File.mnemonic")
@@ -260,11 +272,16 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     fileMenu.addFollowAppAction(pause_);
     fileMenu.addSeparator();
     fileMenu.addFollowAppAction(exit_);
+    // edit menu
     Menu editMenu = new Menu(
       resBundle_.getString("menu.Edit.name"),
       resBundle_.getString("menu.Edit.mnemonic")
     );
     editMenu.addFollowAppAction(find_);
+    editMenu.addSeparator();
+    editMenu.addFollowAppAction(clearHighlights_);
+    editMenu.addFollowAppAction(clearAllHighlights_);
+    // tool menu
     Menu toolsMenu = new Menu(
       resBundle_.getString("menu.Tools.name"),
       resBundle_.getString("menu.Tools.mnemonic")
@@ -279,13 +296,14 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     toolsMenu.addSeparator();
     toolsMenu.addFollowAppAction(configure_);
     toolsMenu.addFollowAppAction(edit_);
+    // window menu
     Menu windowMenu = new Menu(
       resBundle_.getString("menu.Window.name"),
       resBundle_.getString("menu.Window.mnemonic")
     );
     windowMenu.addFollowAppAction(nextTab_);
     windowMenu.addFollowAppAction(prevTab_);
-    
+    // help menu
     Menu helpMenu = new Menu(
       resBundle_.getString("menu.Help.name"),
       resBundle_.getString("menu.Help.mnemonic")
@@ -295,6 +313,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         helpMenu.addSeparator();
         helpMenu.addFollowAppAction(debug_);
     }
+    // create menu bar and add menus
     JMenuBar jMenuBar = new JMenuBar();
     jMenuBar.add(fileMenu);
     jMenuBar.add(editMenu);
@@ -375,13 +394,6 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         attributes_.getLatency(),
         attributes_.autoScroll()
       );
-      // add a listener to set the pause icon correctly
-      fileFollowingPane.addComponentListener(new ComponentAdapter() {
-        public void componentShown(ComponentEvent e)
-        {
-          pause_.setIconByState(((FileFollowingPane)e.getSource()).isFollowing());
-        }
-      });
       JTextArea ffpTextArea = fileFollowingPane.getTextArea();
       enableDragAndDrop(ffpTextArea);
       ffpTextArea.setFont(attributes_.getFont());
@@ -395,6 +407,13 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         file.getAbsolutePath()
       );
       tabbedPane_.setSelectedIndex(tabbedPane_.getTabCount() - 1);
+      // add a listener to set the pause icon correctly
+      fileFollowingPane.addComponentListener(new ComponentAdapter() {
+        public void componentShown(ComponentEvent e)
+        {
+          pause_.setIconByState(((FileFollowingPane)e.getSource()).isFollowing());
+        }
+      });
       if (!close_.isEnabled()) {
         close_.setEnabled(true);
         reload_.setEnabled(true);
@@ -510,6 +529,8 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   NextTab nextTab_;
   PreviousTab prevTab_;
   Find find_;
+  ClearHighlights clearHighlights_;
+  ClearAllHighlights clearAllHighlights_;
 
   SystemInterface systemInterface_;
 
@@ -562,9 +583,11 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       instance_.startupStatus_.markDone(instance_.startupStatus_.CREATE_WIDGETS);
     }});
     instance_.startupStatus_.dispose();
-    for (int i=0; i < instance_.tabbedPane_.getTabCount(); i++) {
-      ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
-    }
+    // commented code below so that windows follow based on setting in
+    // preferences which is set on the pane when the file is opened
+//    for (int i=0; i < instance_.tabbedPane_.getTabCount(); i++) {
+//      ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
+//    }
   }
   static FollowApp instance_;
 }

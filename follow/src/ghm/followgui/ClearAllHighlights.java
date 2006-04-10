@@ -20,29 +20,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package ghm.followgui;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
+import java.util.Iterator;
 
 /**
-Action which opens a new file in the Follow application.
-@author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
-*/
-class Open extends FollowAppAction {
-
-  Open (FollowApp app) {
+ * Action which clears the highlighted search in the current pane
+ * 
+ * @author <a href="mailto:chall@cfhdev.com">Carl Hall</a>
+ */
+class ClearAllHighlights extends FollowAppAction {
+  
+  ClearAllHighlights (FollowApp app) {
     super(
       app, 
-      app.resBundle_.getString("action.Open.name"),
-      app.resBundle_.getString("action.Open.mnemonic"),
-      app.resBundle_.getString("action.Open.accelerator"),
-      app.resBundle_.getString("action.Open.icon")
-    );    
+      app.resBundle_.getString("action.ClearAllHighlights.name"),
+      app.resBundle_.getString("action.ClearAllHighlights.mnemonic"),
+      app.resBundle_.getString("action.ClearAllHighlights.accelerator")
+    );
   }
 
   public void actionPerformed (ActionEvent e) {
-    File file = app_.systemInterface_.getFileFromUser();
-    if (file != null) {
-      app_.attributes_.setLastFileChooserDirectory(file.getParentFile());
-      app_.open(file, app_.attributes_.autoScroll());
+    Iterator panes = app_.fileToFollowingPaneMap_.values().iterator();
+    while (panes.hasNext()) {
+      // get the current selected tab
+      FileFollowingPane pane = (FileFollowingPane) panes.next();
+      // search the tab with the given text
+      SearchableTextArea textArea = (SearchableTextArea) pane.getTextArea();
+      textArea.removeHighlights();
     }
   }
 }

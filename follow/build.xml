@@ -7,7 +7,7 @@
     <mkdir dir="build/classes"/>
     <javac srcdir="src" destdir="build/classes"/>
     <copy todir="build/classes/ghm/followgui">
-      <fileset dir="src/ghm/followgui" includes="*.gif"/>
+      <fileset dir="src/ghm/followgui" includes="*.gif,*.png"/>
     </copy>
     <filter token="version" value="${version}"/>
     <copy todir="build/classes/ghm/followgui" filtering="yes">

@@ -44,8 +44,7 @@ class Pause extends FollowAppAction {
    * @param e
    */
   public void actionPerformed (ActionEvent e) {
-    FileFollowingPane pane = (FileFollowingPane) app_.tabbedPane_.getSelectedComponent();
-    playPausePane(pane);
+    playPausePane(app_.getSelectedFileFollowingPane());
   }
   
   /**

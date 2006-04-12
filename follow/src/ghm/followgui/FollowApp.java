@@ -120,6 +120,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     find_ = new Find(this);
     clearHighlights_ = new ClearHighlights(this);
     clearAllHighlights_ = new ClearAllHighlights(this);
+    reset_ = new Reset(this);
 
     // initialize SystemInterface
     systemInterface_ = new DefaultSystemInterface(this);
@@ -269,6 +270,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     fileMenu.addFollowAppAction(close_);
     fileMenu.addFollowAppAction(reload_);
     fileMenu.addSeparator();
+    fileMenu.addFollowAppAction(reset_);
     fileMenu.addFollowAppAction(pause_);
     fileMenu.addSeparator();
     fileMenu.addFollowAppAction(exit_);
@@ -361,6 +363,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     toolBar_.addFollowAppAction(delete_);
     toolBar_.addFollowAppAction(deleteAll_);
     toolBar_.addSeparator();
+    toolBar_.addFollowAppAction(reset_);
     toolBar_.addFollowAppAction(pause_);
     toolBar_.addSeparator();
     toolBar_.addFollowAppAction(configure_);
@@ -531,6 +534,7 @@ GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   Find find_;
   ClearHighlights clearHighlights_;
   ClearAllHighlights clearAllHighlights_;
+  Reset reset_;
 
   SystemInterface systemInterface_;
 

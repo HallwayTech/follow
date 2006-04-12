@@ -49,7 +49,7 @@ public class Find extends FollowAppAction
 
   private int doFind() {
     // get the current selected tab
-    FileFollowingPane pane = (FileFollowingPane) app_.tabbedPane_.getSelectedComponent();
+    FileFollowingPane pane = app_.getSelectedFileFollowingPane();
     // search the tab with the given text
     SearchableTextArea textArea = (SearchableTextArea) pane.getTextArea();
     textArea.selectAll();
@@ -104,7 +104,7 @@ public class Find extends FollowAppAction
         public void actionPerformed(ActionEvent e)
         {
           // get the current selected tab
-          FileFollowingPane pane = (FileFollowingPane) app_.tabbedPane_.getSelectedComponent();
+          FileFollowingPane pane = app_.getSelectedFileFollowingPane();
           // clear the highlights from the searched tab
           SearchableTextArea textArea = (SearchableTextArea) pane.getTextArea();
           textArea.removeHighlights();

@@ -103,6 +103,7 @@ public class FileFollower {
 
   public synchronized void restart () {
     needsRestart_ = true;
+    startingPoint_ = -1;
     runnerThread_.interrupt();
   }
 
@@ -237,8 +238,6 @@ public class FileFollower {
         long lastActivityTime = 0;
 
         FileInputStream fis = new FileInputStream(file_);
-        System.out.println("File size: " + fileSize);
-        System.out.println("Buffer size: " + bufferSize_);
         // == -1 indicates that the default buffer size should be used
         // > -1 indicates that the file is being restarted and should start
         //      back at the original position

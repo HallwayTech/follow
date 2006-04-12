@@ -38,20 +38,23 @@ class Close extends FollowAppAction {
 
   public void actionPerformed (ActionEvent e) {
     FileFollowingPane fileFollowingPane = app_.getSelectedFileFollowingPane();
-    app_.tabbedPane_.removeTabAt(app_.tabbedPane_.getSelectedIndex());
-    app_.disableDragAndDrop(fileFollowingPane.getTextArea());  
-    app_.attributes_.removeFollowedFile(fileFollowingPane.getFollowedFile());
-    fileFollowingPane.stopFollowing();
-    app_.fileToFollowingPaneMap_.remove(fileFollowingPane.getFollowedFile());
-    if (app_.fileToFollowingPaneMap_.size() == 0) {
-      app_.close_.setEnabled(false);
-      app_.top_.setEnabled(false);
-      app_.bottom_.setEnabled(false);
-      app_.clear_.setEnabled(false);
-      app_.clearAll_.setEnabled(false);
-      app_.delete_.setEnabled(false);
-      app_.deleteAll_.setEnabled(false);
-      app_.pause_.setEnabled(false);
+    int tab = app_.tabbedPane_.getSelectedIndex();
+    if (tab >= 0) {
+      app_.tabbedPane_.removeTabAt(tab);
+      app_.disableDragAndDrop(fileFollowingPane.getTextArea());  
+      app_.attributes_.removeFollowedFile(fileFollowingPane.getFollowedFile());
+      fileFollowingPane.stopFollowing();
+      app_.fileToFollowingPaneMap_.remove(fileFollowingPane.getFollowedFile());
+      if (app_.fileToFollowingPaneMap_.size() == 0) {
+        app_.close_.setEnabled(false);
+        app_.top_.setEnabled(false);
+        app_.bottom_.setEnabled(false);
+        app_.clear_.setEnabled(false);
+        app_.clearAll_.setEnabled(false);
+        app_.delete_.setEnabled(false);
+        app_.deleteAll_.setEnabled(false);
+        app_.pause_.setEnabled(false);
+      }
     }
   }
 

@@ -126,7 +126,7 @@ public class FileFollower {
       Thread.yield();
     }
   }
-  
+
   /**
   Add another OutputDestination to which the followed file's contents should
   be printed.
@@ -135,7 +135,7 @@ public class FileFollower {
   public boolean addOutputDestination (OutputDestination outputDestination) {
     return outputDestinations_.add(outputDestination);
   }
-  
+
   /**
   Remove the supplied OutputDestination from the list of OutputDestinations 
   to which the followed file's contents should be printed.
@@ -144,7 +144,7 @@ public class FileFollower {
   public boolean removeOutputDestination (OutputDestination outputDestination) {
     return outputDestinations_.remove(outputDestination);
   }
-  
+
   /**
   Returns the List which maintains all OutputDestinations for this FileFollower.
   @return contains all OutputDestinations for this FileFollower
@@ -213,6 +213,7 @@ public class FileFollower {
   protected boolean continueRunning_;  
   protected boolean needsRestart_;  
   protected Thread runnerThread_;
+  protected long startingPoint_ = -1;
   
   /*
   Instances of this class are used to run a thread which follows
@@ -226,7 +227,6 @@ public class FileFollower {
       }
     }
 
-
     protected void runAction () {
       try {
         clear();
@@ -237,9 +237,23 @@ public class FileFollower {
         long lastActivityTime = 0;
 
         FileInputStream fis = new FileInputStream(file_);
+        System.out.println("File size: " + fileSize);
+        System.out.println("Buffer size: " + bufferSize_);
+        // == -1 indicates that the default buffer size should be used
+        // > -1 indicates that the file is being restarted and should start
+        //      back at the original position
+        if (startingPoint_ > -1) {
+          fis.skip(startingPoint_);
+        }
         // Skip to the end of the file.
-        if (fileSize > bufferSize_) {
+        else {
+          if (fileSize > bufferSize_) {
             fis.skip(fileSize - bufferSize_);
+            startingPoint_ = fileSize - bufferSize_;
+          }
+          else {
+            startingPoint_ = 0;
+          }
         }
 
         BufferedInputStream bis = new BufferedInputStream(fis);
@@ -299,4 +313,3 @@ public class FileFollower {
     System.getProperty("line.separator");
   
 }
-

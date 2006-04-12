@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
@@ -25,7 +26,7 @@ public class Find extends FollowAppAction
 
   Find (FollowApp app) {
     super(
-      app, 
+      app,
       app.resBundle_.getString("action.Find.name"),
       app.resBundle_.getString("action.Find.mnemonic"),
       app.resBundle_.getString("action.Find.accelerator")
@@ -44,6 +45,15 @@ public class Find extends FollowAppAction
     find_.selectAll();
     dialog_.show();
     app_.setCursor(Cursor.DEFAULT_CURSOR);
+  }
+
+  private int doFind() {
+    // get the current selected tab
+    FileFollowingPane pane = (FileFollowingPane) app_.tabbedPane_.getSelectedComponent();
+    // search the tab with the given text
+    SearchableTextArea textArea = (SearchableTextArea) pane.getTextArea();
+    textArea.selectAll();
+    return textArea.highlight(find_.getText());
   }
 
   class FindDialog extends JDialog {
@@ -73,14 +83,6 @@ public class Find extends FollowAppAction
       findPanel.add(new JLabel(app_.resBundle_.getString("dialog.Find.findText.label")));
       find_ = new JTextField(15);
       find_.setHorizontalAlignment(JTextField.LEFT);
-//      find_.addKeyListener(new KeyAdapter() {
-//        public void keyPressed(KeyEvent e)
-//        {
-//          if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-//            doFind();
-//          }
-//        }
-//      });
       findPanel.add(find_);
       // add the find button
       JButton btnFind = new JButton(app_.resBundle_.getString("dialog.Find.findButton.label"));
@@ -88,7 +90,24 @@ public class Find extends FollowAppAction
       btnFind.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e)
         {
-          doFind();
+          int found = doFind();
+          if (found == 0) {
+            JOptionPane.showMessageDialog(dialog_, "Search term not found.", "Search results",
+                JOptionPane.INFORMATION_MESSAGE);
+          }
+        }
+      });
+      // add the clear button
+      JButton btnClear = new JButton(app_.resBundle_.getString("dialog.Find.clearButton.label"));
+      btnClear.setMnemonic(app_.resBundle_.getString("dialog.Find.clearButton.mnemonic").charAt(0));
+      btnClear.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e)
+        {
+          // get the current selected tab
+          FileFollowingPane pane = (FileFollowingPane) app_.tabbedPane_.getSelectedComponent();
+          // clear the highlights from the searched tab
+          SearchableTextArea textArea = (SearchableTextArea) pane.getTextArea();
+          textArea.removeHighlights();
         }
       });
       // add the close button
@@ -103,6 +122,7 @@ public class Find extends FollowAppAction
       // add the buttons to the dialog
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
       buttonPanel.add(btnFind);
+      buttonPanel.add(btnClear);
       buttonPanel.add(btnClose);
       // add everything to the content pane
       contentPane.add(findPanel, BorderLayout.CENTER);
@@ -124,18 +144,14 @@ public class Find extends FollowAppAction
       stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
       rootPane.registerKeyboardAction(new ActionListener() {
         public void actionPerformed(ActionEvent actionEvent) {
-          doFind();
+          int found = doFind();
+          if (found == 0) {
+            JOptionPane.showMessageDialog(dialog_, "Search term not found.", "Search results",
+                JOptionPane.INFORMATION_MESSAGE);
+          }
        }
       }, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
       return rootPane;
     }
-  }
-
-  private void doFind() {
-    // get the current selected tab
-    FileFollowingPane pane = (FileFollowingPane) app_.tabbedPane_.getSelectedComponent();
-    // search the tab with the given text
-    SearchableTextArea textArea = (SearchableTextArea) pane.getTextArea();
-    textArea.highlight(find_.getText());
   }
 }

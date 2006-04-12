@@ -14,7 +14,7 @@ public class SearchableTextArea extends JTextArea {
 
   private static DefaultHighlightPainter painter = new DefaultHighlightPainter(Color.YELLOW);
 
-  public void highlight(String term) {
+  public int highlight(String term) {
     // First remove all old highlights
     removeHighlights();
 
@@ -22,16 +22,23 @@ public class SearchableTextArea extends JTextArea {
     int pos = 0;
 
     // Search for pattern
+    int numFound = 0;
     try {
-      while ((pos = search(term, pos)) > -1) {
+      Document doc = getDocument();
+      String text = doc.getText(0, doc.getLength());
+      
+      while ((pos = text.indexOf(term, pos)) > -1) {
         // Create highlighter using private painter and apply around pattern
         hilite.addHighlight(pos, pos+term.length(), painter);
         pos += term.length();
+        numFound++;
       }
+      
     }
     catch (BadLocationException e) {
       // don't worry about it
     }
+    return numFound;
   }
 
   /**

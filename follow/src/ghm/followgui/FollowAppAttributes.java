@@ -90,6 +90,11 @@ class FollowAppAttributes {
             app.resBundle_.getString("v1.4.info.title"),
             JOptionPane.INFORMATION_MESSAGE
           );
+        case v1_4:
+          // Migrate 1.4 attributes to 1.5 attributes
+          System.out.println("Migrating v1.4 properties to v.1.5.");
+          setAttributesVersion(v1_5_0);
+          setTabSize(4);
       }
       fis.close();
     }
@@ -144,7 +149,7 @@ class FollowAppAttributes {
       fileNames
     );
   }
-  
+
   void removeFollowedFile (File file) {
     List fileNames = properties_.getEnumeratedProperty(followedFilesKey);
     fileNames.remove(file.getAbsolutePath());
@@ -158,7 +163,15 @@ class FollowAppAttributes {
   void setTabPlacement (int tabPlacement) {
     setInt(tabPlacementKey, tabPlacement);
   }
-  
+
+  int getTabSize() {return getInt(tabSizeKey); }
+  void setTabSize(int tabSize) {
+    setInt(tabSizeKey, tabSize);
+  }
+  void setTabSize (String tabSize) { 
+    setTabSize(Integer.parseInt(tabSize));
+  }
+
   int getSelectedTabIndex () {
     try { return getInt(selectedTabIndexKey); }
     catch (NumberFormatException e) {
@@ -344,6 +357,7 @@ availableFontFamilyNames[0] + " instead."
   static final String confirmDeleteAllKey = "confirmDeleteAll";
   static final String autoScrollKey = "autoScroll";
   static final String editorKey = "editor";
+  static final String tabSizeKey = "tabSize";
 
   // Versions
   static final int UNVERSIONED = 0;
@@ -352,6 +366,5 @@ availableFontFamilyNames[0] + " instead."
   static final int v1_3 = 3;
   static final int v1_3_2 = 4;
   static final int v1_4 = 5;
-
+  static final int v1_5_0 = 6;
 }
-

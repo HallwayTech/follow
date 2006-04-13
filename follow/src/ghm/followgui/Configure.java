@@ -27,6 +27,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -38,8 +39,10 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 /**
 Action which brings up a dialog allowing one to configure the Follow 
@@ -72,6 +75,7 @@ class Configure extends FollowAppAction {
     dialog_.confirmDeleteAll_.setValue(app_.attributes_.confirmDeleteAll());
     dialog_.autoScroll_.setValue(app_.attributes_.autoScroll());
     dialog_.editor_.setText(String.valueOf(app_.attributes_.getEditor()));
+    dialog_.tabSize_.setText(String.valueOf(app_.attributes_.getTabSize()));
     dialog_.fontSelectionPanel_.setSelectedFont(app_.attributes_.getFont());
     // Quasi-kludge to get around font repainting issue
     dialog_.setLocationRelativeTo(app_.frame_);
@@ -85,7 +89,18 @@ class Configure extends FollowAppAction {
   CfgDialog dialog_ = null;
   
   class CfgDialog extends JDialog {
-    
+    protected JRootPane createRootPane()
+    {
+      KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+      JRootPane rootPane = new JRootPane();
+      rootPane.registerKeyboardAction(new ActionListener() {
+        public void actionPerformed(ActionEvent actionEvent) {
+          dialog_.close_.doClick();
+       }
+      }, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+      return rootPane;
+    }
+
     CfgDialog () {
       super(
         Configure.this.app_.frame_, 
@@ -286,6 +301,31 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
       gbc.fill = GridBagConstraints.NONE;
       configPanel.add(editorInfo, gbc);
 
+      // tabSize
+      gbc.gridx = 0;
+      gbc.gridy++;
+      gbc.ipadx = 4;
+      configPanel.add(
+  new JLabel(app_.resBundle_.getString("dialog.Configure.tabSize.label")),
+  gbc
+      );
+      tabSize_ = new JTextField();
+      tabSize_.setHorizontalAlignment(JTextField.RIGHT);
+      gbc.gridx = 1;
+      gbc.weightx = 1;
+      gbc.ipadx = 0;
+      gbc.fill = GridBagConstraints.HORIZONTAL;
+      configPanel.add(tabSize_, gbc);
+      JButton tabSizeInfo = new WhatIsThis(
+        app_,
+        app_.resBundle_.getString("WhatIsThis.tabSize.title"),
+        app_.resBundle_.getString("WhatIsThis.tabSize.text")
+      );
+      gbc.gridx = 2;
+      gbc.weightx = 0;
+      gbc.fill = GridBagConstraints.NONE;
+      configPanel.add(tabSizeInfo, gbc);
+
       // font selection
       fontSelectionPanel_ = new CfgFontSelectionPanel();
       // Must change border to top=0 because of default top in titled border
@@ -306,13 +346,13 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
       contentPane.add(configPanel, BorderLayout.CENTER);
     
       // Save button
-      JButton save = new JButton(
+      save_ = new JButton(
         app_.resBundle_.getString("dialog.Configure.save.label")
       );
-      save.setMnemonic(
+      save_.setMnemonic(
         app_.resBundle_.getString("dialog.Configure.save.mnemonic").charAt(0)
       );
-      save.addActionListener(new ActionListener () {
+      save_.addActionListener(new ActionListener () {
         public void actionPerformed (ActionEvent e) {
           // Validate fields
           StringBuffer invalidFieldsMessage = new StringBuffer();
@@ -357,6 +397,7 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
             app_.attributes_.setConfirmDeleteAll(confirmDeleteAll_.getValue());
             app_.attributes_.setAutoScroll(autoScroll_.getValue());
             app_.attributes_.setEditor(editor_.getText());
+            app_.attributes_.setTabSize(tabSize_.getText());
             Font selectedFont;
             try { selectedFont = fontSelectionPanel_.getSelectedFont(); }
             catch (FontSelectionPanel.InvalidFontException ife) {
@@ -378,6 +419,7 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
               pane.getFileFollower().setLatency(app_.attributes_.getLatency());
               pane.getTextArea().setFont(selectedFont);
               pane.setAutoPositionCaret(app_.attributes_.autoScroll());
+              pane.getTextArea().setTabSize(app_.attributes_.getTabSize());
               app_.tabbedPane_.invalidate();
               app_.tabbedPane_.repaint();
             }
@@ -390,13 +432,13 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
       });
       
       // Restore Defaults button
-      JButton restoreDefaults = new JButton(
+      restoreDefaults_ = new JButton(
         app_.resBundle_.getString("dialog.Configure.restoreDefaults.label")
       );
-      restoreDefaults.setMnemonic(app_.resBundle_.
+      restoreDefaults_.setMnemonic(app_.resBundle_.
         getString("dialog.Configure.restoreDefaults.mnemonic").charAt(0)
       );
-      restoreDefaults.addActionListener(new ActionListener () {
+      restoreDefaults_.addActionListener(new ActionListener () {
         public void actionPerformed (ActionEvent e) {
           try {
   bufferSize_.setText(
@@ -436,20 +478,20 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
       });
 
       // Close button
-      JButton close = new JButton(
+      close_ = new JButton(
         app_.resBundle_.getString("dialog.Configure.close.label")
       );
-      close.setMnemonic(
+      close_.setMnemonic(
         app_.resBundle_.getString("dialog.Configure.close.mnemonic").charAt(0)
       );
-      close.addActionListener(new ActionListener () {
+      close_.addActionListener(new ActionListener () {
         public void actionPerformed (ActionEvent e) { dispose(); }
       });
 
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-      buttonPanel.add(save);
-      buttonPanel.add(restoreDefaults);
-      buttonPanel.add(close);
+      buttonPanel.add(save_);
+      buttonPanel.add(restoreDefaults_);
+      buttonPanel.add(close_);
       contentPane.add(buttonPanel, BorderLayout.SOUTH);
     }
     
@@ -469,7 +511,11 @@ app_.resBundle_.getString("dialog.Configure.autoScroll.no.displayValue")
     BooleanComboBox confirmDeleteAll_;
     BooleanComboBox autoScroll_;
     JTextField editor_;
+    JTextField tabSize_;
     CfgFontSelectionPanel fontSelectionPanel_;
+    JButton save_;
+    JButton restoreDefaults_;
+    JButton close_;
   }
 
   private class TabPlacementValue {

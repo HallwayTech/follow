@@ -23,6 +23,9 @@ public class Find extends FollowAppAction
 {
   FindDialog dialog_;
   JTextField find_;
+  JButton findButton_;
+  JButton clearButton_;
+  JButton closeButton_;
 
   Find (FollowApp app) {
     super(
@@ -85,9 +88,9 @@ public class Find extends FollowAppAction
       find_.setHorizontalAlignment(JTextField.LEFT);
       findPanel.add(find_);
       // add the find button
-      JButton btnFind = new JButton(app_.resBundle_.getString("dialog.Find.findButton.label"));
-      btnFind.setMnemonic(app_.resBundle_.getString("dialog.Find.findButton.mnemonic").charAt(0));
-      btnFind.addActionListener(new ActionListener() {
+      findButton_ = new JButton(app_.resBundle_.getString("dialog.Find.findButton.label"));
+      findButton_.setMnemonic(app_.resBundle_.getString("dialog.Find.findButton.mnemonic").charAt(0));
+      findButton_.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e)
         {
           int found = doFind();
@@ -98,9 +101,9 @@ public class Find extends FollowAppAction
         }
       });
       // add the clear button
-      JButton btnClear = new JButton(app_.resBundle_.getString("dialog.Find.clearButton.label"));
-      btnClear.setMnemonic(app_.resBundle_.getString("dialog.Find.clearButton.mnemonic").charAt(0));
-      btnClear.addActionListener(new ActionListener() {
+      clearButton_ = new JButton(app_.resBundle_.getString("dialog.Find.clearButton.label"));
+      clearButton_.setMnemonic(app_.resBundle_.getString("dialog.Find.clearButton.mnemonic").charAt(0));
+      clearButton_.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e)
         {
           // get the current selected tab
@@ -111,9 +114,9 @@ public class Find extends FollowAppAction
         }
       });
       // add the close button
-      JButton btnClose = new JButton(app_.resBundle_.getString("dialog.Find.closeButton.label"));
-      btnClose.setMnemonic(app_.resBundle_.getString("dialog.Find.closeButton.mnemonic").charAt(0));
-      btnClose.addActionListener(new ActionListener() {
+      closeButton_ = new JButton(app_.resBundle_.getString("dialog.Find.closeButton.label"));
+      closeButton_.setMnemonic(app_.resBundle_.getString("dialog.Find.closeButton.mnemonic").charAt(0));
+      closeButton_.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e)
         {
           dialog_.hide();
@@ -121,9 +124,9 @@ public class Find extends FollowAppAction
       });
       // add the buttons to the dialog
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-      buttonPanel.add(btnFind);
-      buttonPanel.add(btnClear);
-      buttonPanel.add(btnClose);
+      buttonPanel.add(findButton_);
+      buttonPanel.add(clearButton_);
+      buttonPanel.add(closeButton_);
       // add everything to the content pane
       contentPane.add(findPanel, BorderLayout.CENTER);
       contentPane.add(buttonPanel, BorderLayout.SOUTH);
@@ -138,17 +141,13 @@ public class Find extends FollowAppAction
       JRootPane rootPane = new JRootPane();
       rootPane.registerKeyboardAction(new ActionListener() {
         public void actionPerformed(ActionEvent actionEvent) {
-          hide();
+          closeButton_.doClick();
        }
       }, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
       stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
       rootPane.registerKeyboardAction(new ActionListener() {
         public void actionPerformed(ActionEvent actionEvent) {
-          int found = doFind();
-          if (found == 0) {
-            JOptionPane.showMessageDialog(dialog_, "Search term not found.", "Search results",
-                JOptionPane.INFORMATION_MESSAGE);
-          }
+          findButton_.doClick();
        }
       }, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
       return rootPane;

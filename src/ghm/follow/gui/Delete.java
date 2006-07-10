@@ -47,7 +47,7 @@ public class Delete extends FollowAppAction {
 					.getResourceBundle().getString("dialog.confirmDelete.doNotConfirmButtonText"),
 					getApp().getResourceBundle().getString("dialog.confirmDelete.disableText"));
 			confirm.pack();
-			confirm.show();
+			confirm.setVisible(true);
 			if (confirm.markedDisabled()) {
 				getApp().getAttributes().setConfirmDelete(false);
 			}

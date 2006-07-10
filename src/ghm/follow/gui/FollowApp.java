@@ -110,7 +110,7 @@ public class FollowApp {
 		startupStatus_.pack();
 		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {
-				startupStatus_.show();
+				startupStatus_.setVisible(true);
 			}
 		});
 
@@ -393,7 +393,7 @@ public class FollowApp {
 	private StartupStatus startupStatus_;
 
 	public void show() {
-		frame_.show();
+		frame_.setVisible(true);
 	}
 
 	/**

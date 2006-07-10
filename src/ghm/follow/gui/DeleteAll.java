@@ -50,7 +50,7 @@ public class DeleteAll extends FollowAppAction {
 							"dialog.confirmDeleteAll.doNotConfirmButtonText"), getApp()
 							.getResourceBundle().getString("dialog.confirmDeleteAll.disableText"));
 			confirm.pack();
-			confirm.show();
+			confirm.setVisible(true);
 			if (confirm.markedDisabled()) {
 				getApp().getAttributes().setConfirmDeleteAll(false);
 			}

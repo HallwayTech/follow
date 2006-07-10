@@ -87,7 +87,7 @@ public class Configure extends FollowAppAction {
 		// No need to set font; this is taken care of during CfgDialog
 		// construction
 		dialog_.pack();
-		dialog_.show();
+		dialog_.setVisible(true);
 		getApp().setCursor(Cursor.DEFAULT_CURSOR);
 	}
 

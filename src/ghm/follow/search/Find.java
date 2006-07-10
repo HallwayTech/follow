@@ -47,7 +47,7 @@ public class Find extends FollowAppAction {
 		}
 		find_.grabFocus();
 		find_.selectAll();
-		dialog_.show();
+		dialog_.setVisible(true);
 		getApp().setCursor(Cursor.DEFAULT_CURSOR);
 	}
 
@@ -67,7 +67,7 @@ public class Find extends FollowAppAction {
 			addKeyListener(new KeyAdapter() {
 				public void keyPressed(KeyEvent e) {
 					if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-						hide();
+						setVisible(false);
 					}
 				}
 			});
@@ -118,7 +118,7 @@ public class Find extends FollowAppAction {
 					"dialog.Find.closeButton.mnemonic").charAt(0));
 			closeButton_.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					dialog_.hide();
+					dialog_.setVisible(false);
 				}
 			});
 			// add the buttons to the dialog

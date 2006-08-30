@@ -365,8 +365,9 @@ public class FontSelectionPanel extends JPanel {
 	public void setSelectedFontFamily(String family) {
 		ListModel familyListModel = fontFamilyList_.getModel();
 		for (int i = 0; i < familyListModel.getSize(); i++) {
-			if (familyListModel.getElementAt(i).equals(family)) {
-				fontFamilyList_.setSelectedValue(family, true);
+                        String listEntry = String.valueOf(familyListModel.getElementAt(i));
+			if (listEntry.equalsIgnoreCase(family)) {
+				fontFamilyList_.setSelectedValue(listEntry, true);
 				return;
 			}
 		}

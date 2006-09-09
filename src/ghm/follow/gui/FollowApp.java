@@ -611,21 +611,26 @@ public class FollowApp {
 	 * @param args
 	 *            files to be opened
 	 */
-	public static void main(String[] args) throws IOException, InterruptedException,
-			InvocationTargetException {
-		instance_ = new FollowApp(args);
-		SwingUtilities.invokeAndWait(new Runnable() {
-			public void run() {
-				// ensure all widgets inited before opening files
-				instance_.show();
-				instance_.startupStatus_.markDone(instance_.startupStatus_.CREATE_WIDGETS);
-			}
-		});
-		instance_.startupStatus_.dispose();
-		// commented code below so that windows follow based on setting in
-		// preferences which is set on the pane when the file is opened
-		// for (int i=0; i < instance_.tabbedPane_.getTabCount(); i++) {
-		// ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
-		// }
+	public static void main(String[] args) {
+		try {
+			instance_ = new FollowApp(args);
+			SwingUtilities.invokeAndWait(new Runnable() {
+				public void run() {
+					// ensure all widgets inited before opening files
+					instance_.show();
+					instance_.startupStatus_.markDone(instance_.startupStatus_.CREATE_WIDGETS);
+				}
+			});
+			instance_.startupStatus_.dispose();
+			// commented code below so that windows follow based on setting in
+			// preferences which is set on the pane when the file is opened
+			// for (int i=0; i < instance_.tabbedPane_.getTabCount(); i++) {
+			// ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
+			// }
+		}
+		catch (Throwable t) {
+			t.printStackTrace();
+			System.exit(-1);
+		}
 	}
 }

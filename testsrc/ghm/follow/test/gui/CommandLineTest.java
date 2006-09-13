@@ -5,7 +5,6 @@ import ghm.follow.gui.Exit;
 import ghm.follow.gui.FollowApp;
 
 import java.io.File;
-import java.util.Iterator;
 
 public class CommandLineTest extends AppLaunchingTestCase {
 
@@ -21,24 +20,24 @@ public class CommandLineTest extends AppLaunchingTestCase {
     FollowApp.main(new String[0]);
     doPostLaunch();
     assertEquals(false, 
-      FollowApp.getInstance().getAttributes().getFollowedFiles().hasNext());
+      FollowApp.getInstance().getAttributes().getFollowedFiles().length == 0);
   }
 
   public void testOneArg () throws Exception {
     File temp = createTempFile();
     FollowApp.main(new String[]{temp.toString()});
     doPostLaunch();
-    Iterator followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
-    File followedFile = (File)followedFiles.next();
-    assertEquals(false, followedFiles.hasNext());
+    File[] followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
+    File followedFile = (File) followedFiles[0];
+    assertEquals(false, followedFiles.length > 1);
     assertEquals(temp, followedFile);
     invokeAction(app_.getAction(Exit.NAME));
     while (!systemInterface_.exitCalled()) { Thread.sleep(250); }
     FollowApp.main(new String[]{temp.toString()});
     doPostLaunch();
     followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
-    followedFile = (File)followedFiles.next();
-    assertEquals(false, followedFiles.hasNext());
+    followedFile = (File) followedFiles[1];
+    assertEquals(false, followedFiles.length > 2);
     assertEquals(temp, followedFile);
   }
 
@@ -46,10 +45,10 @@ public class CommandLineTest extends AppLaunchingTestCase {
     File[] temp = new File[]{createTempFile(), createTempFile()};
     FollowApp.main(new String[]{temp[0].toString(), temp[1].toString()});
     doPostLaunch();
-    Iterator followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
-    assertEquals(temp[0], followedFiles.next());
-    assertEquals(temp[1], followedFiles.next());
-    assertEquals(false, followedFiles.hasNext());
+    File[] followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
+    assertEquals(temp[0], followedFiles[0]);
+    assertEquals(temp[1], followedFiles[1]);
+    assertEquals(false, followedFiles.length > 2);
   }
 
   public void testDuplicateArgs () throws Exception {
@@ -58,9 +57,8 @@ public class CommandLineTest extends AppLaunchingTestCase {
       temp.toString(), createTempFile().toString(), temp.toString()
     });
     doPostLaunch();
-    Iterator followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
-    assertEquals(temp, followedFiles.next());
-    followedFiles.next();
-    assertEquals(false, followedFiles.hasNext());
+    File[] followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
+    assertEquals(temp, followedFiles[0]);
+    assertEquals(false, followedFiles.length > 2);
   }
 }

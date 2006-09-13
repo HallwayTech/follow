@@ -51,7 +51,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -89,7 +88,7 @@ public class FollowApp {
 	public static final String MESSAGE_LINE_SEPARATOR = "\n";
 	public static final boolean DEBUG = Boolean.getBoolean("follow.debug");
 	public static boolean HAS_SOLARIS_BUG = false;
-	
+
 	public FollowAppAction getAction(String name) {
 		return (FollowAppAction) actions_.get(name);
 	}
@@ -223,12 +222,12 @@ public class FollowApp {
 		// before frame creation (as in v1.0), frame creation may take longer
 		// because there are more threads (spawned in the course of open())
 		// contending for processor time.
-		Iterator i = getAttributes().getFollowedFiles();
+		File[] files = getAttributes().getFollowedFiles();
 		StringBuffer nonexistentFilesBuffer = null;
 		int nonexistentFileCount = 0;
 		File file;
-		while (i.hasNext()) {
-			file = (File) i.next();
+		for (int i = 0; i < files.length; i++) {
+			file = files[i];
 			if (file.exists()) {
 				open(file, false);
 			}
@@ -304,6 +303,9 @@ public class FollowApp {
 		fileMenu.addFollowAppAction(getAction(Reset.NAME));
 		fileMenu.addFollowAppAction(getAction(Pause.NAME));
 		fileMenu.addSeparator();
+		fileMenu.add(new Menu(getResourceBundle().getString("menu.RecentFiles.name"),
+				getResourceBundle().getString("menu.RecentFiles.mnemonic")));
+		fileMenu.addSeparator();
 		fileMenu.addFollowAppAction(getAction(Exit.NAME));
 		// edit menu
 		Menu editMenu = new Menu(getResourceBundle().getString("menu.Edit.name"),
@@ -338,6 +340,9 @@ public class FollowApp {
 			helpMenu.addSeparator();
 			helpMenu.addFollowAppAction(getAction(Debug.NAME));
 		}
+		// populate the recent documents menu
+		// TODO add method to get this list and associate to menu
+
 		// create menu bar and add menus
 		JMenuBar jMenuBar = new JMenuBar();
 		jMenuBar.add(fileMenu);
@@ -423,7 +428,8 @@ public class FollowApp {
 			// add a listener to set the pause icon correctly
 			fileFollowingPane.addComponentListener(new ComponentAdapter() {
 				public void componentShown(ComponentEvent e) {
-					((Pause) getAction(Pause.NAME)).setIconByState(((FileFollowingPane) e.getSource()).isFollowing());
+					((Pause) getAction(Pause.NAME)).setIconByState(((FileFollowingPane) e
+							.getSource()).isFollowing());
 				}
 			});
 			if (!getAction(Close.NAME).isEnabled()) {
@@ -550,30 +556,6 @@ public class FollowApp {
 	public JTabbedPane getTabbedPane() {
 		return tabbedPane_;
 	}
-
-	// Actions
-//	Open open_;
-//	Close close_;
-//	Reload reload_;
-//	Edit edit_;
-//	Exit exit_;
-//	Top top_;
-//	Bottom bottom_;
-//	Clear clear_;
-//	ClearAll clearAll_;
-//	Delete delete_;
-//	DeleteAll deleteAll_;
-//	Configure configure_;
-//	About about_;
-//	Debug debug_;
-//	Pause pause_;
-//	NextTab nextTab_;
-//	PreviousTab prevTab_;
-//	Find find_;
-//	ClearHighlights clearHighlights_;
-//	ClearAllHighlights clearAllHighlights_;
-//	Reset reset_;
-//	SystemInterface systemInterface_;
 
 	// We should remove this hack once JDK 1.4 gets wide adoption on Solaris.
 	static {

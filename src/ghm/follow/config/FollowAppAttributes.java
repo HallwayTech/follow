@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -91,7 +90,12 @@ public class FollowAppAttributes {
 				System.out.println("Migrating v1.4 properties to v.1.5.");
 				setAttributesVersion(v1_5_0);
 				setTabSize(4);
-			}
+			case v1_6_0:
+				// Migrate 1.5.0 attributes to 1.6.0 attributes
+				System.out.println("Migrating v1.5 properties to 1.6.0.");
+				setAttributesVersion(v1_6_0);
+				setRecentFilesMax(5);
+			}			
 			fis.close();
 		}
 	}
@@ -132,14 +136,18 @@ public class FollowAppAttributes {
 		setInt(Y_KEY, y);
 	}
 
-	public Iterator getFollowedFiles() {
-		List fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
-		List files = new ArrayList();
+	public File[] getFollowedFiles() {
+		return getFiles(properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY));
+	}
+	
+	protected File[] getFiles(List fileNames) {
+		File[] files = new File[fileNames.size()];
 		Iterator i = fileNames.iterator();
+		int count = 0;
 		while (i.hasNext()) {
-			files.add(new File((String) i.next()));
+			files[count] = new File((String) i.next());
 		}
-		return files.iterator();
+		return files;
 	}
 
 	/**
@@ -148,14 +156,35 @@ public class FollowAppAttributes {
 	 *         File
 	 */
 	public boolean followedFileListContains(File file) throws IOException {
-		Iterator i = getFollowedFiles();
-		while (i.hasNext()) {
-			File nextFile = (File) i.next();
-			if (nextFile.getCanonicalPath().equals(file.getCanonicalPath())) {
-				return true;
+		return fileListContains(getFollowedFiles(), file);
+	}
+	
+	/**
+	 * @return true iff any File in the List of recent Files
+	 *         (getFollowedFiles()) has the same Canonical Path as the supplied
+	 *         File
+	 */
+	public boolean recentFileListContains(File file) throws IOException {
+		return fileListContains(getRecentFiles(), file);
+	}
+	
+	/**
+	 * @return true iff any File in the List of Files
+	 *         (getFollowedFiles()) has the same Canonical Path as the supplied
+	 *         File
+	 */
+	protected boolean fileListContains(File[] fileList, File file) throws IOException {
+		boolean retval = false;
+		if (fileList != null && file != null) {
+			for (int i = 0; i < fileList.length; i++) {
+				File nextFile = fileList[i];
+				if (nextFile.getCanonicalPath().equals(file.getCanonicalPath())) {
+					retval = true;
+					break;
+				}
 			}
 		}
-		return false;
+		return retval;
 	}
 
 	public void addFollowedFile(File file) {
@@ -300,6 +329,31 @@ public class FollowAppAttributes {
 		properties_.setProperty(EDITOR_KEY, value);
 	}
 
+	public void addRecentFile(File file) {
+		List fileNames = properties_.getEnumeratedProperty(RECENT_FILES_KEY);
+		fileNames.add(file.getAbsolutePath());
+		properties_.setEnumeratedProperty(RECENT_FILES_KEY, fileNames);
+	}
+
+	public File[] getRecentFiles() {
+		List fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
+		File[] files = new File[fileNames.size()];
+		Iterator i = fileNames.iterator();
+		int count = 0;
+		while (i.hasNext()) {
+			files[count] = new File((String) i.next());
+		}
+		return files;
+	}
+	
+	public int getRecentFilesMax() {
+		return getInt(RECENT_FILES_MAX_KEY);
+	}
+	
+	public void setRecentFilesMax(int max) {
+		setInt(RECENT_FILES_MAX_KEY, max);
+	}
+
 	public void store() throws IOException {
 		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(propertyFileName));
 		properties_.store(bos, null);
@@ -375,6 +429,7 @@ public class FollowAppAttributes {
 	public static final File PROPERTY_FILE = new File(propertyFileName);
 	public static final String PROPERTY_PROTOTYPE_FILE_NAME = "followApp.properties.prototype";
 	public static final int BUFFER_SIZE = 32768;
+
 	public static final String HEIGHT_KEY = "height";
 	public static final String WIDTH_KEY = "width";
 	public static final String X_KEY = "x";
@@ -394,6 +449,8 @@ public class FollowAppAttributes {
 	public static final String AUTO_SCROLL_KEY = "autoScroll";
 	public static final String EDITOR_KEY = "editor";
 	public static final String TAB_SIZE_KEY = "tabSize";
+	public static final String RECENT_FILES_MAX_KEY = "recentFilesMax";
+	public static final String RECENT_FILES_KEY = "recentFiles";
 
 	// Versions
 	public static final int UNVERSIONED = 0;
@@ -403,4 +460,5 @@ public class FollowAppAttributes {
 	public static final int v1_3_2 = 4;
 	public static final int v1_4 = 5;
 	public static final int v1_5_0 = 6;
+	public static final int v1_6_0 = 7;
 }

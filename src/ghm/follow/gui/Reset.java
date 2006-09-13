@@ -25,6 +25,8 @@ public class Reset extends FollowAppAction {
 
 	public void actionPerformed(ActionEvent e) {
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
-		fileFollowingPane.restartFollowing();
+		if (fileFollowingPane != null) {
+			fileFollowingPane.restartFollowing();
+		}
 	}
 }

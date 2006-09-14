@@ -81,6 +81,8 @@ public class Configure extends FollowAppAction {
 		dialog_.editor_.setText(String.valueOf(getApp().getAttributes().getEditor()));
 		dialog_.tabSize_.setText(String.valueOf(getApp().getAttributes().getTabSize()));
 		dialog_.fontSelectionPanel_.setSelectedFont(getApp().getAttributes().getFont());
+		dialog_.recentFilesMax_.setText(String
+				.valueOf(getApp().getAttributes().getRecentFilesMax()));
 		// Quasi-kludge to get around font repainting issue
 		dialog_.setLocationRelativeTo(getApp().getFrame());
 		dialog_.setLocation(30, 30);
@@ -286,6 +288,27 @@ public class Configure extends FollowAppAction {
 			gbc.fill = GridBagConstraints.NONE;
 			configPanel.add(tabSizeInfo, gbc);
 
+			// recentFilesMax
+			gbc.gridx = 0;
+			gbc.gridy++;
+			gbc.ipadx = 4;
+			configPanel.add(new JLabel(getApp().getResourceBundle().getString(
+					"dialog.Configure.recentFilesMax.label")), gbc);
+			recentFilesMax_ = new JTextField();
+			recentFilesMax_.setHorizontalAlignment(JTextField.RIGHT);
+			gbc.gridx = 1;
+			gbc.weightx = 1;
+			gbc.ipadx = 0;
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+			configPanel.add(recentFilesMax_, gbc);
+			JButton recentFilesMaxInfo = new WhatIsThis(getApp(), getApp().getResourceBundle()
+					.getString("WhatIsThis.recentFilesMax.title"), getApp().getResourceBundle()
+					.getString("WhatIsThis.recentFilesMax.text"));
+			gbc.gridx = 2;
+			gbc.weightx = 0;
+			gbc.fill = GridBagConstraints.NONE;
+			configPanel.add(recentFilesMaxInfo, gbc);
+
 			// font selection
 			fontSelectionPanel_ = new CfgFontSelectionPanel();
 			// Must change border to top=0 because of default top in titled
@@ -324,6 +347,12 @@ public class Configure extends FollowAppAction {
 						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
 						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
 					}
+					if (!isPositiveInteger(recentFilesMax_.getText())) {
+						invalidFieldsMessage.append(getApp().getResourceBundle().getString(
+								"dialog.Configure.recentFilesMaxInvalid.text"));
+						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
+						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
+					}
 					try {
 						fontSelectionPanel_.getSelectedFont();
 					}
@@ -350,6 +379,8 @@ public class Configure extends FollowAppAction {
 						getApp().getAttributes().setAutoScroll(autoScroll_.getValue());
 						getApp().getAttributes().setEditor(editor_.getText());
 						getApp().getAttributes().setTabSize(tabSize_.getText());
+						getApp().getAttributes().setRecentFilesMax(recentFilesMax_.getText());
+						getApp().refreshRecentFilesMenu();
 						Font selectedFont;
 						try {
 							selectedFont = fontSelectionPanel_.getSelectedFont();
@@ -408,6 +439,8 @@ public class Configure extends FollowAppAction {
 								.getDefaultAttributes().getEditor()));
 						fontSelectionPanel_.setSelectedFont(getApp().getAttributes()
 								.getDefaultAttributes().getFont());
+						recentFilesMax_.setText(String.valueOf(getApp().getAttributes()
+								.getDefaultAttributes().getRecentFilesMax()));
 					}
 					catch (IOException ioe) {
 						JOptionPane.showMessageDialog(getApp().getFrame(), getApp()
@@ -452,27 +485,17 @@ public class Configure extends FollowAppAction {
 		}
 
 		JTextField bufferSize_;
-
 		JTextField latency_;
-
 		JComboBox tabPlacement_;
-
 		BooleanComboBox confirmDelete_;
-
 		BooleanComboBox confirmDeleteAll_;
-
 		BooleanComboBox autoScroll_;
-
 		JTextField editor_;
-
 		JTextField tabSize_;
-
+		JTextField recentFilesMax_;
 		CfgFontSelectionPanel fontSelectionPanel_;
-
 		JButton save_;
-
 		JButton restoreDefaults_;
-
 		JButton close_;
 	}
 

@@ -77,8 +77,8 @@ class TabbedPane extends JTabbedPane {
 	}
 
 	public void removeTabAt(int index) {
-		super.removeTabAt(index);
 		handleSelectedFile();
+		super.removeTabAt(index);
 	}
 
 	private void handleSelectedFile() {

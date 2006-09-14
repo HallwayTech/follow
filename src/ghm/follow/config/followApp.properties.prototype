@@ -13,3 +13,4 @@ confirmDelete=true
 confirmDeleteAll=true
 autoScroll=true
 tabSize=4
+recentFilesMax=5

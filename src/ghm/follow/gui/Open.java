@@ -25,9 +25,12 @@ import java.io.File;
  * Action which opens a new file in the Follow application.
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
+ * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public class Open extends FollowAppAction {
 	public static final String NAME = "open";
+
+	private File recentFile;
 
 	public Open(FollowApp app) {
 		super(app, app.getResourceBundle().getString("action.Open.name"), app.getResourceBundle()
@@ -35,10 +38,22 @@ public class Open extends FollowAppAction {
 				"action.Open.accelerator"), app.getResourceBundle().getString("action.Open.icon"));
 	}
 
+	public Open(FollowApp app, File recentFile) {
+		super(app, recentFile.getName(), app.getResourceBundle()
+				.getString("action.Open.mnemonic"), app.getResourceBundle().getString(
+				"action.Open.accelerator"));
+		this.recentFile = recentFile;
+	}
+
 	public void actionPerformed(ActionEvent e) {
-		File file = getApp().getSystemInterface().getFileFromUser();
-		if (file != null) {
-			getApp().open(file, getApp().getAttributes().autoScroll());
+		if (recentFile != null) {
+			getApp().open(recentFile, getApp().getAttributes().autoScroll());
+		}
+		else {
+			File file = getApp().getSystemInterface().getFileFromUser();
+			if (file != null) {
+				getApp().open(file, getApp().getAttributes().autoScroll());
+			}
 		}
 	}
 }

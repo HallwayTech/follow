@@ -90,12 +90,12 @@ public class FollowAppAttributes {
 				System.out.println("Migrating v1.4 properties to v.1.5.");
 				setAttributesVersion(v1_5_0);
 				setTabSize(4);
-			case v1_6_0:
+			case v1_5_0:
 				// Migrate 1.5.0 attributes to 1.6.0 attributes
 				System.out.println("Migrating v1.5 properties to 1.6.0.");
 				setAttributesVersion(v1_6_0);
 				setRecentFilesMax(5);
-			}			
+			}
 			fis.close();
 		}
 	}
@@ -136,50 +136,72 @@ public class FollowAppAttributes {
 		setInt(Y_KEY, y);
 	}
 
+	/**
+	 * Get an array files being followed
+	 * 
+	 * @return File[] File array of followed files
+	 */
 	public File[] getFollowedFiles() {
-		return getFiles(properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY));
+		return getFiles(getFollowedFilesList());
 	}
-	
-	protected File[] getFiles(List fileNames) {
-		File[] files = new File[fileNames.size()];
-		Iterator i = fileNames.iterator();
+
+	/**
+	 * Get a list of files being followed
+	 * 
+	 * @return List file names as Strings
+	 */
+	private List getFollowedFilesList() {
+		return properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
+	}
+
+	protected File[] getFiles(List fileList) {
+		File[] files = new File[fileList.size()];
+		Iterator i = fileList.iterator();
 		int count = 0;
 		while (i.hasNext()) {
-			files[count] = new File((String) i.next());
+			files[count++] = new File((String) i.next());
 		}
 		return files;
 	}
 
 	/**
+	 * Checks the existence of a file in the list of followed files
+	 * 
 	 * @return true iff any File in the List of followed Files
 	 *         (getFollowedFiles()) has the same Canonical Path as the supplied
 	 *         File
 	 */
-	public boolean followedFileListContains(File file) throws IOException {
-		return fileListContains(getFollowedFiles(), file);
+	public boolean followedFileListContains(File file) {
+		return fileListContains(getFollowedFilesList(), file);
 	}
-	
+
 	/**
+	 * Checks the existence of a file in the list of recent files
+	 * 
 	 * @return true iff any File in the List of recent Files
 	 *         (getFollowedFiles()) has the same Canonical Path as the supplied
 	 *         File
 	 */
-	public boolean recentFileListContains(File file) throws IOException {
-		return fileListContains(getRecentFiles(), file);
+	public boolean recentFileListContains(File file) {
+		return fileListContains(getRecentFilesList(), file);
 	}
-	
+
 	/**
-	 * @return true iff any File in the List of Files
-	 *         (getFollowedFiles()) has the same Canonical Path as the supplied
-	 *         File
+	 * @return true iff any File in the List of Files (getFollowedFiles()) has
+	 *         the same Canonical Path as the supplied File
 	 */
-	protected boolean fileListContains(File[] fileList, File file) throws IOException {
+	protected boolean fileListContains(List fileList, File file) {
 		boolean retval = false;
 		if (fileList != null && file != null) {
-			for (int i = 0; i < fileList.length; i++) {
-				File nextFile = fileList[i];
-				if (nextFile.getCanonicalPath().equals(file.getCanonicalPath())) {
-					retval = true;
+			for (int i = 0; i < fileList.size(); i++) {
+				String nextFile = (String) fileList.get(i);
+				try {
+					if (nextFile.equals(file.getCanonicalPath())) {
+						retval = true;
+						break;
+					}
+				}
+				catch (IOException e) {
 					break;
 				}
 			}
@@ -187,12 +209,21 @@ public class FollowAppAttributes {
 		return retval;
 	}
 
+	/**
+	 * Adds a file to the list of followed files
+	 * 
+	 * @param file
+	 */
 	public void addFollowedFile(File file) {
 		List fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
 		fileNames.add(file.getAbsolutePath());
 		properties_.setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
 	}
 
+	/**
+	 * Removes a file from the list of followed files
+	 * @param file
+	 */
 	public void removeFollowedFile(File file) {
 		List fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
 		fileNames.remove(file.getAbsolutePath());
@@ -329,31 +360,64 @@ public class FollowAppAttributes {
 		properties_.setProperty(EDITOR_KEY, value);
 	}
 
+	/**
+	 * Adds a file to the list of recent files
+	 * @param file
+	 */
 	public void addRecentFile(File file) {
-		List fileNames = properties_.getEnumeratedProperty(RECENT_FILES_KEY);
-		fileNames.add(file.getAbsolutePath());
-		properties_.setEnumeratedProperty(RECENT_FILES_KEY, fileNames);
+		if (!recentFileListContains(file)) {
+			List fileList = getRecentFilesList();
+			// check size constraint and add accordingly
+			if (fileList.size() == getRecentFilesMax()) {
+				for (int i = 0; i < fileList.size() - 1; i++) {
+					fileList.set(i, fileList.get(i + 1));
+				}
+				fileList.set(fileList.size() - 1, file.getAbsolutePath());
+			}
+			else {
+				fileList.add(file.getAbsolutePath());
+			}
+			properties_.setEnumeratedProperty(RECENT_FILES_KEY, fileList);
+		}
 	}
 
-	public File[] getRecentFiles() {
-		List fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
-		File[] files = new File[fileNames.size()];
-		Iterator i = fileNames.iterator();
-		int count = 0;
-		while (i.hasNext()) {
-			files[count] = new File((String) i.next());
-		}
-		return files;
+	/**
+	 * Get a list of recently opened files
+	 * 
+	 * @return List recently opened files as Strings
+	 */
+	private List getRecentFilesList() {
+		return properties_.getEnumeratedProperty(RECENT_FILES_KEY);
 	}
-	
+
+	/**
+	 * Get an array of recently opened files
+	 * 
+	 * @return File[] File array of followed files
+	 */
+	public File[] getRecentFiles() {
+		return getFiles(getRecentFilesList());
+	}
+
 	public int getRecentFilesMax() {
 		return getInt(RECENT_FILES_MAX_KEY);
 	}
 	
-	public void setRecentFilesMax(int max) {
-		setInt(RECENT_FILES_MAX_KEY, max);
+	public void setRecentFilesMax(String max) {
+		setRecentFilesMax(Integer.parseInt(max));
 	}
 
+	public void setRecentFilesMax(int max) {
+		List files = getRecentFilesList();
+		if (files.size() > max) {
+			for (int i = files.size() - max; i > 0; i--) {
+				files.remove(0);
+			}
+			properties_.setEnumeratedProperty(RECENT_FILES_KEY, files);
+		}
+		setInt(RECENT_FILES_MAX_KEY, max);
+	}
+	
 	public void store() throws IOException {
 		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(propertyFileName));
 		properties_.store(bos, null);

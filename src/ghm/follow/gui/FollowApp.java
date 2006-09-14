@@ -77,6 +77,7 @@ public class FollowApp {
 	private JTabbedPane tabbedPane_;
 	private ToolBar toolBar_;
 	private PopupMenu popupMenu_;
+	private Menu recentFilesMenu_;
 	private MouseListener rightClickListener_;
 	private ResourceBundle resBundle_ = ResourceBundle
 			.getBundle("ghm.follow.gui.FollowAppResourceBundle");
@@ -303,8 +304,10 @@ public class FollowApp {
 		fileMenu.addFollowAppAction(getAction(Reset.NAME));
 		fileMenu.addFollowAppAction(getAction(Pause.NAME));
 		fileMenu.addSeparator();
-		fileMenu.add(new Menu(getResourceBundle().getString("menu.RecentFiles.name"),
-				getResourceBundle().getString("menu.RecentFiles.mnemonic")));
+		recentFilesMenu_ = new Menu(getResourceBundle().getString("menu.RecentFiles.name"),
+				getResourceBundle().getString("menu.RecentFiles.mnemonic"));
+		refreshRecentFilesMenu();
+		fileMenu.add(recentFilesMenu_);
 		fileMenu.addSeparator();
 		fileMenu.addFollowAppAction(getAction(Exit.NAME));
 		// edit menu
@@ -340,8 +343,6 @@ public class FollowApp {
 			helpMenu.addSeparator();
 			helpMenu.addFollowAppAction(getAction(Debug.NAME));
 		}
-		// populate the recent documents menu
-		// TODO add method to get this list and associate to menu
 
 		// create menu bar and add menus
 		JMenuBar jMenuBar = new JMenuBar();
@@ -351,6 +352,17 @@ public class FollowApp {
 		jMenuBar.add(windowMenu);
 		jMenuBar.add(helpMenu);
 		return jMenuBar;
+	}
+	
+	public void refreshRecentFilesMenu() {
+		if (recentFilesMenu_ != null) {
+			recentFilesMenu_.removeAll();
+			File[] recentFiles = getAttributes().getRecentFiles();
+			// descend down the list to order files by last opened
+			for (int i = recentFiles.length - 1; i >= 0; i--) {
+				recentFilesMenu_.add(new Open(this, recentFiles[i]));
+			}
+		}
 	}
 
 	/**
@@ -446,6 +458,8 @@ public class FollowApp {
 			}
 			if (addFileToAttributes) {
 				getAttributes().addFollowedFile(file);
+				getAttributes().addRecentFile(file);
+				refreshRecentFilesMenu();
 			}
 		}
 	}

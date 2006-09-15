@@ -77,13 +77,15 @@ class TabbedPane extends JTabbedPane {
 	}
 
 	public void removeTabAt(int index) {
-		handleSelectedFile();
 		super.removeTabAt(index);
+		handleSelectedFile();
 	}
 
 	private void handleSelectedFile() {
 		FileFollowingPane pane = (FileFollowingPane) getSelectedComponent();
-		File parent = pane.getFollowedFile().getParentFile();
-		attributes_.setLastFileChooserDirectory(parent);
+		if (pane != null) {
+			File parent = pane.getFollowedFile().getParentFile();
+			attributes_.setLastFileChooserDirectory(parent);
+		}
 	}
 }

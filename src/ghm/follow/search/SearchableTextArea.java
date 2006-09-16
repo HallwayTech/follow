@@ -1,5 +1,6 @@
 package ghm.follow.search;
 
+import ghm.follow.search.SearchStrategy.Result;
 import java.awt.Color;
 
 import javax.swing.JTextArea;
@@ -14,29 +15,41 @@ public class SearchableTextArea extends JTextArea {
 
   private static DefaultHighlightPainter painter = new DefaultHighlightPainter(Color.YELLOW);
 
-  public int highlight(String term) {
+  public int highlight(String term, boolean useRegularExpression) {
     // First remove all old highlights
     removeHighlights();
-
+    // Get a highlighter
     Highlighter hilite = getHighlighter();
-    int pos = 0;
-
     // Search for pattern
     int numFound = 0;
-    try {
-      Document doc = getDocument();
-      String text = doc.getText(0, doc.getLength());
-      
-      while ((pos = text.indexOf(term, pos)) > -1) {
-        // Create highlighter using private painter and apply around pattern
-        hilite.addHighlight(pos, pos+term.length(), painter);
-        pos += term.length();
-        numFound++;
+    if ((term != null) && (term.length() > 0)) {
+      try {
+        Document doc = getDocument();
+        String text = doc.getText(0, doc.getLength());
+        // look for instances of the term in the text
+        Result[] results = null;
+        if (useRegularExpression) {
+          results = SearchStrategy.getInstance(SearchStrategy.REGULAR_EXPRESSION, text)
+              .search(term);
+        }
+        else {
+          results = SearchStrategy.getInstance(text).search(term);
+        }
+        numFound = results.length;
+        for (int i = 0; i < results.length; i++) {
+          hilite.addHighlight(results[i].start, results[i].end, painter);
+        }
+        
+//        while ((pos = text.indexOf(term, pos)) > -1) {
+//          // Create highlighter using private painter and apply around pattern
+//          hilite.addHighlight(pos, pos+term.length(), painter);
+//          pos += term.length();
+//          numFound++;
+//        }
       }
-      
-    }
-    catch (BadLocationException e) {
-      // don't worry about it
+      catch (BadLocationException e) {
+        // don't worry about it
+      }
     }
     return numFound;
   }
@@ -55,7 +68,9 @@ public class SearchableTextArea extends JTextArea {
 
   /**
    * Searches for a term.  If the term provided matches the
-   * last searched term, the last found position is used as a starting point.
+   * last searched term, the last found position is used as a starting point.<br>
+   * <br>
+   * Developer note: this method isn't currently used.
    * 
    * @param term The string for which to search.
    * @return The position where the term was found.<br>
@@ -87,7 +102,9 @@ public class SearchableTextArea extends JTextArea {
   }
 
   /**
-   * Searches for a term at the given starting position.
+   * Searches for a term at the given starting position.<br>
+   * <br>
+   * Developer note: this method isn't currently used.
    * 
    * @param term The string for which to search.
    * @param startPos Where to start.

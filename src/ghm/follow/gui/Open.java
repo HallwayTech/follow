@@ -39,7 +39,7 @@ public class Open extends FollowAppAction {
 	}
 
 	public Open(FollowApp app, File recentFile) {
-		super(app, recentFile.getName(), app.getResourceBundle()
+		super(app, recentFile.getAbsolutePath(), app.getResourceBundle()
 				.getString("action.Open.mnemonic"), app.getResourceBundle().getString(
 				"action.Open.accelerator"));
 		this.recentFile = recentFile;

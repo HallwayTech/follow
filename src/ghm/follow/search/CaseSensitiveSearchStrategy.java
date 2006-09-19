@@ -3,13 +3,13 @@ package ghm.follow.search;
 import java.util.ArrayList;
 
 /**
- * Implementation of a basic search.  Nothing fancy.
+ * Implementation of a case sensitive search.  Nothing fancy.
  * 
  * @author chall
  */
-public class BasicSearchStrategy extends SearchStrategy {
+public class CaseSensitiveSearchStrategy extends SearchStrategy {
 
-  public BasicSearchStrategy(String text) {
+  public CaseSensitiveSearchStrategy(String text) {
     super(text);
   }
 

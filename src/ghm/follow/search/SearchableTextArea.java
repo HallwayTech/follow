@@ -1,6 +1,6 @@
 package ghm.follow.search;
 
-import ghm.follow.search.SearchStrategy.Result;
+import ghm.follow.search.SearchEngine.Result;
 import java.awt.Color;
 
 import javax.swing.JTextArea;
@@ -30,13 +30,13 @@ public class SearchableTextArea extends JTextArea {
 				Result[] results = null;
 				int flags = 0;
 				if (caseSensitive) {
-					flags |= SearchStrategy.CASE_SENSITIVE;
+					flags |= SearchEngine.CASE_SENSITIVE;
 				}
 				if (useRegularExpression) {
-					flags |= SearchStrategy.REGEX;
+					flags |= SearchEngine.REGEX;
 				}
-				
-				results = SearchStrategy.getInstance(text, flags).search(term);
+
+				results = new SearchEngine(text).search(term, flags);
 				numFound = results.length;
 				for (int i = 0; i < results.length; i++) {
 					hilite.addHighlight(results[i].start, results[i].end, painter);

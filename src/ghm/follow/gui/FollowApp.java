@@ -436,7 +436,16 @@ public class FollowApp {
 				fileFollowingPane.startFollowing();
 			}
 			tabbedPane_.addTab(file.getName(), null, fileFollowingPane, file.getAbsolutePath());
-			tabbedPane_.setSelectedIndex(tabbedPane_.getTabCount() - 1);
+			int tabCount = tabbedPane_.getTabCount();
+			if (tabCount < 10)
+			{
+				// KeyEvent.VK_1 through KeyEvent.VK_9 is represented by the
+				// ascii characters 1-9 (49-57)
+				// Note: there's probably a better way to convert a number
+				// into the ascii value but this is quick and easy.
+				tabbedPane_.setMnemonicAt(tabCount - 1, tabCount + 48);
+			}
+			tabbedPane_.setSelectedIndex(tabCount - 1);
 			// add a listener to set the pause icon correctly
 			fileFollowingPane.addComponentListener(new ComponentAdapter() {
 				public void componentShown(ComponentEvent e) {

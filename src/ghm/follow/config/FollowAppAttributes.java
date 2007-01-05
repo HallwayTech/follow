@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -467,9 +468,10 @@ public class FollowAppAttributes {
 
 	private EnumeratedProperties getDefaultProperties() throws IOException {
 		if (defaultProperties_ == null) {
-			BufferedInputStream bis = new BufferedInputStream(this.getClass().getResourceAsStream(
-					PROPERTY_PROTOTYPE_FILE_NAME));
-			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(PROPERTY_FILE));
+          InputStream in = this.getClass().getResourceAsStream(PROPERTY_PROTOTYPE_FILE_NAME);
+			BufferedInputStream bis = new BufferedInputStream(in);
+            FileOutputStream fos = new FileOutputStream(PROPERTY_FILE);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			byte[] byteArray = new byte[BUFFER_SIZE];
 			int len;
 			while ((len = bis.read(byteArray, 0, BUFFER_SIZE)) > 0) {

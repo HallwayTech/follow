@@ -6,12 +6,12 @@
   <target name="compile">
     <mkdir dir="build/classes"/>
     <javac srcdir="src" destdir="build/classes" deprecation="yes" debug="true"/>
-    <copy todir="build/classes/ghm/follow/gui">
-      <fileset dir="src/ghm/follow/gui" includes="*.gif,*.png"/>
+    <copy todir="build/classes/ghm/follow">
+      <fileset dir="src/ghm/follow" includes="*.gif,*.png"/>
     </copy>
     <filter token="version" value="${version}"/>
-    <copy todir="build/classes/ghm/follow/gui" filtering="yes">
-      <fileset dir="src/ghm/follow/gui" includes="*.properties,*.prototype"/>
+    <copy todir="build/classes/ghm/follow" filtering="yes">
+      <fileset dir="src/ghm/follow" includes="**/*.properties,**/*.prototype"/>
     </copy>
   </target>
 

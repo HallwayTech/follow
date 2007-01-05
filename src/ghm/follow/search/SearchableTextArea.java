@@ -6,14 +6,17 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
+import javax.swing.text.Utilities;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
 public class SearchableTextArea extends JTextArea {
 	private int lastSearchPos = -1;
 	private String lastSearchTerm;
 
-	private static DefaultHighlightPainter painter = new DefaultHighlightPainter(Color.YELLOW);
+	private static DefaultHighlightPainter linePainter = new DefaultHighlightPainter(Color.YELLOW);
+    private static DefaultHighlightPainter wordPainter = new DefaultHighlightPainter(Color.LIGHT_GRAY);
 
 	public int highlight(String term, boolean caseSensitive, boolean useRegularExpression) {
 		// Remove all old highlights
@@ -39,7 +42,15 @@ public class SearchableTextArea extends JTextArea {
 				results = new SearchEngine(text).search(term, flags);
 				numFound = results.length;
 				for (int i = 0; i < results.length; i++) {
-					hilite.addHighlight(results[i].start, results[i].end, painter);
+                    // highlight the searched term
+                    int start = results[i].start;
+                    int end = results[i].end;
+                    hilite.addHighlight(start, end, wordPainter);
+                    // highlight the whole line
+                    Element elem = Utilities.getParagraphElement(this, results[i].start);
+                    start = elem.getStartOffset();
+                    end = elem.getEndOffset();
+					hilite.addHighlight(start, end, linePainter);
 				}
 			}
 			catch (BadLocationException e) {

@@ -69,25 +69,43 @@ import javax.swing.SwingUtilities;
  */
 public class FollowApp {
 	private int currentCursor_ = Cursor.DEFAULT_CURSOR;
+
 	private Cursor defaultCursor_;
+
 	private Cursor waitCursor_;
+
 	private FollowAppAttributes attributes_;
+
 	private Map fileToFollowingPaneMap_ = new HashMap();
+
 	private JFrame frame_;
+
 	private JTabbedPane tabbedPane_;
+
 	private ToolBar toolBar_;
+
 	private PopupMenu popupMenu_;
+
 	private Menu recentFilesMenu_;
+
 	private MouseListener rightClickListener_;
+
 	private ResourceBundle resBundle_ = ResourceBundle
 			.getBundle("ghm.follow.gui.FollowAppResourceBundle");
+
 	private HashMap actions_ = new HashMap();
+
 	private SystemInterface systemInterface_;
+
 	private static FollowApp instance_;
 
-	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+	public static final String FILE_SEPARATOR = System
+			.getProperty("file.separator");
+
 	public static final String MESSAGE_LINE_SEPARATOR = "\n";
+
 	public static final boolean DEBUG = Boolean.getBoolean("follow.debug");
+
 	public static boolean HAS_SOLARIS_BUG = false;
 
 	public FollowAppAction getAction(String name) {
@@ -116,7 +134,8 @@ public class FollowApp {
 
 		// Ghastly workaround for bug in Font construction, in review by
 		// Sun with review id 108683.
-		GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+		GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getAvailableFontFamilyNames();
 		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {
 				startupStatus_.markDone(startupStatus_.LOAD_SYSTEM_FONTS);
@@ -131,11 +150,11 @@ public class FollowApp {
 		for (int i = 0; i < fileNames.length; i++) {
 			File file = new File(fileNames[i]);
 			if (!file.exists()) {
-				String msg = MessageFormat.format(getResourceBundle().getString(
-						"message.cmdLineFileNotFound.text"), new Object[] { file });
+				String msg = MessageFormat.format(getResourceBundle()
+						.getString("message.cmdLineFileNotFound.text"),
+						new Object[] { file });
 				System.out.println(msg);
-			}
-			else if (!getAttributes().followedFileListContains(file)) {
+			} else if (!getAttributes().followedFileListContains(file)) {
 				getAttributes().addFollowedFile(file);
 			}
 		}
@@ -189,15 +208,15 @@ public class FollowApp {
 		// on Solaris jdk versions before 1.4
 		if (HAS_SOLARIS_BUG) {
 			frame_.setLocation(50, 50);
-		}
-		else {
+		} else {
 			frame_.setLocation(getAttributes().getX(), getAttributes().getY());
 		}
 		frame_.addWindowListener(new WindowTracker(getAttributes()));
 		frame_.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				if (tabbedPane_.getTabCount() > 0) {
-					getAttributes().setSelectedTabIndex(tabbedPane_.getSelectedIndex());
+					getAttributes().setSelectedTabIndex(
+							tabbedPane_.getSelectedIndex());
 				}
 				((Window) e.getSource()).dispose();
 			}
@@ -205,12 +224,11 @@ public class FollowApp {
 			public void windowClosed(WindowEvent e) {
 				try {
 					getAttributes().store();
-				}
-				catch (IOException ioe) {
-					System.err.println("Error encountered while storing properties...");
+				} catch (IOException ioe) {
+					System.err
+							.println("Error encountered while storing properties...");
 					ioe.printStackTrace(System.err);
-				}
-				finally {
+				} finally {
 					systemInterface_.exit(0);
 				}
 			}
@@ -231,17 +249,16 @@ public class FollowApp {
 			file = files[i];
 			if (file.exists()) {
 				open(file, false);
-			}
-			else {
+			} else {
 				// This file has been deleted since the previous execution.
 				// Remove it
 				// from the list of followed files
 				getAttributes().removeFollowedFile(file);
 				nonexistentFileCount++;
 				if (nonexistentFilesBuffer == null) {
-					nonexistentFilesBuffer = new StringBuffer(file.getAbsolutePath());
-				}
-				else {
+					nonexistentFilesBuffer = new StringBuffer(file
+							.getAbsolutePath());
+				} else {
 					nonexistentFilesBuffer.append(file.getAbsolutePath());
 				}
 				nonexistentFilesBuffer.append(MESSAGE_LINE_SEPARATOR);
@@ -250,21 +267,23 @@ public class FollowApp {
 		if (nonexistentFileCount > 0) {
 			// Alert the user of the fact that one or more files have been
 			// deleted since the previous execution
-			String message = MessageFormat.format(getResourceBundle().getString(
-					"message.filesDeletedSinceLastExecution.text"), new Object[] {
-					new Long(nonexistentFileCount), nonexistentFilesBuffer.toString() });
-			JOptionPane.showMessageDialog(frame_, message, getResourceBundle().getString(
-					"message.filesDeletedSinceLastExecution.title"), JOptionPane.WARNING_MESSAGE);
+			String message = MessageFormat.format(getResourceBundle()
+					.getString("message.filesDeletedSinceLastExecution.text"),
+					new Object[] { new Long(nonexistentFileCount),
+							nonexistentFilesBuffer.toString() });
+			JOptionPane.showMessageDialog(frame_, message, getResourceBundle()
+					.getString("message.filesDeletedSinceLastExecution.title"),
+					JOptionPane.WARNING_MESSAGE);
 		}
 		if (tabbedPane_.getTabCount() > 0) {
-			if (tabbedPane_.getTabCount() > getAttributes().getSelectedTabIndex()) {
-				tabbedPane_.setSelectedIndex(getAttributes().getSelectedTabIndex());
-			}
-			else {
+			if (tabbedPane_.getTabCount() > getAttributes()
+					.getSelectedTabIndex()) {
+				tabbedPane_.setSelectedIndex(getAttributes()
+						.getSelectedTabIndex());
+			} else {
 				tabbedPane_.setSelectedIndex(0);
 			}
-		}
-		else {
+		} else {
 			getAction(Close.NAME).setEnabled(false);
 			getAction(Reload.NAME).setEnabled(false);
 			getAction(Edit.NAME).setEnabled(false);
@@ -295,8 +314,9 @@ public class FollowApp {
 	 */
 	private JMenuBar buildMenuBar() {
 		// file menu
-		Menu fileMenu = new Menu(getResourceBundle().getString("menu.File.name"),
-				getResourceBundle().getString("menu.File.mnemonic"));
+		Menu fileMenu = new Menu(getResourceBundle()
+				.getString("menu.File.name"), getResourceBundle().getString(
+				"menu.File.mnemonic"));
 		fileMenu.addFollowAppAction(getAction(Open.NAME));
 		fileMenu.addFollowAppAction(getAction(Close.NAME));
 		fileMenu.addFollowAppAction(getAction(Reload.NAME));
@@ -304,22 +324,25 @@ public class FollowApp {
 		fileMenu.addFollowAppAction(getAction(Reset.NAME));
 		fileMenu.addFollowAppAction(getAction(Pause.NAME));
 		fileMenu.addSeparator();
-		recentFilesMenu_ = new Menu(getResourceBundle().getString("menu.RecentFiles.name"),
-				getResourceBundle().getString("menu.RecentFiles.mnemonic"));
+		recentFilesMenu_ = new Menu(getResourceBundle().getString(
+				"menu.RecentFiles.name"), getResourceBundle().getString(
+				"menu.RecentFiles.mnemonic"));
 		refreshRecentFilesMenu();
 		fileMenu.add(recentFilesMenu_);
 		fileMenu.addSeparator();
 		fileMenu.addFollowAppAction(getAction(Exit.NAME));
 		// edit menu
-		Menu editMenu = new Menu(getResourceBundle().getString("menu.Edit.name"),
-				getResourceBundle().getString("menu.Edit.mnemonic"));
+		Menu editMenu = new Menu(getResourceBundle()
+				.getString("menu.Edit.name"), getResourceBundle().getString(
+				"menu.Edit.mnemonic"));
 		editMenu.addFollowAppAction(getAction(Find.NAME));
 		editMenu.addSeparator();
 		editMenu.addFollowAppAction(getAction(ClearHighlights.NAME));
 		editMenu.addFollowAppAction(getAction(ClearAllHighlights.NAME));
 		// tool menu
-		Menu toolsMenu = new Menu(getResourceBundle().getString("menu.Tools.name"),
-				getResourceBundle().getString("menu.Tools.mnemonic"));
+		Menu toolsMenu = new Menu(getResourceBundle().getString(
+				"menu.Tools.name"), getResourceBundle().getString(
+				"menu.Tools.mnemonic"));
 		toolsMenu.addFollowAppAction(getAction(Top.NAME));
 		toolsMenu.addFollowAppAction(getAction(Bottom.NAME));
 		toolsMenu.addSeparator();
@@ -331,13 +354,15 @@ public class FollowApp {
 		toolsMenu.addFollowAppAction(getAction(Configure.NAME));
 		toolsMenu.addFollowAppAction(getAction(Edit.NAME));
 		// window menu
-		Menu windowMenu = new Menu(getResourceBundle().getString("menu.Window.name"),
-				getResourceBundle().getString("menu.Window.mnemonic"));
+		Menu windowMenu = new Menu(getResourceBundle().getString(
+				"menu.Window.name"), getResourceBundle().getString(
+				"menu.Window.mnemonic"));
 		windowMenu.addFollowAppAction(getAction(NextTab.NAME));
 		windowMenu.addFollowAppAction(getAction(PreviousTab.NAME));
 		// help menu
-		Menu helpMenu = new Menu(getResourceBundle().getString("menu.Help.name"),
-				getResourceBundle().getString("menu.Help.mnemonic"));
+		Menu helpMenu = new Menu(getResourceBundle()
+				.getString("menu.Help.name"), getResourceBundle().getString(
+				"menu.Help.mnemonic"));
 		helpMenu.addFollowAppAction(getAction(About.NAME));
 		if (DEBUG) {
 			helpMenu.addSeparator();
@@ -353,7 +378,7 @@ public class FollowApp {
 		jMenuBar.add(helpMenu);
 		return jMenuBar;
 	}
-	
+
 	public void refreshRecentFilesMenu() {
 		if (recentFilesMenu_ != null) {
 			recentFilesMenu_.removeAll();
@@ -419,14 +444,15 @@ public class FollowApp {
 	 * dispatching thread.
 	 */
 	void open(File file, boolean addFileToAttributes, boolean startFollowing) {
-		FileFollowingPane fileFollowingPane = (FileFollowingPane) fileToFollowingPaneMap_.get(file);
+		FileFollowingPane fileFollowingPane = (FileFollowingPane) fileToFollowingPaneMap_
+				.get(file);
 		if (fileFollowingPane != null) {
 			// File is already open; merely select its tab
 			tabbedPane_.setSelectedComponent(fileFollowingPane);
-		}
-		else {
-			fileFollowingPane = new FileFollowingPane(file, getAttributes().getBufferSize(),
-					getAttributes().getLatency(), getAttributes().autoScroll());
+		} else {
+			fileFollowingPane = new FileFollowingPane(file, getAttributes()
+					.getBufferSize(), getAttributes().getLatency(),
+					getAttributes().autoScroll());
 			JTextArea ffpTextArea = fileFollowingPane.getTextArea();
 			enableDragAndDrop(ffpTextArea);
 			ffpTextArea.setFont(getAttributes().getFont());
@@ -435,10 +461,10 @@ public class FollowApp {
 			if (startFollowing) {
 				fileFollowingPane.startFollowing();
 			}
-			tabbedPane_.addTab(file.getName(), null, fileFollowingPane, file.getAbsolutePath());
+			tabbedPane_.addTab(file.getName(), null, fileFollowingPane, file
+					.getAbsolutePath());
 			int tabCount = tabbedPane_.getTabCount();
-			if (tabCount < 10)
-			{
+			if (tabCount < 10) {
 				// KeyEvent.VK_1 through KeyEvent.VK_9 is represented by the
 				// ascii characters 1-9 (49-57)
 				// Note: there's probably a better way to convert a number
@@ -449,8 +475,9 @@ public class FollowApp {
 			// add a listener to set the pause icon correctly
 			fileFollowingPane.addComponentListener(new ComponentAdapter() {
 				public void componentShown(ComponentEvent e) {
-					((Pause) getAction(Pause.NAME)).setIconByState(((FileFollowingPane) e
-							.getSource()).isFollowing());
+					((Pause) getAction(Pause.NAME))
+							.setIconByState(((FileFollowingPane) e.getSource())
+									.isFollowing());
 				}
 			});
 			if (!getAction(Close.NAME).isEnabled()) {
@@ -593,8 +620,7 @@ public class FollowApp {
 					if (minor < 4) {
 						HAS_SOLARIS_BUG = true;
 					}
-				}
-				catch (NumberFormatException nfe) {
+				} catch (NumberFormatException nfe) {
 					// Nothing else to do.
 				}
 			}
@@ -604,8 +630,11 @@ public class FollowApp {
 	static void centerWindowInScreen(Window window) {
 		Dimension screenSize = window.getToolkit().getScreenSize();
 		Dimension windowSize = window.getPreferredSize();
-		window.setLocation((int) (screenSize.getWidth() / 2 - windowSize.getWidth() / 2),
-				(int) (screenSize.getHeight() / 2 - windowSize.getHeight() / 2));
+		window
+				.setLocation((int) (screenSize.getWidth() / 2 - windowSize
+						.getWidth() / 2),
+						(int) (screenSize.getHeight() / 2 - windowSize
+								.getHeight() / 2));
 	}
 
 	/**
@@ -623,7 +652,8 @@ public class FollowApp {
 				public void run() {
 					// ensure all widgets inited before opening files
 					instance_.show();
-					instance_.startupStatus_.markDone(instance_.startupStatus_.CREATE_WIDGETS);
+					instance_.startupStatus_
+							.markDone(instance_.startupStatus_.CREATE_WIDGETS);
 				}
 			});
 			instance_.startupStatus_.dispose();
@@ -632,8 +662,7 @@ public class FollowApp {
 			// for (int i=0; i < instance_.tabbedPane_.getTabCount(); i++) {
 			// ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
 			// }
-		}
-		catch (Throwable t) {
+		} catch (Throwable t) {
 			t.printStackTrace();
 			System.exit(-1);
 		}

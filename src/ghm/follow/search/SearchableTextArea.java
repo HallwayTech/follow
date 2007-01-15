@@ -13,12 +13,17 @@ import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
 public class SearchableTextArea extends JTextArea {
 	private int lastSearchPos = -1;
+
 	private String lastSearchTerm;
 
-	private static DefaultHighlightPainter linePainter = new DefaultHighlightPainter(Color.YELLOW);
-    private static DefaultHighlightPainter wordPainter = new DefaultHighlightPainter(Color.LIGHT_GRAY);
+	private static DefaultHighlightPainter linePainter = new DefaultHighlightPainter(
+			Color.YELLOW);
 
-	public int highlight(String term, boolean caseSensitive, boolean useRegularExpression) {
+	private static DefaultHighlightPainter wordPainter = new DefaultHighlightPainter(
+			Color.LIGHT_GRAY);
+
+	public int highlight(String term, boolean caseSensitive,
+			boolean useRegularExpression) {
 		// Remove all old highlights
 		removeHighlights();
 		// Get a highlighter
@@ -42,18 +47,18 @@ public class SearchableTextArea extends JTextArea {
 				results = new SearchEngine(text).search(term, flags);
 				numFound = results.length;
 				for (int i = 0; i < results.length; i++) {
-                    // highlight the searched term
-                    int start = results[i].start;
-                    int end = results[i].end;
-                    hilite.addHighlight(start, end, wordPainter);
-                    // highlight the whole line
-                    Element elem = Utilities.getParagraphElement(this, results[i].start);
-                    start = elem.getStartOffset();
-                    end = elem.getEndOffset();
+					// highlight the searched term
+					int start = results[i].start;
+					int end = results[i].end;
+					hilite.addHighlight(start, end, wordPainter);
+					// highlight the whole line
+					Element elem = Utilities.getParagraphElement(this,
+							results[i].start);
+					start = elem.getStartOffset();
+					end = elem.getEndOffset();
 					hilite.addHighlight(start, end, linePainter);
 				}
-			}
-			catch (BadLocationException e) {
+			} catch (BadLocationException e) {
 				// don't worry about it
 			}
 		}
@@ -95,16 +100,14 @@ public class SearchableTextArea extends JTextArea {
 					pos = lastSearchPos + lastSearchTerm.length();
 				}
 				lastSearchPos = search(lastSearchTerm, pos);
-			}
-			else {
+			} else {
 				lastSearchPos = search(term, 0);
 			}
 		}
 		// remember the term if it was found
 		if (lastSearchPos == -1) {
 			lastSearchTerm = null;
-		}
-		else {
+		} else {
 			lastSearchTerm = term;
 		}
 		return lastSearchPos;
@@ -130,8 +133,7 @@ public class SearchableTextArea extends JTextArea {
 
 			// Search for pattern
 			pos = text.indexOf(term, startPos);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			// just return -1;
 			pos = -1;
 		}

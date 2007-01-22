@@ -22,20 +22,18 @@ public class SearchableTextArea extends JTextArea {
 	private static DefaultHighlightPainter wordPainter = new DefaultHighlightPainter(
 			Color.LIGHT_GRAY);
 
-	public int highlight(String term, boolean caseSensitive,
-			boolean useRegularExpression) {
+	public Result[] highlight(String term, boolean caseSensitive, boolean useRegularExpression) {
+		Result[] results = null;
 		// Remove all old highlights
 		removeHighlights();
 		// Get a highlighter
 		Highlighter hilite = getHighlighter();
 		// Search for pattern
-		int numFound = 0;
 		if ((term != null) && (term.length() > 0)) {
 			try {
 				Document doc = getDocument();
 				String text = doc.getText(0, doc.getLength());
 				// look for instances of the term in the text
-				Result[] results = null;
 				int flags = 0;
 				if (caseSensitive) {
 					flags |= SearchEngine.CASE_SENSITIVE;
@@ -45,7 +43,6 @@ public class SearchableTextArea extends JTextArea {
 				}
 
 				results = new SearchEngine(text).search(term, flags);
-				numFound = results.length;
 				for (int i = 0; i < results.length; i++) {
 					// highlight the searched term
 					int start = results[i].start;
@@ -62,7 +59,7 @@ public class SearchableTextArea extends JTextArea {
 				// don't worry about it
 			}
 		}
-		return numFound;
+		return results;
 	}
 
 	/**

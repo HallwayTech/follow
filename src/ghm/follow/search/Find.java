@@ -3,6 +3,7 @@ package ghm.follow.search;
 import ghm.follow.gui.FileFollowingPane;
 import ghm.follow.gui.FollowApp;
 import ghm.follow.gui.FollowAppAction;
+import ghm.follow.search.SearchEngine.Result;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
@@ -54,7 +55,7 @@ public class Find extends FollowAppAction {
 		getApp().setCursor(Cursor.DEFAULT_CURSOR);
 	}
 
-	private int doFind() {
+	private Result[] doFind() {
 		// get the current selected tab
 		FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
 		// search the tab with the given text
@@ -125,8 +126,8 @@ public class Find extends FollowAppAction {
 					"dialog.Find.findButton.mnemonic").charAt(0));
 			findButton_.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					int found = doFind();
-					if (found == 0) {
+					Result[] results = doFind();
+					if (results.length == 0) {
 						JOptionPane.showMessageDialog(dialog_, "Search term not found.",
 								"Search results", JOptionPane.INFORMATION_MESSAGE);
 					}

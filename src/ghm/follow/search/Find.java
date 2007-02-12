@@ -3,10 +3,10 @@ package ghm.follow.search;
 import ghm.follow.gui.FileFollowingPane;
 import ghm.follow.gui.FollowApp;
 import ghm.follow.gui.FollowAppAction;
-import ghm.follow.search.SearchEngine.Result;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -19,21 +19,36 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.border.BevelBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class Find extends FollowAppAction {
 	public static final String NAME = "find";
+
 	private FindDialog dialog_;
+
 	private JTextField find_;
+
 	private JCheckBox regularExpression_;
+
 	private JCheckBox caseSensitive_;
+
 	private JButton findButton_;
+
 	private JButton clearButton_;
+
 	private JButton closeButton_;
+
+	private JLabel statusBar_;
+
+	private JScrollPane resultPane_;
 
 	public Find(FollowApp app) {
 		super(app, app.getResourceBundle().getString("action.Find.name"), app.getResourceBundle()
@@ -55,14 +70,19 @@ public class Find extends FollowAppAction {
 		getApp().setCursor(Cursor.DEFAULT_CURSOR);
 	}
 
-	private Result[] doFind() {
+	private LineResult[] doFind() {
 		// get the current selected tab
 		FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
 		// search the tab with the given text
 		SearchableTextArea textArea = (SearchableTextArea) pane.getTextArea();
-		textArea.selectAll();
-		return textArea.highlight(find_.getText(), caseSensitive_.isSelected(), regularExpression_
-				.isSelected());
+		// textArea.selectAll();
+		LineResult[] results = textArea.highlight(find_.getText(), caseSensitive_.isSelected(),
+				regularExpression_.isSelected());
+		if (results == null)
+			results = new LineResult[0];
+		// select search term for convenience
+		find_.selectAll();
+		return results;
 	}
 
 	class FindDialog extends JDialog {
@@ -76,7 +96,7 @@ public class Find extends FollowAppAction {
 					}
 				}
 			});
-			setResizable(false);
+			// setResizable(false);
 			JComponent contentPane = (JComponent) getContentPane();
 			contentPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 			JPanel findPanel = new JPanel(new GridBagLayout());
@@ -126,13 +146,48 @@ public class Find extends FollowAppAction {
 					"dialog.Find.findButton.mnemonic").charAt(0));
 			findButton_.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Result[] results = doFind();
-					if (results.length == 0) {
-						JOptionPane.showMessageDialog(dialog_, "Search term not found.",
-								"Search results", JOptionPane.INFORMATION_MESSAGE);
+					clearResults();
+					LineResult[] results = doFind();
+					if (results != null) {
+						if (results.length == 0) {
+							statusBar_.setText("Search term not found.");
+						}
+						else {
+							JList resultList = showResults(results);
+							resultList.addListSelectionListener(new ListSelectionListener() {
+								/**
+								 * Catches selection events and sets the caret
+								 * within the view so that the screen scrolls
+								 * 
+								 * @author chall
+								 */
+								public void valueChanged(ListSelectionEvent ev) {
+									if (!ev.getValueIsAdjusting()) {
+										JList list = (JList) ev.getSource();
+										int pos = list.getSelectedIndex();
+										if (pos >= 0) {
+											// get the result associated to the
+											// selected position
+											LineResult result = (LineResult) list.getModel()
+													.getElementAt(pos);
+
+											// get the current selected tab
+											// and text area
+											FileFollowingPane pane = getApp()
+													.getSelectedFileFollowingPane();
+											SearchableTextArea textArea = (SearchableTextArea) pane
+													.getTextArea();
+											// move the caret to the chosen text
+											textArea.setCaretPosition(result.getFirstWordPosition());
+										}
+									}
+								}
+							});
+						}
 					}
 				}
 			});
+
 			// add the clear button
 			clearButton_ = new JButton(getApp().getResourceBundle().getString(
 					"dialog.Find.clearButton.label"));
@@ -145,8 +200,11 @@ public class Find extends FollowAppAction {
 					// clear the highlights from the searched tab
 					SearchableTextArea textArea = (SearchableTextArea) pane.getTextArea();
 					textArea.removeHighlights();
+					// clear the status bar and result list
+					clearResults();
 				}
 			});
+
 			// add the close button
 			closeButton_ = new JButton(getApp().getResourceBundle().getString(
 					"dialog.Find.closeButton.label"));
@@ -159,16 +217,74 @@ public class Find extends FollowAppAction {
 			});
 			// add the buttons to the dialog
 			JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+			// create buttons
 			buttonPanel.add(findButton_);
 			buttonPanel.add(clearButton_);
 			buttonPanel.add(closeButton_);
+
+			// create status bar
+			JPanel statusPanel = new JPanel(new BorderLayout());
+			resultPane_ = new JScrollPane();
+			resultPane_.setVisible(false);
+			statusBar_ = new JLabel(" ");
+			statusBar_.setFont(new Font("Arial", Font.PLAIN, 10));
+			statusBar_.setBorder(new BevelBorder(BevelBorder.LOWERED));
+			statusPanel.add(statusBar_, BorderLayout.CENTER);
+			statusPanel.add(resultPane_, BorderLayout.SOUTH);
+
 			// add everything to the content pane
-			contentPane.add(findPanel, BorderLayout.CENTER);
-			contentPane.add(buttonPanel, BorderLayout.SOUTH);
+			contentPane.add(findPanel, BorderLayout.NORTH);
+			contentPane.add(buttonPanel, BorderLayout.CENTER);
+			contentPane.add(statusPanel, BorderLayout.SOUTH);
+		}
+
+		/**
+		 * Show results some results by creating a list and updating the status
+		 * bar
+		 * 
+		 * @author chall
+		 * @param results
+		 * @return
+		 */
+		private JList showResults(LineResult[] results) {
+			// create a list of the results
+			JList resultList = new JList(results);
+			resultList.setFont(new Font("Arial", Font.PLAIN, 10));
+
+			// set the status bar
+			statusBar_.setText(" " + results.length + " occurence(s) found.");
+
+			// show the result list
+			resultPane_.getViewport().setView(resultList);
+			resultPane_.setVisible(true);
+
+			// resize the dialog
+			dialog_.pack();
+			return resultList;
+		}
+
+		/**
+		 * Clear out the results list and status bar.
+		 * 
+		 * @author chall
+		 */
+		private void clearResults() {
+			// clear the status bar
+			statusBar_.setText(" ");
+
+			// clear and hide the result list
+			resultPane_.getViewport().setView(null);
+			resultPane_.setVisible(false);
+
+			// resize the dialog
+			dialog_.pack();
 		}
 
 		/**
 		 * Override method to add ESCAPE key action for window close
+		 * 
+		 * @author chall
 		 */
 		protected JRootPane createRootPane() {
 			KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);

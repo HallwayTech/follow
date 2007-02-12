@@ -1,14 +1,11 @@
 package ghm.follow.search;
 
-import ghm.follow.search.SearchEngine.Result;
 import java.awt.Color;
 
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
-import javax.swing.text.Utilities;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
 public class SearchableTextArea extends JTextArea {
@@ -16,14 +13,13 @@ public class SearchableTextArea extends JTextArea {
 
 	private String lastSearchTerm;
 
-	private static DefaultHighlightPainter linePainter = new DefaultHighlightPainter(
-			Color.YELLOW);
+	private static DefaultHighlightPainter linePainter = new DefaultHighlightPainter(Color.YELLOW);
 
 	private static DefaultHighlightPainter wordPainter = new DefaultHighlightPainter(
 			Color.LIGHT_GRAY);
 
-	public Result[] highlight(String term, boolean caseSensitive, boolean useRegularExpression) {
-		Result[] results = null;
+	public LineResult[] highlight(String term, boolean caseSensitive, boolean useRegularExpression) {
+		LineResult[] lineResults = null;
 		// Remove all old highlights
 		removeHighlights();
 		// Get a highlighter
@@ -31,8 +27,6 @@ public class SearchableTextArea extends JTextArea {
 		// Search for pattern
 		if ((term != null) && (term.length() > 0)) {
 			try {
-				Document doc = getDocument();
-				String text = doc.getText(0, doc.getLength());
 				// look for instances of the term in the text
 				int flags = 0;
 				if (caseSensitive) {
@@ -42,24 +36,24 @@ public class SearchableTextArea extends JTextArea {
 					flags |= SearchEngine.REGEX;
 				}
 
-				results = new SearchEngine(text).search(term, flags);
-				for (int i = 0; i < results.length; i++) {
-					// highlight the searched term
-					int start = results[i].start;
-					int end = results[i].end;
-					hilite.addHighlight(start, end, wordPainter);
+				lineResults = new SearchEngine(this).search(term, flags);
+				for (int i = 0; i < lineResults.length; i++) {
+					WordResult[] wordResults = lineResults[i].getWordResults();
+					for (int j = 0; j < wordResults.length; j++) {
+						// highlight the searched term
+						int wordStart = wordResults[j].start;
+						int wordEnd = wordResults[j].end;
+						hilite.addHighlight(wordStart, wordEnd, wordPainter);
+					}
 					// highlight the whole line
-					Element elem = Utilities.getParagraphElement(this,
-							results[i].start);
-					start = elem.getStartOffset();
-					end = elem.getEndOffset();
-					hilite.addHighlight(start, end, linePainter);
+					hilite.addHighlight(lineResults[i].start, lineResults[i].end, linePainter);
 				}
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				// don't worry about it
 			}
 		}
-		return results;
+		return lineResults;
 	}
 
 	/**
@@ -97,14 +91,16 @@ public class SearchableTextArea extends JTextArea {
 					pos = lastSearchPos + lastSearchTerm.length();
 				}
 				lastSearchPos = search(lastSearchTerm, pos);
-			} else {
+			}
+			else {
 				lastSearchPos = search(term, 0);
 			}
 		}
 		// remember the term if it was found
 		if (lastSearchPos == -1) {
 			lastSearchTerm = null;
-		} else {
+		}
+		else {
 			lastSearchTerm = term;
 		}
 		return lastSearchPos;
@@ -130,7 +126,8 @@ public class SearchableTextArea extends JTextArea {
 
 			// Search for pattern
 			pos = text.indexOf(term, startPos);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			// just return -1;
 			pos = -1;
 		}

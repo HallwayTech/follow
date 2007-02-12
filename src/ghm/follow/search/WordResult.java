@@ -7,7 +7,7 @@ package ghm.follow.search;
  */
 public class WordResult {
 	// term described by these positions
-	 public String term;
+	public String term;
 
 	// absolute starting position of term in document
 	public int start;

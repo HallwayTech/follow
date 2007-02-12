@@ -61,7 +61,7 @@ public class Find extends FollowAppAction {
 		if (dialog_ == null) {
 			dialog_ = new FindDialog();
 			dialog_.setLocationRelativeTo(getApp().getFrame());
-			dialog_.setLocation(30, 30);
+			dialog_.setLocation(100, 100);
 			dialog_.pack();
 		}
 		find_.grabFocus();
@@ -96,7 +96,7 @@ public class Find extends FollowAppAction {
 					}
 				}
 			});
-			// setResizable(false);
+			setResizable(false);
 			JComponent contentPane = (JComponent) getContentPane();
 			contentPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 			JPanel findPanel = new JPanel(new GridBagLayout());

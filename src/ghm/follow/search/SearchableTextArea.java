@@ -26,18 +26,19 @@ public class SearchableTextArea extends JTextPane {
 	public final Style defaultStyle;
 
 	private SearchEngine searchEngine;
-	
+
 	public SearchableTextArea() {
-		StyleConstants.setBackground(lineHighlighter, Color.YELLOW);
-		StyleConstants.setBackground(wordHighlighter, Color.LIGHT_GRAY);
-		StyleConstants.setBackground(wordHighlighter, Color.WHITE);
-		
 		TabSet tabSet = new TabSet(new TabStop[] {new TabStop(100)});
 		// set up the styles you want to use in you JTextPane
 		Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 		StyleConstants.setTabSet(def,tabSet);
 		setParagraphAttributes(def,true);
 		defaultStyle = addStyle("regular", def);
+
+		StyleConstants.setBackground(lineHighlighter, Color.YELLOW);
+		StyleConstants.setBackground(wordHighlighter, Color.LIGHT_GRAY);
+		// TODO set this to match the default style background
+		StyleConstants.setBackground(clearHighlighter, Color.WHITE);
 	}
 
 	/**
@@ -65,17 +66,18 @@ public class SearchableTextArea extends JTextPane {
 			}
 
 			lineResults = getSearchEngine().search(term, flags);
-			for (int i = 0; i < 1; i++) {  //i < lineResults.length; i++) {
+			for (int i = 0; i < lineResults.length; i++) {
+				int lineStart = lineResults[i].start;
+				int lineEnd = lineResults[i].end;
 				// highlight the whole line
-				addHighlight(lineResults[i].lineNumber, lineResults[i].end, lineHighlighter);
-//				WordResult[] wordResults = lineResults[i].getWordResults();
-//				for (int j = 0; j < wordResults.length; j++) {
-//					// highlight the searched term
-//					int wordStart = wordResults[j].start;
-//					int wordEnd = wordResults[j].end;
-//					addHighlight(wordStart + lineResults[i].start, wordEnd + lineResults[i].end,
-//							wordHighlighter);
-//				}
+				addHighlight(lineStart, lineEnd - lineStart, lineHighlighter);
+				WordResult[] wordResults = lineResults[i].getWordResults();
+				for (int j = 0; j < wordResults.length; j++) {
+					// highlight the searched term
+					int wordStart = wordResults[j].start;
+					int wordEnd = wordResults[j].end;
+					addHighlight(wordStart, wordEnd - wordStart, wordHighlighter);
+				}
 			}
 		}
 		return lineResults;
@@ -88,8 +90,8 @@ public class SearchableTextArea extends JTextPane {
 	 * @param wordEnd
 	 * @param highlighter
 	 */
-	private void addHighlight(int wordStart, int wordEnd, MutableAttributeSet highlighter) {
-		getStyledDocument().setCharacterAttributes(wordStart, wordStart, highlighter, true);
+	private void addHighlight(int wordStart, int length, MutableAttributeSet highlighter) {
+		getStyledDocument().setCharacterAttributes(wordStart, length, highlighter, true);
 	}
 
 	/**

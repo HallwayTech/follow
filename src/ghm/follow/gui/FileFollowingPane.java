@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 package ghm.follow.gui;
 
 import ghm.follow.FileFollower;
-import ghm.follow.JTextAreaDestination;
+import ghm.follow.JTextPaneDestination;
 import ghm.follow.OutputDestination;
 import ghm.follow.search.SearchableTextArea;
 
@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
@@ -48,23 +47,23 @@ public class FileFollowingPane extends JScrollPane {
   @param latency latency of the FileFollower used to follow the supplied file
   */
   public FileFollowingPane (File file, int bufferSize, int latency, boolean autoPositionCaret) {
-    textArea_ = new SearchableTextArea();
-    textArea_.setEditable(false);
-    destination_ = new JTextAreaDestination(textArea_, autoPositionCaret);
+    textPane_ = new SearchableTextArea();
+    textPane_.setEditable(false);
+    destination_ = new JTextPaneDestination(textPane_, autoPositionCaret);
     fileFollower_ = new FileFollower(
       file,
       bufferSize,
       latency,
       new OutputDestination [] { destination_ }
     );
-    this.setViewportView(textArea_);
+    this.setViewportView(textPane_);
   }
 
   /**
   Returns the text area to which the followed file's contents are being printed.
   @return text area containing followed file's contents
   */
-  public JTextArea getTextArea () { return textArea_; }
+  public SearchableTextArea getTextArea() { return textPane_; }
 
   /**
   Returns whether caret is automatically repositioned to the end of the text area when
@@ -145,7 +144,7 @@ public class FileFollowingPane extends JScrollPane {
       bos.close();
 
       // Update textarea contents to reflect freshly cleared file
-      Document doc = textArea_.getDocument();
+      Document doc = textPane_.getDocument();
       try {
         doc.remove(0, doc.getLength());
       }
@@ -162,8 +161,8 @@ public class FileFollowingPane extends JScrollPane {
   protected FileFollower fileFollower_;
   
   /** Text area into which followed file's contents are printed */
-  protected SearchableTextArea textArea_;
+  protected SearchableTextArea textPane_;
 
   /** OutputDestination used w/FileFollower */
-  protected JTextAreaDestination destination_;
+  protected JTextPaneDestination destination_;
 }

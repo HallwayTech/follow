@@ -3,8 +3,8 @@ package ghm.follow.search;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.swing.JTextArea;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
@@ -15,13 +15,15 @@ import javax.swing.text.Utilities;
  * 
  * @author chall
  */
-public class SearchEngine {
+public class SearchEngine implements DocumentListener {
 	public static final int CASE_SENSITIVE = 1;
 
 	public static final int REGEX = 2;
 
-	protected JTextArea textArea;
+	protected SearchableTextArea textPane;
 
+	protected Document doc;
+	
 	protected String text;
 
 	/**
@@ -31,21 +33,15 @@ public class SearchEngine {
 	 * @author chall
 	 * @param textArea
 	 */
-	public SearchEngine(JTextArea textArea) {
-		try {
-			Document doc = textArea.getDocument();
-			String text = doc.getText(0, doc.getLength());
-			this.textArea = textArea;
-			this.text = text;
-		}
-		catch (BadLocationException e) {
-
-		}
+	public SearchEngine(SearchableTextArea textPane) {
+		doc = textPane.getDocument();
+		doc.addDocumentListener(this);
+		this.textPane = textPane;
 	}
 
 	/**
 	 * Constructor for searching text without keeping track of any display
-	 * elements
+	 * elements.
 	 * 
 	 * @author chall
 	 * @param text
@@ -64,6 +60,14 @@ public class SearchEngine {
 	 * @return An array of found positions of term
 	 */
 	public LineResult[] search(String term, int flags) {
+		try {
+			if (doc != null) {
+				text = doc.getText(0, doc.getLength());
+			}
+		} catch (BadLocationException e) {
+			// can ignore as the search will stop if text is null
+			text = null;
+		}
 		LineResult[] retval = null;
 		// search using a case sensitive regular expression
 		if (((flags & CASE_SENSITIVE) != 0) && ((flags & REGEX) != 0)) {
@@ -87,6 +91,9 @@ public class SearchEngine {
 		else {
 			throw new IllegalArgumentException("Unknown search strategy requested [flags=" + flags);
 		}
+		if (doc != null) {
+			text = null;
+		}
 		return retval;
 	}
 
@@ -106,24 +113,19 @@ public class SearchEngine {
 			int lastLine = -1;
 			LineResult tempLine = null;
 			while ((pos = text.indexOf(term, pos)) > -1) {
-				try {
-					int line = textArea.getLineOfOffset(pos);
-					if (line != lastLine) {
-						if (tempLine != null) {
-							results.add(tempLine);
-						}
-						Element elem = Utilities.getParagraphElement(textArea, pos);
-						int lineStart = elem.getStartOffset();
-						int lineEnd = elem.getEndOffset();
-						tempLine = new LineResult(line, lineStart, lineEnd);
+				int line = textPane.getLineOfOffset(pos);
+				if (line != lastLine) {
+					if (tempLine != null) {
+						results.add(tempLine);
 					}
-					buildWordResult(tempLine, pos, pos + term.length(), term, textArea);
-					lastLine = line;
-					pos += term.length();
+					Element elem = Utilities.getParagraphElement(textPane, pos);
+					int lineStart = elem.getStartOffset();
+					int lineEnd = elem.getEndOffset();
+					tempLine = new LineResult(line, lineStart, lineEnd);
 				}
-				catch (BadLocationException e) {
-					// doesn't matter
-				}
+				buildWordResult(tempLine, pos, pos + term.length(), term);
+				lastLine = line;
+				pos += term.length();
 			}
 			if (tempLine != null) {
 				results.add(tempLine);
@@ -149,23 +151,18 @@ public class SearchEngine {
 		LineResult tempLine = null;
 		int lastLine = -1;
 		while (m.find()) {
-			try {
-				int line = textArea.getLineOfOffset(m.start());
-				if (line != lastLine) {
-					if (tempLine != null) {
-						results.add(tempLine);
-					}
-					Element elem = Utilities.getParagraphElement(textArea, m.start());
-					int lineStart = elem.getStartOffset();
-					int lineEnd = elem.getEndOffset();
-					tempLine = new LineResult(line, lineStart, lineEnd);
+			int line = textPane.getLineOfOffset(m.start());
+			if (line != lastLine) {
+				if (tempLine != null) {
+					results.add(tempLine);
 				}
-				buildWordResult(tempLine, m.start(), m.end(), m.group(), textArea);
-				lastLine = line;
+				Element elem = Utilities.getParagraphElement(textPane, m.start());
+				int lineStart = elem.getStartOffset();
+				int lineEnd = elem.getEndOffset();
+				tempLine = new LineResult(line, lineStart, lineEnd);
 			}
-			catch (BadLocationException e) {
-				// doesn't matter
-			}
+			buildWordResult(tempLine, m.start(), m.end(), m.group());
+			lastLine = line;
 		}
 		if (tempLine != null) {
 			results.add(tempLine);
@@ -184,22 +181,50 @@ public class SearchEngine {
 	 * @param textArea
 	 * @return
 	 */
-	private WordResult buildWordResult(LineResult lineResult, int start, int end, String term,
-			JTextArea textArea) {
+	private WordResult buildWordResult(LineResult lineResult, int start, int end, String term) {
 		WordResult r = new WordResult(start, end, term);
 		lineResult.addResult(r);
-		try {
+//		try {
 			// increase by 1 because offset starts at 0.
 			// 1 is clearer to the user since most people don't start counting
 			// at 0
-			int line = textArea.getLineOfOffset(start);
+			int line = textPane.getLineOfOffset(start);
 			r.parent.lineNumber = line + 1;
-			int lineOffset = textArea.getLineStartOffset(line);
+			int lineOffset = textPane.getLineStartOffset(line);
 			r.setLineOffset(lineOffset);
-		}
-		catch (BadLocationException e) {
-			r.parent.lineNumber = -1;
-		}
+//		}
+//		catch (BadLocationException e) {
+//			r.parent.lineNumber = -1;
+//		}
 		return r;
+	}
+
+	/**
+	 * Inherited from javax.swing.event.DocumentListener
+	 */
+	public void changedUpdate(DocumentEvent arg0) {
+		clearText(true);
+	}
+
+	/**
+	 * Inherited from javax.swing.event.DocumentListener
+	 */
+	public void insertUpdate(DocumentEvent arg0) {
+		clearText(true);
+	}
+
+	/**
+	 * Inherited from javax.swing.event.DocumentListener
+	 */
+	public void removeUpdate(DocumentEvent arg0) {
+		clearText(true);
+	}
+	
+	private void clearText(boolean requireDocument) {
+		if (requireDocument && doc != null) {
+			text = null;
+		} else if (!requireDocument) {
+			text = null;
+		}
 	}
 }

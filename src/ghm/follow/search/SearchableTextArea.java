@@ -1,71 +1,103 @@
 package ghm.follow.search;
 
 import java.awt.Color;
+import java.util.StringTokenizer;
 
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.Highlighter;
-import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.TabSet;
+import javax.swing.text.TabStop;
 
-public class SearchableTextArea extends JTextArea {
+public class SearchableTextArea extends JTextPane {
 	private int lastSearchPos = -1;
 
 	private String lastSearchTerm;
 
-	private static DefaultHighlightPainter linePainter = new DefaultHighlightPainter(Color.YELLOW);
+	private MutableAttributeSet lineHighlighter = new SimpleAttributeSet();
+	private MutableAttributeSet wordHighlighter = new SimpleAttributeSet();
+	private MutableAttributeSet clearHighlighter = new SimpleAttributeSet();
 
-	private static DefaultHighlightPainter wordPainter = new DefaultHighlightPainter(
-			Color.LIGHT_GRAY);
+	public final Style defaultStyle;
+
+	private SearchEngine searchEngine;
+	
+	public SearchableTextArea() {
+		StyleConstants.setBackground(lineHighlighter, Color.YELLOW);
+		StyleConstants.setBackground(wordHighlighter, Color.LIGHT_GRAY);
+		StyleConstants.setBackground(wordHighlighter, Color.WHITE);
+		
+		TabSet tabSet = new TabSet(new TabStop[] {new TabStop(100)});
+		// set up the styles you want to use in you JTextPane
+		Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+		StyleConstants.setTabSet(def,tabSet);
+		setParagraphAttributes(def,true);
+		defaultStyle = addStyle("regular", def);
+	}
+
+	/**
+	 * Gets the default style for the document
+	 * 
+	 * @return
+	 */
+	public Style getDefaultStyle() {
+		return defaultStyle;
+	}
 
 	public LineResult[] highlight(String term, boolean caseSensitive, boolean useRegularExpression) {
 		LineResult[] lineResults = null;
 		// Remove all old highlights
 		removeHighlights();
-		// Get a highlighter
-		Highlighter hilite = getHighlighter();
 		// Search for pattern
 		if ((term != null) && (term.length() > 0)) {
-			try {
-				// look for instances of the term in the text
-				int flags = 0;
-				if (caseSensitive) {
-					flags |= SearchEngine.CASE_SENSITIVE;
-				}
-				if (useRegularExpression) {
-					flags |= SearchEngine.REGEX;
-				}
-
-				lineResults = new SearchEngine(this).search(term, flags);
-				for (int i = 0; i < lineResults.length; i++) {
-					WordResult[] wordResults = lineResults[i].getWordResults();
-					for (int j = 0; j < wordResults.length; j++) {
-						// highlight the searched term
-						int wordStart = wordResults[j].start;
-						int wordEnd = wordResults[j].end;
-						hilite.addHighlight(wordStart, wordEnd, wordPainter);
-					}
-					// highlight the whole line
-					hilite.addHighlight(lineResults[i].start, lineResults[i].end, linePainter);
-				}
+			// look for instances of the term in the text
+			int flags = 0;
+			if (caseSensitive) {
+				flags |= SearchEngine.CASE_SENSITIVE;
 			}
-			catch (BadLocationException e) {
-				// don't worry about it
+			if (useRegularExpression) {
+				flags |= SearchEngine.REGEX;
+			}
+
+			lineResults = getSearchEngine().search(term, flags);
+			for (int i = 0; i < 1; i++) {  //i < lineResults.length; i++) {
+				// highlight the whole line
+				addHighlight(lineResults[i].lineNumber, lineResults[i].end, lineHighlighter);
+//				WordResult[] wordResults = lineResults[i].getWordResults();
+//				for (int j = 0; j < wordResults.length; j++) {
+//					// highlight the searched term
+//					int wordStart = wordResults[j].start;
+//					int wordEnd = wordResults[j].end;
+//					addHighlight(wordStart + lineResults[i].start, wordEnd + lineResults[i].end,
+//							wordHighlighter);
+//				}
 			}
 		}
 		return lineResults;
 	}
 
 	/**
+	 * Highlight a piece of text in the document
+	 * 
+	 * @param wordStart
+	 * @param wordEnd
+	 * @param highlighter
+	 */
+	private void addHighlight(int wordStart, int wordEnd, MutableAttributeSet highlighter) {
+		getStyledDocument().setCharacterAttributes(wordStart, wordStart, highlighter, true);
+	}
+
+	/**
 	 * Removes highlights from text area
 	 */
 	public void removeHighlights() {
-		Highlighter hilite = getHighlighter();
-		Highlighter.Highlight[] hilites = hilite.getHighlights();
-
-		for (int i = 0; i < hilites.length; i++) {
-			hilite.removeHighlight(hilites[i]);
-		}
+		getStyledDocument().setCharacterAttributes(0, getDocument().getLength(), clearHighlighter,
+				true);
 	}
 
 	/**
@@ -132,5 +164,41 @@ public class SearchableTextArea extends JTextArea {
 			pos = -1;
 		}
 		return pos;
+	}
+
+	/**
+	 * Get search engine ensuring that only 1 instance is created and reentrant.
+	 * 
+	 * @return searchEngine associated to this text area
+	 */
+	private SearchEngine getSearchEngine() {
+		if (searchEngine == null) {
+			searchEngine = new SearchEngine(this);
+		}
+		return searchEngine;
+	}
+	
+	public int getLineOfOffset(int offset) {
+		StringTokenizer st = new StringTokenizer(getText(),"\n",true);
+		int count = 0;
+		int lineNumber = 0;
+		while (st.hasMoreTokens() && (count < offset)) {
+			String s = st.nextToken();
+			count += s.length();
+			if (s.equals("\n")) lineNumber++;
+		}
+		return lineNumber;
+	}
+	
+	public int getLineStartOffset(int line) {
+		StringTokenizer st = new StringTokenizer(getText(),"\n",true);
+		int count = 0;
+		int lineNumber = 0;
+		while (st.hasMoreTokens() && (lineNumber < line)) {
+			String s = st.nextToken();
+			count += s.length();
+			if (s.equals("\n")) lineNumber++;
+		}
+		return count;
 	}
 }

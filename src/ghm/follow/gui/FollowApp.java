@@ -28,6 +28,7 @@ import ghm.follow.nav.Top;
 import ghm.follow.search.ClearAllHighlights;
 import ghm.follow.search.ClearHighlights;
 import ghm.follow.search.Find;
+import ghm.follow.search.SearchableTextArea;
 import ghm.follow.systemInterface.DefaultSystemInterface;
 import ghm.follow.systemInterface.SystemInterface;
 
@@ -58,7 +59,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 /**
@@ -453,7 +453,7 @@ public class FollowApp {
 			fileFollowingPane = new FileFollowingPane(file, getAttributes()
 					.getBufferSize(), getAttributes().getLatency(),
 					getAttributes().autoScroll());
-			JTextArea ffpTextArea = fileFollowingPane.getTextArea();
+			SearchableTextArea ffpTextArea = fileFollowingPane.getTextArea();
 			enableDragAndDrop(ffpTextArea);
 			ffpTextArea.setFont(getAttributes().getFont());
 			ffpTextArea.addMouseListener(getRightClickListener());

@@ -21,10 +21,10 @@ package ghm.follow.nav;
 import ghm.follow.gui.FileFollowingPane;
 import ghm.follow.gui.FollowApp;
 import ghm.follow.gui.FollowAppAction;
+import ghm.follow.search.SearchableTextArea;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextArea;
 import javax.swing.JViewport;
 
 /**
@@ -44,7 +44,7 @@ public class Bottom extends FollowAppAction {
 
 	public void actionPerformed(ActionEvent e) {
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
-		JTextArea textArea = fileFollowingPane.getTextArea();
+		SearchableTextArea textArea = fileFollowingPane.getTextArea();
 		textArea.setCaretPosition(textArea.getDocument().getLength());
 		JViewport viewport = fileFollowingPane.getViewport();
 		int y = (int) (viewport.getViewSize().getHeight() - viewport.getExtentSize().getHeight());

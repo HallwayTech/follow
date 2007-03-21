@@ -404,7 +404,7 @@ public class Configure extends FollowAppAction {
 									.setLatency(getApp().getAttributes().getLatency());
 							pane.getTextArea().setFont(selectedFont);
 							pane.setAutoPositionCaret(getApp().getAttributes().autoScroll());
-							pane.getTextArea().setTabSize(getApp().getAttributes().getTabSize());
+//							pane.getTextArea().setTabSize(getApp().getAttributes().getTabSize());
 							getApp().getTabbedPane().invalidate();
 							getApp().getTabbedPane().repaint();
 						}

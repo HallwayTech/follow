@@ -20,7 +20,7 @@ public class SearchEngine implements DocumentListener {
 
 	public static final int REGEX = 2;
 
-	protected SearchableTextArea textPane;
+	protected SearchableTextPane textPane;
 
 	protected Document doc;
 	
@@ -33,7 +33,7 @@ public class SearchEngine implements DocumentListener {
 	 * @author chall
 	 * @param textArea
 	 */
-	public SearchEngine(SearchableTextArea textPane) {
+	public SearchEngine(SearchableTextPane textPane) {
 		doc = textPane.getDocument();
 		doc.addDocumentListener(this);
 		this.textPane = textPane;

@@ -22,7 +22,7 @@ package ghm.follow.gui;
 import ghm.follow.FileFollower;
 import ghm.follow.JTextPaneDestination;
 import ghm.follow.OutputDestination;
-import ghm.follow.search.SearchableTextArea;
+import ghm.follow.search.SearchableTextPane;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -47,7 +47,7 @@ public class FileFollowingPane extends JScrollPane {
   @param latency latency of the FileFollower used to follow the supplied file
   */
   public FileFollowingPane (File file, int bufferSize, int latency, boolean autoPositionCaret) {
-    textPane_ = new SearchableTextArea();
+    textPane_ = new SearchableTextPane();
     textPane_.setEditable(false);
     destination_ = new JTextPaneDestination(textPane_, autoPositionCaret);
     fileFollower_ = new FileFollower(
@@ -63,7 +63,7 @@ public class FileFollowingPane extends JScrollPane {
   Returns the text area to which the followed file's contents are being printed.
   @return text area containing followed file's contents
   */
-  public SearchableTextArea getTextArea() { return textPane_; }
+  public SearchableTextPane getTextArea() { return textPane_; }
 
   /**
   Returns whether caret is automatically repositioned to the end of the text area when
@@ -161,7 +161,7 @@ public class FileFollowingPane extends JScrollPane {
   protected FileFollower fileFollower_;
   
   /** Text area into which followed file's contents are printed */
-  protected SearchableTextArea textPane_;
+  protected SearchableTextPane textPane_;
 
   /** OutputDestination used w/FileFollower */
   protected JTextPaneDestination destination_;

@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 package ghm.follow;
 
-import ghm.follow.search.SearchableTextArea;
+import ghm.follow.search.SearchableTextPane;
 
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -63,8 +63,8 @@ public class JTextPaneDestination implements OutputDestination {
   public void print(String s) {
 		try {
 			Style style = null;
-			if (jTextPane_ instanceof SearchableTextArea) {
-				style = ((SearchableTextArea) jTextPane_).getDefaultStyle();
+			if (jTextPane_ instanceof SearchableTextPane) {
+				style = ((SearchableTextPane) jTextPane_).getDefaultStyle();
 			}
 			jTextPane_.getDocument().insertString(jTextPane_.getDocument().getLength(), s, style);
 			if (autoPositionCaret_) {

@@ -126,6 +126,8 @@ public class SearchEngine implements DocumentListener {
 				buildWordResult(tempLine, pos, pos + term.length(), term);
 				lastLine = line;
 				pos += term.length();
+                // allow other things to happen in case the search takes a while
+                Thread.yield();
 			}
 			if (tempLine != null) {
 				results.add(tempLine);
@@ -184,18 +186,13 @@ public class SearchEngine implements DocumentListener {
 	private WordResult buildWordResult(LineResult lineResult, int start, int end, String term) {
 		WordResult r = new WordResult(start, end, term);
 		lineResult.addResult(r);
-//		try {
-			// increase by 1 because offset starts at 0.
-			// 1 is clearer to the user since most people don't start counting
-			// at 0
-			int line = textPane.getLineOfOffset(start);
-			r.parent.lineNumber = line + 1;
-			int lineOffset = textPane.getLineStartOffset(line);
-			r.setLineOffset(lineOffset);
-//		}
-//		catch (BadLocationException e) {
-//			r.parent.lineNumber = -1;
-//		}
+		// increase by 1 because offset starts at 0.
+		// 1 is clearer to the user since most people don't start counting
+		// at 0
+		int line = textPane.getLineOfOffset(start);
+		r.parent.lineNumber = line + 1;
+		int lineOffset = textPane.getLineStartOffset(line);
+		r.setLineOffset(lineOffset);
 		return r;
 	}
 

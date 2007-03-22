@@ -3,7 +3,6 @@ package ghm.follow.search;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -40,6 +39,13 @@ public class SearchableTextPane extends JTextPane {
 		setFont(font);
 		setTabSize(tabSize);
 	}
+
+    /**
+     * Override this to keep the text from wrapping.
+     */
+    public boolean getScrollableTracksViewportWidth() {
+      return false;
+    }
 
 	/**
 	 * Sets the display font used and updates the font widths.

@@ -99,8 +99,7 @@ public class FollowApp {
 
 	private static FollowApp instance_;
 
-	public static final String FILE_SEPARATOR = System
-			.getProperty("file.separator");
+	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
 	public static final String MESSAGE_LINE_SEPARATOR = "\n";
 
@@ -134,8 +133,7 @@ public class FollowApp {
 
 		// Ghastly workaround for bug in Font construction, in review by
 		// Sun with review id 108683.
-		GraphicsEnvironment.getLocalGraphicsEnvironment()
-				.getAvailableFontFamilyNames();
+		GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {
 				startupStatus_.markDone(startupStatus_.LOAD_SYSTEM_FONTS);
@@ -150,9 +148,8 @@ public class FollowApp {
 		for (int i = 0; i < fileNames.length; i++) {
 			File file = new File(fileNames[i]);
 			if (!file.exists()) {
-				String msg = MessageFormat.format(getResourceBundle()
-						.getString("message.cmdLineFileNotFound.text"),
-						new Object[] { file });
+				String msg = MessageFormat.format(getResourceBundle().getString(
+						"message.cmdLineFileNotFound.text"), new Object[] { file });
 				System.out.println(msg);
 			} else if (!getAttributes().followedFileListContains(file)) {
 				getAttributes().addFollowedFile(file);
@@ -215,8 +212,7 @@ public class FollowApp {
 		frame_.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				if (tabbedPane_.getTabCount() > 0) {
-					getAttributes().setSelectedTabIndex(
-							tabbedPane_.getSelectedIndex());
+					getAttributes().setSelectedTabIndex(tabbedPane_.getSelectedIndex());
 				}
 				((Window) e.getSource()).dispose();
 			}
@@ -225,8 +221,7 @@ public class FollowApp {
 				try {
 					getAttributes().store();
 				} catch (IOException ioe) {
-					System.err
-							.println("Error encountered while storing properties...");
+					System.err.println("Error encountered while storing properties...");
 					ioe.printStackTrace(System.err);
 				} finally {
 					systemInterface_.exit(0);
@@ -256,8 +251,7 @@ public class FollowApp {
 				getAttributes().removeFollowedFile(file);
 				nonexistentFileCount++;
 				if (nonexistentFilesBuffer == null) {
-					nonexistentFilesBuffer = new StringBuffer(file
-							.getAbsolutePath());
+					nonexistentFilesBuffer = new StringBuffer(file.getAbsolutePath());
 				} else {
 					nonexistentFilesBuffer.append(file.getAbsolutePath());
 				}
@@ -267,19 +261,15 @@ public class FollowApp {
 		if (nonexistentFileCount > 0) {
 			// Alert the user of the fact that one or more files have been
 			// deleted since the previous execution
-			String message = MessageFormat.format(getResourceBundle()
-					.getString("message.filesDeletedSinceLastExecution.text"),
-					new Object[] { new Long(nonexistentFileCount),
-							nonexistentFilesBuffer.toString() });
-			JOptionPane.showMessageDialog(frame_, message, getResourceBundle()
-					.getString("message.filesDeletedSinceLastExecution.title"),
-					JOptionPane.WARNING_MESSAGE);
+			String message = MessageFormat.format(getResourceBundle().getString(
+					"message.filesDeletedSinceLastExecution.text"), new Object[] {
+					new Long(nonexistentFileCount), nonexistentFilesBuffer.toString() });
+			JOptionPane.showMessageDialog(frame_, message, getResourceBundle().getString(
+					"message.filesDeletedSinceLastExecution.title"), JOptionPane.WARNING_MESSAGE);
 		}
 		if (tabbedPane_.getTabCount() > 0) {
-			if (tabbedPane_.getTabCount() > getAttributes()
-					.getSelectedTabIndex()) {
-				tabbedPane_.setSelectedIndex(getAttributes()
-						.getSelectedTabIndex());
+			if (tabbedPane_.getTabCount() > getAttributes().getSelectedTabIndex()) {
+				tabbedPane_.setSelectedIndex(getAttributes().getSelectedTabIndex());
 			} else {
 				tabbedPane_.setSelectedIndex(0);
 			}
@@ -314,9 +304,8 @@ public class FollowApp {
 	 */
 	private JMenuBar buildMenuBar() {
 		// file menu
-		Menu fileMenu = new Menu(getResourceBundle()
-				.getString("menu.File.name"), getResourceBundle().getString(
-				"menu.File.mnemonic"));
+		Menu fileMenu = new Menu(getResourceBundle().getString("menu.File.name"),
+				getResourceBundle().getString("menu.File.mnemonic"));
 		fileMenu.addFollowAppAction(getAction(Open.NAME));
 		fileMenu.addFollowAppAction(getAction(Close.NAME));
 		fileMenu.addFollowAppAction(getAction(Reload.NAME));
@@ -324,25 +313,22 @@ public class FollowApp {
 		fileMenu.addFollowAppAction(getAction(Reset.NAME));
 		fileMenu.addFollowAppAction(getAction(Pause.NAME));
 		fileMenu.addSeparator();
-		recentFilesMenu_ = new Menu(getResourceBundle().getString(
-				"menu.RecentFiles.name"), getResourceBundle().getString(
-				"menu.RecentFiles.mnemonic"));
+		recentFilesMenu_ = new Menu(getResourceBundle().getString("menu.RecentFiles.name"),
+				getResourceBundle().getString("menu.RecentFiles.mnemonic"));
 		refreshRecentFilesMenu();
 		fileMenu.add(recentFilesMenu_);
 		fileMenu.addSeparator();
 		fileMenu.addFollowAppAction(getAction(Exit.NAME));
 		// edit menu
-		Menu editMenu = new Menu(getResourceBundle()
-				.getString("menu.Edit.name"), getResourceBundle().getString(
-				"menu.Edit.mnemonic"));
+		Menu editMenu = new Menu(getResourceBundle().getString("menu.Edit.name"),
+				getResourceBundle().getString("menu.Edit.mnemonic"));
 		editMenu.addFollowAppAction(getAction(Find.NAME));
 		editMenu.addSeparator();
 		editMenu.addFollowAppAction(getAction(ClearHighlights.NAME));
 		editMenu.addFollowAppAction(getAction(ClearAllHighlights.NAME));
 		// tool menu
-		Menu toolsMenu = new Menu(getResourceBundle().getString(
-				"menu.Tools.name"), getResourceBundle().getString(
-				"menu.Tools.mnemonic"));
+		Menu toolsMenu = new Menu(getResourceBundle().getString("menu.Tools.name"),
+				getResourceBundle().getString("menu.Tools.mnemonic"));
 		toolsMenu.addFollowAppAction(getAction(Top.NAME));
 		toolsMenu.addFollowAppAction(getAction(Bottom.NAME));
 		toolsMenu.addSeparator();
@@ -354,15 +340,13 @@ public class FollowApp {
 		toolsMenu.addFollowAppAction(getAction(Configure.NAME));
 		toolsMenu.addFollowAppAction(getAction(Edit.NAME));
 		// window menu
-		Menu windowMenu = new Menu(getResourceBundle().getString(
-				"menu.Window.name"), getResourceBundle().getString(
-				"menu.Window.mnemonic"));
+		Menu windowMenu = new Menu(getResourceBundle().getString("menu.Window.name"),
+				getResourceBundle().getString("menu.Window.mnemonic"));
 		windowMenu.addFollowAppAction(getAction(NextTab.NAME));
 		windowMenu.addFollowAppAction(getAction(PreviousTab.NAME));
 		// help menu
-		Menu helpMenu = new Menu(getResourceBundle()
-				.getString("menu.Help.name"), getResourceBundle().getString(
-				"menu.Help.mnemonic"));
+		Menu helpMenu = new Menu(getResourceBundle().getString("menu.Help.name"),
+				getResourceBundle().getString("menu.Help.mnemonic"));
 		helpMenu.addFollowAppAction(getAction(About.NAME));
 		if (DEBUG) {
 			helpMenu.addSeparator();
@@ -444,25 +428,23 @@ public class FollowApp {
 	 * dispatching thread.
 	 */
 	void open(File file, boolean addFileToAttributes, boolean startFollowing) {
-		FileFollowingPane fileFollowingPane = (FileFollowingPane) fileToFollowingPaneMap_
-				.get(file);
+		FileFollowingPane fileFollowingPane = (FileFollowingPane) fileToFollowingPaneMap_.get(file);
 		if (fileFollowingPane != null) {
 			// File is already open; merely select its tab
 			tabbedPane_.setSelectedComponent(fileFollowingPane);
 		} else {
-			fileFollowingPane = new FileFollowingPane(file, getAttributes()
-					.getBufferSize(), getAttributes().getLatency(),
-					getAttributes().autoScroll());
-			SearchableTextPane ffpTextArea = fileFollowingPane.getTextArea();
-			enableDragAndDrop(ffpTextArea);
-			ffpTextArea.setFont(getAttributes().getFont());
-			ffpTextArea.addMouseListener(getRightClickListener());
+			fileFollowingPane = new FileFollowingPane(file, getAttributes().getBufferSize(),
+					getAttributes().getLatency(), getAttributes().autoScroll(), getAttributes()
+							.getFont(), getAttributes().getTabSize());
+			SearchableTextPane ffpTextPane = fileFollowingPane.getTextPane();
+			enableDragAndDrop(ffpTextPane);
+//			ffpTextPane.setFont(getAttributes().getFont());
+			ffpTextPane.addMouseListener(getRightClickListener());
 			fileToFollowingPaneMap_.put(file, fileFollowingPane);
 			if (startFollowing) {
 				fileFollowingPane.startFollowing();
 			}
-			tabbedPane_.addTab(file.getName(), null, fileFollowingPane, file
-					.getAbsolutePath());
+			tabbedPane_.addTab(file.getName(), null, fileFollowingPane, file.getAbsolutePath());
 			int tabCount = tabbedPane_.getTabCount();
 			if (tabCount < 10) {
 				// KeyEvent.VK_1 through KeyEvent.VK_9 is represented by the
@@ -475,9 +457,8 @@ public class FollowApp {
 			// add a listener to set the pause icon correctly
 			fileFollowingPane.addComponentListener(new ComponentAdapter() {
 				public void componentShown(ComponentEvent e) {
-					((Pause) getAction(Pause.NAME))
-							.setIconByState(((FileFollowingPane) e.getSource())
-									.isFollowing());
+					((Pause) getAction(Pause.NAME)).setIconByState(((FileFollowingPane) e
+							.getSource()).isFollowing());
 				}
 			});
 			if (!getAction(Close.NAME).isEnabled()) {
@@ -630,11 +611,8 @@ public class FollowApp {
 	static void centerWindowInScreen(Window window) {
 		Dimension screenSize = window.getToolkit().getScreenSize();
 		Dimension windowSize = window.getPreferredSize();
-		window
-				.setLocation((int) (screenSize.getWidth() / 2 - windowSize
-						.getWidth() / 2),
-						(int) (screenSize.getHeight() / 2 - windowSize
-								.getHeight() / 2));
+		window.setLocation((int) (screenSize.getWidth() / 2 - windowSize.getWidth() / 2),
+				(int) (screenSize.getHeight() / 2 - windowSize.getHeight() / 2));
 	}
 
 	/**
@@ -652,8 +630,7 @@ public class FollowApp {
 				public void run() {
 					// ensure all widgets inited before opening files
 					instance_.show();
-					instance_.startupStatus_
-							.markDone(instance_.startupStatus_.CREATE_WIDGETS);
+					instance_.startupStatus_.markDone(instance_.startupStatus_.CREATE_WIDGETS);
 				}
 			});
 			instance_.startupStatus_.dispose();

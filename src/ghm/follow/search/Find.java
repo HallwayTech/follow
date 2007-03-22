@@ -74,7 +74,7 @@ public class Find extends FollowAppAction {
 		// get the current selected tab
 		FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
 		// search the tab with the given text
-		SearchableTextPane textArea = pane.getTextArea();
+		SearchableTextPane textArea = pane.getTextPane();
 		// textArea.selectAll();
 		LineResult[] results = textArea.highlight(find_.getText(), caseSensitive_.isSelected(),
 				regularExpression_.isSelected());
@@ -175,7 +175,7 @@ public class Find extends FollowAppAction {
 											// and text area
 											FileFollowingPane pane = getApp()
 													.getSelectedFileFollowingPane();
-											SearchableTextPane textArea = pane.getTextArea();
+											SearchableTextPane textArea = pane.getTextPane();
 											// move the caret to the chosen text
 											textArea.setCaretPosition(result.getFirstWordPosition());
 										}
@@ -197,7 +197,7 @@ public class Find extends FollowAppAction {
 					// get the current selected tab
 					FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
 					// clear the highlights from the searched tab
-					SearchableTextPane textArea = pane.getTextArea();
+					SearchableTextPane textArea = pane.getTextPane();
 					textArea.removeHighlights();
 					// clear the status bar and result list
 					clearResults();

@@ -42,7 +42,7 @@ public class Close extends FollowAppAction {
 		int tab = getApp().getTabbedPane().getSelectedIndex();
 		if (tab >= 0) {
 			getApp().getTabbedPane().removeTabAt(tab);
-			getApp().disableDragAndDrop(fileFollowingPane.getTextArea());
+			getApp().disableDragAndDrop(fileFollowingPane.getTextPane());
 			getApp().getAttributes().removeFollowedFile(fileFollowingPane.getFollowedFile());
 			fileFollowingPane.stopFollowing();
 			getApp().getFileToFollowingPaneMap().remove(fileFollowingPane.getFollowedFile());

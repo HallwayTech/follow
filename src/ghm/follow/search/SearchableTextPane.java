@@ -1,16 +1,19 @@
 package ghm.follow.search;
 
 import java.awt.Color;
-import java.util.StringTokenizer;
+import java.awt.Font;
+import java.awt.FontMetrics;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Element;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 import javax.swing.text.TabSet;
 import javax.swing.text.TabStop;
 
@@ -19,37 +22,100 @@ public class SearchableTextPane extends JTextPane {
 
 	private String lastSearchTerm;
 
-	private MutableAttributeSet lineHighlighter = new SimpleAttributeSet();
-	private MutableAttributeSet wordHighlighter = new SimpleAttributeSet();
-	private MutableAttributeSet clearHighlighter = new SimpleAttributeSet();
+	private final MutableAttributeSet lineHighlighter = new SimpleAttributeSet();
 
-	public final Style defaultStyle;
+	private final MutableAttributeSet wordHighlighter = new SimpleAttributeSet();
+
+	private final MutableAttributeSet clearHighlighter = new SimpleAttributeSet();
 
 	private SearchEngine searchEngine;
 
-	public SearchableTextPane() {
-		TabSet tabSet = new TabSet(new TabStop[] {new TabStop(100)});
-		// set up the styles you want to use in you JTextPane
-		Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-		StyleConstants.setTabSet(def,tabSet);
-		setParagraphAttributes(def,true);
-		defaultStyle = addStyle("regular", def);
+	private int tabSize;
 
+	public SearchableTextPane(Font font, int tabSize) {
 		StyleConstants.setBackground(lineHighlighter, Color.YELLOW);
 		StyleConstants.setBackground(wordHighlighter, Color.LIGHT_GRAY);
-		// TODO set this to match the default style background
 		StyleConstants.setBackground(clearHighlighter, Color.WHITE);
+		// set the display font
+		setFont(font);
+		setTabSize(tabSize);
 	}
 
 	/**
-	 * Gets the default style for the document
+	 * Sets the display font used and updates the font widths.
 	 * 
-	 * @return
+	 * @param font
 	 */
-	public Style getDefaultStyle() {
-		return defaultStyle;
+	public void setFont(Font font) {
+		setFont(font, false);
 	}
 
+	/**
+	 * Sets the display font used and updates the font widths.
+	 * 
+	 * @param font
+	 * @param updateTabs
+	 */
+	public void setFont(Font font, boolean updateTabs) {
+		super.setFont(font);
+		Document doc = getDocument();
+		StyledDocument sdoc = getStyledDocument();
+		// apply the style to the document
+		if (sdoc != null && doc != null) {
+			Style style = StyleContext.getDefaultStyleContext()
+					.getStyle(StyleContext.DEFAULT_STYLE);
+			StyleConstants.setFontFamily(style, font.getFamily());
+			StyleConstants.setFontSize(style, font.getSize());
+			StyleConstants.setBold(style, font.isBold());
+			StyleConstants.setItalic(style, font.isItalic());
+			sdoc.setCharacterAttributes(0, doc.getLength(), style, false);
+		}
+		if (updateTabs) {
+			setTabs();
+		}
+	}
+
+	public int getTabSize() {
+		return tabSize;
+	}
+
+	public void setTabSize(int tabSize) {
+		this.tabSize = tabSize;
+		setTabs();
+	}
+
+	private void setTabs() {
+		Document doc = getDocument();
+		StyledDocument sdoc = getStyledDocument();
+		if (doc != null && sdoc != null) {
+			FontMetrics fm = getFontMetrics(getFont());
+			int charWidth = fm.charWidth('o');
+			int tabWidth = charWidth * tabSize;
+
+			TabStop[] tabs = new TabStop[10];
+
+			for (int j = 0; j < tabs.length; j++) {
+				int tab = j + 1;
+				tabs[j] = new TabStop(tab * tabWidth);
+			}
+
+			TabSet tabSet = new TabSet(tabs);
+			SimpleAttributeSet attributes = new SimpleAttributeSet();
+			StyleConstants.setTabSet(attributes, tabSet);
+			int length = doc.getLength();
+			sdoc.setParagraphAttributes(0, length, attributes, false);
+		}
+	}
+
+	/**
+	 * Highlight <code>term</code> wherever it is found in the view. Also
+	 * highlights the entire line on which the term is found.
+	 * 
+	 * @param term
+	 * @param caseSensitive
+	 * @param useRegularExpression
+	 * @return
+	 */
 	public LineResult[] highlight(String term, boolean caseSensitive, boolean useRegularExpression) {
 		LineResult[] lineResults = null;
 		// Remove all old highlights
@@ -125,16 +191,14 @@ public class SearchableTextPane extends JTextPane {
 					pos = lastSearchPos + lastSearchTerm.length();
 				}
 				lastSearchPos = search(lastSearchTerm, pos);
-			}
-			else {
+			} else {
 				lastSearchPos = search(term, 0);
 			}
 		}
 		// remember the term if it was found
 		if (lastSearchPos == -1) {
 			lastSearchTerm = null;
-		}
-		else {
+		} else {
 			lastSearchTerm = term;
 		}
 		return lastSearchPos;
@@ -160,8 +224,7 @@ public class SearchableTextPane extends JTextPane {
 
 			// Search for pattern
 			pos = text.indexOf(term, startPos);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			// just return -1;
 			pos = -1;
 		}
@@ -179,28 +242,39 @@ public class SearchableTextPane extends JTextPane {
 		}
 		return searchEngine;
 	}
-	
+
+	/**
+	 * Get the line where <code>offset</code> is found. Taken from JTextArea.
+	 * 
+	 * @param offset
+	 * @return
+	 */
 	public int getLineOfOffset(int offset) {
-		StringTokenizer st = new StringTokenizer(getText(),"\n",true);
-		int count = 0;
-		int lineNumber = 0;
-		while (st.hasMoreTokens() && (count < offset)) {
-			String s = st.nextToken();
-			count += s.length();
-			if (s.equals("\n")) lineNumber++;
-		}
-		return lineNumber;
+		Element map = getDocument().getDefaultRootElement();
+		return map.getElementIndex(offset);
 	}
-	
+
+	/**
+	 * Get the starting caret position of a line. Taken from JTextArea.
+	 * 
+	 * @param line
+	 * @return
+	 */
 	public int getLineStartOffset(int line) {
-		StringTokenizer st = new StringTokenizer(getText(),"\n",true);
-		int count = 0;
-		int lineNumber = 0;
-		while (st.hasMoreTokens() && (lineNumber < line)) {
-			String s = st.nextToken();
-			count += s.length();
-			if (s.equals("\n")) lineNumber++;
-		}
-		return count;
+		Element map = getDocument().getDefaultRootElement();
+		Element lineElem = map.getElement(line);
+		return lineElem.getStartOffset();
+	}
+
+	/**
+	 * Get the ending caret position of a line. Taken from JTextArea.
+	 * 
+	 * @param line
+	 * @return
+	 */
+	public int getLineEndOffset(int line) {
+		Element map = getDocument().getDefaultRootElement();
+		Element lineElem = map.getElement(line);
+		return lineElem.getEndOffset();
 	}
 }

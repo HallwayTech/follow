@@ -42,7 +42,7 @@ public class Top extends FollowAppAction {
 
 	public void actionPerformed(ActionEvent e) {
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
-		fileFollowingPane.getTextArea().setCaretPosition(0);
+		fileFollowingPane.getTextPane().setCaretPosition(0);
 		JViewport viewport = fileFollowingPane.getViewport();
 		viewport.setViewPosition(new Point(0, 0));
 		viewport.revalidate();

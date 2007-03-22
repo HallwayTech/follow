@@ -19,12 +19,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 package ghm.follow;
 
-import ghm.follow.search.SearchableTextPane;
-
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
 
 /**
 Implementation of {@link OutputDestination} which appends Strings to a
@@ -62,11 +59,7 @@ public class JTextPaneDestination implements OutputDestination {
 
   public void print(String s) {
 		try {
-			Style style = null;
-			if (jTextPane_ instanceof SearchableTextPane) {
-				style = ((SearchableTextPane) jTextPane_).getDefaultStyle();
-			}
-			jTextPane_.getDocument().insertString(jTextPane_.getDocument().getLength(), s, style);
+			jTextPane_.getDocument().insertString(jTextPane_.getDocument().getLength(), s, null);
 			if (autoPositionCaret_) {
 				jTextPane_.setCaretPosition(jTextPane_.getDocument().getLength());
 			}

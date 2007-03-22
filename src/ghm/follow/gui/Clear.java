@@ -37,7 +37,7 @@ public class Clear extends FollowAppAction {
 
 	public void actionPerformed(ActionEvent e) {
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
-		fileFollowingPane.getTextArea().setText("");
+		fileFollowingPane.getTextPane().setText("");
 	}
 
 }

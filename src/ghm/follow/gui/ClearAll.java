@@ -44,7 +44,7 @@ public class ClearAll extends FollowAppAction {
 		FileFollowingPane fileFollowingPane;
 		while (i.hasNext()) {
 			fileFollowingPane = (FileFollowingPane) i.next();
-			fileFollowingPane.getTextArea().setText("");
+			fileFollowingPane.getTextPane().setText("");
 		}
 	}
 }

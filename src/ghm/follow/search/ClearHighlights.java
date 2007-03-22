@@ -42,7 +42,7 @@ public class ClearHighlights extends FollowAppAction {
 		// get the current selected tab
 		FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
 		// search the tab with the given text
-		SearchableTextPane textArea = pane.getTextArea();
+		SearchableTextPane textArea = pane.getTextPane();
 		textArea.removeHighlights();
 	}
 }

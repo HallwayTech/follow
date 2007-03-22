@@ -402,9 +402,9 @@ public class Configure extends FollowAppAction {
 									getApp().getAttributes().getBufferSize());
 							pane.getFileFollower()
 									.setLatency(getApp().getAttributes().getLatency());
-							pane.getTextArea().setFont(selectedFont);
+							pane.getTextPane().setFont(selectedFont);
 							pane.setAutoPositionCaret(getApp().getAttributes().autoScroll());
-//							pane.getTextArea().setTabSize(getApp().getAttributes().getTabSize());
+							pane.getTextPane().setTabSize(getApp().getAttributes().getTabSize());
 							getApp().getTabbedPane().invalidate();
 							getApp().getTabbedPane().repaint();
 						}

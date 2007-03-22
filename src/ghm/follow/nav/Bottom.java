@@ -44,7 +44,7 @@ public class Bottom extends FollowAppAction {
 
 	public void actionPerformed(ActionEvent e) {
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
-		SearchableTextPane textArea = fileFollowingPane.getTextArea();
+		SearchableTextPane textArea = fileFollowingPane.getTextPane();
 		textArea.setCaretPosition(textArea.getDocument().getLength());
 		JViewport viewport = fileFollowingPane.getViewport();
 		int y = (int) (viewport.getViewSize().getHeight() - viewport.getExtentSize().getHeight());

@@ -1,9 +1,11 @@
 package ghm.follow.search;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import javax.swing.JTextPane;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
@@ -18,18 +20,13 @@ import javax.swing.text.TabStop;
 
 public class SearchableTextPane extends JTextPane {
 	private int lastSearchPos = -1;
-
 	private String lastSearchTerm;
-
 	private final MutableAttributeSet lineHighlighter = new SimpleAttributeSet();
-
 	private final MutableAttributeSet wordHighlighter = new SimpleAttributeSet();
-
 	private final MutableAttributeSet clearHighlighter = new SimpleAttributeSet();
-
 	private SearchEngine searchEngine;
-
 	private int tabSize;
+	private LineResult[] lineResults;
 
 	public SearchableTextPane(Font font, int tabSize) {
 		StyleConstants.setBackground(lineHighlighter, Color.YELLOW);
@@ -40,12 +37,16 @@ public class SearchableTextPane extends JTextPane {
 		setTabSize(tabSize);
 	}
 
-    /**
-     * Override this to keep the text from wrapping.
-     */
-    public boolean getScrollableTracksViewportWidth() {
-      return false;
-    }
+	/**
+	 * Override this to keep the text from wrapping and to make the viewable
+	 * area as wide as the tabbed pane
+	 */
+	public boolean getScrollableTracksViewportWidth() {
+		Component parent = getParent();
+		ComponentUI ui = getUI();
+
+		return parent != null ? (ui.getPreferredSize(this).width <= parent.getSize().width) : true;
+	}
 
 	/**
 	 * Sets the display font used and updates the font widths.
@@ -123,7 +124,7 @@ public class SearchableTextPane extends JTextPane {
 	 * @return
 	 */
 	public LineResult[] highlight(String term, boolean caseSensitive, boolean useRegularExpression) {
-		LineResult[] lineResults = null;
+		lineResults = null;
 		// Remove all old highlights
 		removeHighlights();
 		// Search for pattern
@@ -149,6 +150,7 @@ public class SearchableTextPane extends JTextPane {
 					int wordStart = wordResults[j].start;
 					int wordEnd = wordResults[j].end;
 					addHighlight(wordStart, wordEnd - wordStart, wordHighlighter);
+					Thread.yield();
 				}
 			}
 		}
@@ -170,8 +172,19 @@ public class SearchableTextPane extends JTextPane {
 	 * Removes highlights from text area
 	 */
 	public void removeHighlights() {
-		getStyledDocument().setCharacterAttributes(0, getDocument().getLength(), clearHighlighter,
-				true);
+		if (lineResults != null) {
+			StyledDocument sdoc = getStyledDocument();
+			// Document doc = getDocument();
+			for (int i = 0; i < lineResults.length; i++) {
+				int start = lineResults[i].start;
+				int end = lineResults[i].end;
+				sdoc.setCharacterAttributes(start, end - start, clearHighlighter, false);
+				Thread.yield();
+			}
+		}
+		// getStyledDocument().setCharacterAttributes(0,
+		// getDocument().getLength(), clearHighlighter,
+		// true);
 	}
 
 	/**
@@ -197,14 +210,16 @@ public class SearchableTextPane extends JTextPane {
 					pos = lastSearchPos + lastSearchTerm.length();
 				}
 				lastSearchPos = search(lastSearchTerm, pos);
-			} else {
+			}
+			else {
 				lastSearchPos = search(term, 0);
 			}
 		}
 		// remember the term if it was found
 		if (lastSearchPos == -1) {
 			lastSearchTerm = null;
-		} else {
+		}
+		else {
 			lastSearchTerm = term;
 		}
 		return lastSearchPos;
@@ -230,7 +245,8 @@ public class SearchableTextPane extends JTextPane {
 
 			// Search for pattern
 			pos = text.indexOf(term, startPos);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			// just return -1;
 			pos = -1;
 		}

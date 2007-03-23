@@ -56,7 +56,8 @@ public class FileFollowingPane extends JScrollPane {
 		destination_ = new JTextPaneDestination(textPane_, autoPositionCaret);
 		fileFollower_ = new FileFollower(file, bufferSize, latency,
 				new OutputDestination[] { destination_ });
-		this.setViewportView(textPane_);
+		add(textPane_);
+		setViewportView(textPane_);
 	}
 
 	/**
@@ -156,7 +157,8 @@ public class FileFollowingPane extends JScrollPane {
 		synchronized (fileFollower_) {
 			try {
 				fileFollower_.stopAndWait();
-			} catch (InterruptedException interruptedException) {
+			}
+			catch (InterruptedException interruptedException) {
 				// Handle this better later
 				interruptedException.printStackTrace(System.err);
 			}
@@ -170,7 +172,8 @@ public class FileFollowingPane extends JScrollPane {
 			Document doc = textPane_.getDocument();
 			try {
 				doc.remove(0, doc.getLength());
-			} catch (BadLocationException badLocationException) {
+			}
+			catch (BadLocationException badLocationException) {
 				// Handle this better later
 				badLocationException.printStackTrace(System.err);
 			}

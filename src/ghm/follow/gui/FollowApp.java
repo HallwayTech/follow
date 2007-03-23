@@ -151,7 +151,8 @@ public class FollowApp {
 				String msg = MessageFormat.format(getResourceBundle().getString(
 						"message.cmdLineFileNotFound.text"), new Object[] { file });
 				System.out.println(msg);
-			} else if (!getAttributes().followedFileListContains(file)) {
+			}
+			else if (!getAttributes().followedFileListContains(file)) {
 				getAttributes().addFollowedFile(file);
 			}
 		}
@@ -205,7 +206,8 @@ public class FollowApp {
 		// on Solaris jdk versions before 1.4
 		if (HAS_SOLARIS_BUG) {
 			frame_.setLocation(50, 50);
-		} else {
+		}
+		else {
 			frame_.setLocation(getAttributes().getX(), getAttributes().getY());
 		}
 		frame_.addWindowListener(new WindowTracker(getAttributes()));
@@ -220,10 +222,12 @@ public class FollowApp {
 			public void windowClosed(WindowEvent e) {
 				try {
 					getAttributes().store();
-				} catch (IOException ioe) {
+				}
+				catch (IOException ioe) {
 					System.err.println("Error encountered while storing properties...");
 					ioe.printStackTrace(System.err);
-				} finally {
+				}
+				finally {
 					systemInterface_.exit(0);
 				}
 			}
@@ -244,7 +248,8 @@ public class FollowApp {
 			file = files[i];
 			if (file.exists()) {
 				open(file, false);
-			} else {
+			}
+			else {
 				// This file has been deleted since the previous execution.
 				// Remove it
 				// from the list of followed files
@@ -252,7 +257,8 @@ public class FollowApp {
 				nonexistentFileCount++;
 				if (nonexistentFilesBuffer == null) {
 					nonexistentFilesBuffer = new StringBuffer(file.getAbsolutePath());
-				} else {
+				}
+				else {
 					nonexistentFilesBuffer.append(file.getAbsolutePath());
 				}
 				nonexistentFilesBuffer.append(MESSAGE_LINE_SEPARATOR);
@@ -270,10 +276,12 @@ public class FollowApp {
 		if (tabbedPane_.getTabCount() > 0) {
 			if (tabbedPane_.getTabCount() > getAttributes().getSelectedTabIndex()) {
 				tabbedPane_.setSelectedIndex(getAttributes().getSelectedTabIndex());
-			} else {
+			}
+			else {
 				tabbedPane_.setSelectedIndex(0);
 			}
-		} else {
+		}
+		else {
 			getAction(Close.NAME).setEnabled(false);
 			getAction(Reload.NAME).setEnabled(false);
 			getAction(Edit.NAME).setEnabled(false);
@@ -432,13 +440,15 @@ public class FollowApp {
 		if (fileFollowingPane != null) {
 			// File is already open; merely select its tab
 			tabbedPane_.setSelectedComponent(fileFollowingPane);
-		} else {
+		}
+		else {
 			fileFollowingPane = new FileFollowingPane(file, getAttributes().getBufferSize(),
 					getAttributes().getLatency(), getAttributes().autoScroll(), getAttributes()
 							.getFont(), getAttributes().getTabSize());
 			SearchableTextPane ffpTextPane = fileFollowingPane.getTextPane();
 			enableDragAndDrop(ffpTextPane);
-//			ffpTextPane.setFont(getAttributes().getFont());
+			fileFollowingPane.setSize(frame_.getSize());
+			ffpTextPane.setFont(getAttributes().getFont());
 			ffpTextPane.addMouseListener(getRightClickListener());
 			fileToFollowingPaneMap_.put(file, fileFollowingPane);
 			if (startFollowing) {
@@ -449,16 +459,16 @@ public class FollowApp {
 			if (tabCount < 10) {
 				// KeyEvent.VK_1 through KeyEvent.VK_9 is represented by the
 				// ascii characters 1-9 (49-57)
-				// Note: there's probably a better way to convert a number
-				// into the ascii value but this is quick and easy.
-				tabbedPane_.setMnemonicAt(tabCount - 1, tabCount + 48);
+				int index = tabCount - 1;
+				tabbedPane_.setMnemonicAt(index, index + ((int) '1'));
 			}
 			tabbedPane_.setSelectedIndex(tabCount - 1);
 			// add a listener to set the pause icon correctly
 			fileFollowingPane.addComponentListener(new ComponentAdapter() {
 				public void componentShown(ComponentEvent e) {
-					((Pause) getAction(Pause.NAME)).setIconByState(((FileFollowingPane) e
-							.getSource()).isFollowing());
+					FileFollowingPane ffp = (FileFollowingPane) e.getSource();
+					Pause pause = (Pause) getAction(Pause.NAME);
+					pause.setIconByState(ffp.isFollowing());
 				}
 			});
 			if (!getAction(Close.NAME).isEnabled()) {
@@ -497,23 +507,23 @@ public class FollowApp {
 			return;
 		}
 		switch (cursorType) {
-		case Cursor.DEFAULT_CURSOR:
-			if (defaultCursor_ == null) {
-				defaultCursor_ = Cursor.getDefaultCursor();
-			}
-			frame_.setCursor(defaultCursor_);
-			break;
+			case Cursor.DEFAULT_CURSOR:
+				if (defaultCursor_ == null) {
+					defaultCursor_ = Cursor.getDefaultCursor();
+				}
+				frame_.setCursor(defaultCursor_);
+				break;
 
-		case Cursor.WAIT_CURSOR:
-			if (waitCursor_ == null) {
-				waitCursor_ = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
-			}
-			frame_.setCursor(waitCursor_);
-			break;
+			case Cursor.WAIT_CURSOR:
+				if (waitCursor_ == null) {
+					waitCursor_ = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+				}
+				frame_.setCursor(waitCursor_);
+				break;
 
-		default:
-			throw new IllegalArgumentException(
-					"Supported cursors are Cursor.DEFAULT_CURSOR and Cursor.WAIT_CURSOR");
+			default:
+				throw new IllegalArgumentException(
+						"Supported cursors are Cursor.DEFAULT_CURSOR and Cursor.WAIT_CURSOR");
 		}
 		currentCursor_ = cursorType;
 	}
@@ -601,7 +611,8 @@ public class FollowApp {
 					if (minor < 4) {
 						HAS_SOLARIS_BUG = true;
 					}
-				} catch (NumberFormatException nfe) {
+				}
+				catch (NumberFormatException nfe) {
 					// Nothing else to do.
 				}
 			}
@@ -639,7 +650,8 @@ public class FollowApp {
 			// for (int i=0; i < instance_.tabbedPane_.getTabCount(); i++) {
 			// ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
 			// }
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			t.printStackTrace();
 			System.exit(-1);
 		}

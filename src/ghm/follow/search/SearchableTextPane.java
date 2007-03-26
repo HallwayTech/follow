@@ -24,7 +24,7 @@ public class SearchableTextPane extends JTextPane {
 	private final MutableAttributeSet lineHighlighter = new SimpleAttributeSet();
 	private final MutableAttributeSet wordHighlighter = new SimpleAttributeSet();
 	private final MutableAttributeSet clearHighlighter = new SimpleAttributeSet();
-	private SearchEngine searchEngine;
+//	private SearchEngine searchEngine;
 	private int tabSize;
 	private LineResult[] lineResults;
 
@@ -259,10 +259,11 @@ public class SearchableTextPane extends JTextPane {
 	 * @return searchEngine associated to this text area
 	 */
 	private SearchEngine getSearchEngine() {
-		if (searchEngine == null) {
-			searchEngine = new SearchEngine(this);
-		}
-		return searchEngine;
+//		if (searchEngine == null) {
+//			searchEngine = new SearchEngine(this);
+//		}
+//		return searchEngine;
+      return new SearchEngine(this);
 	}
 
 	/**

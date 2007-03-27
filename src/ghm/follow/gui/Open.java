@@ -20,6 +20,10 @@ package ghm.follow.gui;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.text.MessageFormat;
+
+import javax.swing.JOptionPane;
 
 /**
  * Action which opens a new file in the Follow application.
@@ -39,21 +43,29 @@ public class Open extends FollowAppAction {
 	}
 
 	public Open(FollowApp app, File recentFile) {
-		super(app, recentFile.getAbsolutePath(), app.getResourceBundle()
-				.getString("action.Open.mnemonic"), app.getResourceBundle().getString(
+		super(app, recentFile.getAbsolutePath(), app.getResourceBundle().getString(
+				"action.Open.mnemonic"), app.getResourceBundle().getString(
 				"action.Open.accelerator"));
 		this.recentFile = recentFile;
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (recentFile != null) {
-			getApp().open(recentFile, getApp().getAttributes().autoScroll());
-		}
-		else {
-			File file = getApp().getSystemInterface().getFileFromUser();
-			if (file != null) {
-				getApp().open(file, getApp().getAttributes().autoScroll());
+		File f = null;
+		try {
+			if (recentFile != null) {
+				f = recentFile;
+				getApp().open(recentFile, getApp().getAttributes().autoScroll());
+			} else {
+				f = getApp().getSystemInterface().getFileFromUser();
+				getApp().open(f, getApp().getAttributes().autoScroll());
 			}
+		} catch (FileNotFoundException ex) {
+			String msg = MessageFormat.format(getApp().getResourceBundle().getString(
+					"message.cmdLineFileNotFound.text"), new Object[] { f });
+			JOptionPane.showMessageDialog(getApp().getFrame(), msg, getApp().getResourceBundle()
+					.getString("message.filesDeletedSinceLastExecution.title"),
+					JOptionPane.WARNING_MESSAGE);
 		}
+
 	}
 }

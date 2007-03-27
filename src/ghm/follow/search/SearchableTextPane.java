@@ -138,7 +138,7 @@ public class SearchableTextPane extends JTextPane {
 				flags |= SearchEngine.REGEX;
 			}
 
-			lineResults = getSearchEngine().search(term, flags);
+			lineResults = new SearchEngine(this).search(term, flags);
 			for (int i = 0; i < lineResults.length; i++) {
 				int lineStart = lineResults[i].start;
 				int lineEnd = lineResults[i].end;
@@ -251,19 +251,6 @@ public class SearchableTextPane extends JTextPane {
 			pos = -1;
 		}
 		return pos;
-	}
-
-	/**
-	 * Get search engine ensuring that only 1 instance is created and reentrant.
-	 * 
-	 * @return searchEngine associated to this text area
-	 */
-	private SearchEngine getSearchEngine() {
-//		if (searchEngine == null) {
-//			searchEngine = new SearchEngine(this);
-//		}
-//		return searchEngine;
-      return new SearchEngine(this);
 	}
 
 	/**

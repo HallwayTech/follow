@@ -24,9 +24,9 @@
   </target>
 
   <target name="doc">
-    <mkdir dir="build/javadoc"/>
-    <javadoc sourcepath="src" destdir="build/javadoc"
-     packagenames="ghm.follow"
+    <mkdir dir="doc/web/docs"/>
+    <javadoc sourcepath="src" destdir="doc/web/docs"
+     packagenames="ghm.follow.*"
      windowtitle="Follow ${version} API"
      doctitle="Generated documentation for the Follow application"/>
   </target>

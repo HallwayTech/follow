@@ -31,7 +31,7 @@ public class SearchEngine implements DocumentListener {
 	 * list
 	 * 
 	 * @author chall
-	 * @param textArea
+	 * @param textPane
 	 */
 	public SearchEngine(SearchableTextPane textPane) {
 		doc = textPane.getDocument();
@@ -51,12 +51,11 @@ public class SearchEngine implements DocumentListener {
 	}
 
 	/**
-	 * Search <code>text</code> for <code>term</code>. Use the constants of
+	 * Search for <code>term</code>. Use the constants of
 	 * this class for flags.
 	 * 
 	 * @author chall
 	 * @param term
-	 * @param text
 	 * @return An array of found positions of term
 	 */
 	public LineResult[] search(String term, int flags) {

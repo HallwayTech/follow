@@ -76,7 +76,7 @@ public class LineResult {
 	 * @author chall
 	 * @param wordResult
 	 */
-	public void addResult(WordResult wordResult) {
+	public void addWord(WordResult wordResult) {
 		wordResult.parent = this;
 
 		if (wordResult.start < firstPosition) {

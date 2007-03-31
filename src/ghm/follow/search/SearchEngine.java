@@ -3,28 +3,16 @@ package ghm.follow.search;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
-import javax.swing.text.Utilities;
 
 /**
  * Searches through text based on flags passed at time of search.
  * 
  * @author chall
  */
-public class SearchEngine implements DocumentListener {
+public class SearchEngine {
 	public static final int CASE_SENSITIVE = 1;
-
 	public static final int REGEX = 2;
-
-	protected SearchableTextPane textPane;
-
-	protected Document doc;
-	
-	protected String text;
+	private int flags;
 
 	/**
 	 * Constructor for search text and tracking display elements for results
@@ -33,41 +21,20 @@ public class SearchEngine implements DocumentListener {
 	 * @author chall
 	 * @param textPane
 	 */
-	public SearchEngine(SearchableTextPane textPane) {
-		doc = textPane.getDocument();
-		doc.addDocumentListener(this);
-		this.textPane = textPane;
+	public SearchEngine(int flags) {
+		this.flags = flags;
 	}
 
 	/**
-	 * Constructor for searching text without keeping track of any display
-	 * elements.
-	 * 
-	 * @author chall
-	 * @param text
-	 */
-	public SearchEngine(String text) {
-		this.text = text;
-	}
-
-	/**
-	 * Search for <code>term</code>. Use the constants of
-	 * this class for flags.
+	 * Search for <code>term</code>. Use the constants of this class for
+	 * flags.
 	 * 
 	 * @author chall
 	 * @param term
 	 * @return An array of found positions of term
 	 */
-	public LineResult[] search(String term, int flags) {
-		try {
-			if (doc != null) {
-				text = doc.getText(0, doc.getLength());
-			}
-		} catch (BadLocationException e) {
-			// can ignore as the search will stop if text is null
-			text = null;
-		}
-		LineResult[] retval = null;
+	public WordResult[] search(String term, String text) {
+		WordResult[] retval = null;
 		// search using a case sensitive regular expression
 		if (((flags & CASE_SENSITIVE) != 0) && ((flags & REGEX) != 0)) {
 			Pattern p = Pattern.compile(term, Pattern.MULTILINE);
@@ -90,9 +57,6 @@ public class SearchEngine implements DocumentListener {
 		else {
 			throw new IllegalArgumentException("Unknown search strategy requested [flags=" + flags);
 		}
-		if (doc != null) {
-			text = null;
-		}
 		return retval;
 	}
 
@@ -105,34 +69,18 @@ public class SearchEngine implements DocumentListener {
 	 * @param text
 	 * @return
 	 */
-	protected LineResult[] textSearch(String term, String text) {
+	protected WordResult[] textSearch(String term, String text) {
 		ArrayList results = new ArrayList();
 		if (term != null && term.length() > 0 && text != null && text.length() > 0) {
 			int pos = 0;
-			int lastLine = -1;
-			LineResult tempLine = null;
 			while ((pos = text.indexOf(term, pos)) > -1) {
-				int line = textPane.getLineOfOffset(pos);
-				if (line != lastLine) {
-					if (tempLine != null) {
-						results.add(tempLine);
-					}
-					Element elem = Utilities.getParagraphElement(textPane, pos);
-					int lineStart = elem.getStartOffset();
-					int lineEnd = elem.getEndOffset();
-					tempLine = new LineResult(line, lineStart, lineEnd);
-				}
-				buildWordResult(tempLine, pos, pos + term.length(), term);
-				lastLine = line;
+				results.add(new WordResult(pos, pos + term.length(), term));
 				pos += term.length();
-                // allow other things to happen in case the search takes a while
-                Thread.yield();
-			}
-			if (tempLine != null) {
-				results.add(tempLine);
+				// allow other things to happen in case the search takes a while
+				Thread.yield();
 			}
 		}
-		LineResult[] retval = (LineResult[]) results.toArray(new LineResult[results.size()]);
+		WordResult[] retval = (WordResult[]) results.toArray(new WordResult[results.size()]);
 		return retval;
 	}
 
@@ -146,81 +94,18 @@ public class SearchEngine implements DocumentListener {
 	 * @param text
 	 * @return
 	 */
-	protected LineResult[] regexSearch(Pattern p, String text) {
+	protected WordResult[] regexSearch(Pattern p, String text) {
 		Matcher m = p.matcher(text);
 		ArrayList results = new ArrayList();
 		LineResult tempLine = null;
-		int lastLine = -1;
+		// int lastLine = -1;
 		while (m.find()) {
-			int line = textPane.getLineOfOffset(m.start());
-			if (line != lastLine) {
-				if (tempLine != null) {
-					results.add(tempLine);
-				}
-				Element elem = Utilities.getParagraphElement(textPane, m.start());
-				int lineStart = elem.getStartOffset();
-				int lineEnd = elem.getEndOffset();
-				tempLine = new LineResult(line, lineStart, lineEnd);
-			}
-			buildWordResult(tempLine, m.start(), m.end(), m.group());
-			lastLine = line;
+			results.add(new WordResult(m.start(), m.end(), m.group()));
+			Thread.yield();
 		}
 		if (tempLine != null) {
 			results.add(tempLine);
 		}
-		return (LineResult[]) results.toArray(new LineResult[results.size()]);
-	}
-
-	/**
-	 * Creates a new <code>Result</code> and populates the line number based
-	 * on the starting offset
-	 * 
-	 * @author chall
-	 * @param start
-	 * @param end
-	 * @param term
-	 * @param textArea
-	 * @return
-	 */
-	private WordResult buildWordResult(LineResult lineResult, int start, int end, String term) {
-		WordResult r = new WordResult(start, end, term);
-		lineResult.addResult(r);
-		// increase by 1 because offset starts at 0.
-		// 1 is clearer to the user since most people don't start counting
-		// at 0
-		int line = textPane.getLineOfOffset(start);
-		r.parent.lineNumber = line + 1;
-		int lineOffset = textPane.getLineStartOffset(line);
-		r.setLineOffset(lineOffset);
-		return r;
-	}
-
-	/**
-	 * Inherited from javax.swing.event.DocumentListener
-	 */
-	public void changedUpdate(DocumentEvent arg0) {
-		clearText(true);
-	}
-
-	/**
-	 * Inherited from javax.swing.event.DocumentListener
-	 */
-	public void insertUpdate(DocumentEvent arg0) {
-		clearText(true);
-	}
-
-	/**
-	 * Inherited from javax.swing.event.DocumentListener
-	 */
-	public void removeUpdate(DocumentEvent arg0) {
-		clearText(true);
-	}
-	
-	private void clearText(boolean requireDocument) {
-		if (requireDocument && doc != null) {
-			text = null;
-		} else if (!requireDocument) {
-			text = null;
-		}
+		return (WordResult[]) results.toArray(new WordResult[results.size()]);
 	}
 }

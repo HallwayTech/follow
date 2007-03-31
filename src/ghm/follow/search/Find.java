@@ -32,41 +32,35 @@ import javax.swing.event.ListSelectionListener;
 public class Find extends FollowAppAction {
 	public static final String NAME = "find";
 
-	private FindDialog dialog_;
-
-	private JTextField find_;
-
-	private JCheckBox regularExpression_;
-
-	private JCheckBox caseSensitive_;
-
-	private JButton findButton_;
-
-	private JButton clearButton_;
-
-	private JButton closeButton_;
-
-	private JLabel statusBar_;
-
-	private JScrollPane resultPane_;
+	private FindDialog _dialog;
+	private JTextField _find;
+	private JCheckBox _regEx;
+	private JCheckBox _caseSensitive;
+	private JButton _findButton;
+	private JButton _clearButton;
+	private JButton _closeButton;
+	private JLabel _statusBar;
+	private JScrollPane _resultPane;
+	private String _resultsLabel;
 
 	public Find(FollowApp app) {
 		super(app, app.getResourceBundle().getString("action.Find.name"), app.getResourceBundle()
 				.getString("action.Find.mnemonic"), app.getResourceBundle().getString(
 				"action.Find.accelerator"));
+		_resultsLabel = getApp().getResourceBundle().getString("dialog.Find.results.label").trim();
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		getApp().setCursor(Cursor.WAIT_CURSOR);
-		if (dialog_ == null) {
-			dialog_ = new FindDialog();
-			dialog_.setLocationRelativeTo(getApp().getFrame());
-			dialog_.setLocation(100, 100);
-			dialog_.pack();
+		if (_dialog == null) {
+			_dialog = new FindDialog();
+			_dialog.setLocationRelativeTo(getApp().getFrame());
+			_dialog.setLocation(100, 100);
+			_dialog.pack();
 		}
-		find_.grabFocus();
-		find_.selectAll();
-		dialog_.setVisible(true);
+		_find.grabFocus();
+		_find.selectAll();
+		_dialog.setVisible(true);
 		getApp().setCursor(Cursor.DEFAULT_CURSOR);
 	}
 
@@ -76,12 +70,12 @@ public class Find extends FollowAppAction {
 		// search the tab with the given text
 		SearchableTextPane textArea = pane.getTextPane();
 		// textArea.selectAll();
-		LineResult[] results = textArea.highlight(find_.getText(), caseSensitive_.isSelected(),
-				regularExpression_.isSelected());
+		LineResult[] results = textArea.highlight(_find.getText(), _caseSensitive.isSelected(),
+				_regEx.isSelected());
 		if (results == null)
 			results = new LineResult[0];
 		// select search term for convenience
-		find_.selectAll();
+		_find.selectAll();
 		return results;
 	}
 
@@ -108,49 +102,49 @@ public class Find extends FollowAppAction {
 			gbc.ipadx = 4;
 			findPanel.add(new JLabel(getApp().getResourceBundle().getString(
 					"dialog.Find.findText.label")), gbc);
-			find_ = new JTextField(15);
-			find_.setHorizontalAlignment(JTextField.LEFT);
+			_find = new JTextField(15);
+			_find.setHorizontalAlignment(JTextField.LEFT);
 			gbc.gridx = 1;
 			gbc.weightx = 1;
 			gbc.ipadx = 0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
-			findPanel.add(find_);
+			findPanel.add(_find);
 			//
 			// add the case sensitive check box
 			//
-			caseSensitive_ = new JCheckBox(getApp().getResourceBundle().getString(
+			_caseSensitive = new JCheckBox(getApp().getResourceBundle().getString(
 					"dialog.Find.caseSensitive.label"));
 			gbc.gridx = 1;
 			gbc.gridy = 1;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
-			caseSensitive_.setHorizontalAlignment(JCheckBox.LEFT);
-			findPanel.add(caseSensitive_, gbc);
+			_caseSensitive.setHorizontalAlignment(JCheckBox.LEFT);
+			findPanel.add(_caseSensitive, gbc);
 			//
 			// add the regular expression check box
 			//
-			regularExpression_ = new JCheckBox(getApp().getResourceBundle().getString(
+			_regEx = new JCheckBox(getApp().getResourceBundle().getString(
 					"dialog.Find.regularExpression.label"));
 			gbc.gridx = 1;
 			gbc.gridy = 2;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
-			regularExpression_.setHorizontalAlignment(JCheckBox.LEFT);
-			findPanel.add(regularExpression_, gbc);
+			_regEx.setHorizontalAlignment(JCheckBox.LEFT);
+			findPanel.add(_regEx, gbc);
 			//
 			// add the find button
 			//
-			findButton_ = new JButton(getApp().getResourceBundle().getString(
+			_findButton = new JButton(getApp().getResourceBundle().getString(
 					"dialog.Find.findButton.label"));
-			findButton_.setMnemonic(getApp().getResourceBundle().getString(
+			_findButton.setMnemonic(getApp().getResourceBundle().getString(
 					"dialog.Find.findButton.mnemonic").charAt(0));
-			findButton_.addActionListener(new ActionListener() {
+			_findButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					clearResults();
 					LineResult[] results = doFind();
 					if (results != null) {
 						if (results.length == 0) {
-							statusBar_.setText("Search term not found.");
+							_statusBar.setText("Search term not found.");
 						}
 						else {
 							JList resultList = showResults(results);
@@ -177,7 +171,8 @@ public class Find extends FollowAppAction {
 													.getSelectedFileFollowingPane();
 											SearchableTextPane textArea = pane.getTextPane();
 											// move the caret to the chosen text
-											textArea.setCaretPosition(result.getFirstWordPosition());
+											textArea
+													.setCaretPosition(result.getFirstWordPosition());
 										}
 									}
 								}
@@ -188,11 +183,11 @@ public class Find extends FollowAppAction {
 			});
 
 			// add the clear button
-			clearButton_ = new JButton(getApp().getResourceBundle().getString(
+			_clearButton = new JButton(getApp().getResourceBundle().getString(
 					"dialog.Find.clearButton.label"));
-			clearButton_.setMnemonic(getApp().getResourceBundle().getString(
+			_clearButton.setMnemonic(getApp().getResourceBundle().getString(
 					"dialog.Find.clearButton.mnemonic").charAt(0));
-			clearButton_.addActionListener(new ActionListener() {
+			_clearButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					// get the current selected tab
 					FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
@@ -205,32 +200,32 @@ public class Find extends FollowAppAction {
 			});
 
 			// add the close button
-			closeButton_ = new JButton(getApp().getResourceBundle().getString(
+			_closeButton = new JButton(getApp().getResourceBundle().getString(
 					"dialog.Find.closeButton.label"));
-			closeButton_.setMnemonic(getApp().getResourceBundle().getString(
+			_closeButton.setMnemonic(getApp().getResourceBundle().getString(
 					"dialog.Find.closeButton.mnemonic").charAt(0));
-			closeButton_.addActionListener(new ActionListener() {
+			_closeButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					dialog_.setVisible(false);
+					_dialog.setVisible(false);
 				}
 			});
 			// add the buttons to the dialog
 			JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
 			// create buttons
-			buttonPanel.add(findButton_);
-			buttonPanel.add(clearButton_);
-			buttonPanel.add(closeButton_);
+			buttonPanel.add(_findButton);
+			buttonPanel.add(_clearButton);
+			buttonPanel.add(_closeButton);
 
 			// create status bar
 			JPanel statusPanel = new JPanel(new BorderLayout());
-			resultPane_ = new JScrollPane();
-			resultPane_.setVisible(false);
-			statusBar_ = new JLabel(" ");
-			statusBar_.setFont(new Font("Arial", Font.PLAIN, 10));
-			statusBar_.setBorder(new BevelBorder(BevelBorder.LOWERED));
-			statusPanel.add(statusBar_, BorderLayout.CENTER);
-			statusPanel.add(resultPane_, BorderLayout.SOUTH);
+			_resultPane = new JScrollPane();
+			_resultPane.setVisible(false);
+			_statusBar = new JLabel(" ");
+			_statusBar.setFont(new Font("Arial", Font.PLAIN, 10));
+			_statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
+			statusPanel.add(_statusBar, BorderLayout.CENTER);
+			statusPanel.add(_resultPane, BorderLayout.SOUTH);
 
 			// add everything to the content pane
 			contentPane.add(findPanel, BorderLayout.NORTH);
@@ -252,15 +247,24 @@ public class Find extends FollowAppAction {
 			resultList.setFont(new Font("Arial", Font.PLAIN, 10));
 
 			// set the status bar
-			statusBar_.setText(" " + results.length + " occurence(s) found.");
+			;
+			_statusBar.setText(" " + countResults(results) + " " + _resultsLabel);
 
 			// show the result list
-			resultPane_.getViewport().setView(resultList);
-			resultPane_.setVisible(true);
+			_resultPane.getViewport().setView(resultList);
+			_resultPane.setVisible(true);
 
 			// resize the dialog
-			dialog_.pack();
+			_dialog.pack();
 			return resultList;
+		}
+
+		private int countResults(LineResult[] results) {
+			int count = 0;
+			for (int i = 0; i < results.length; i++) {
+				count += results[i].getWordResults().length;
+			}
+			return count;
 		}
 
 		/**
@@ -270,14 +274,14 @@ public class Find extends FollowAppAction {
 		 */
 		private void clearResults() {
 			// clear the status bar
-			statusBar_.setText(" ");
+			_statusBar.setText(" ");
 
 			// clear and hide the result list
-			resultPane_.getViewport().setView(null);
-			resultPane_.setVisible(false);
+			_resultPane.getViewport().setView(null);
+			_resultPane.setVisible(false);
 
 			// resize the dialog
-			dialog_.pack();
+			_dialog.pack();
 		}
 
 		/**
@@ -290,13 +294,13 @@ public class Find extends FollowAppAction {
 			JRootPane rootPane = new JRootPane();
 			rootPane.registerKeyboardAction(new ActionListener() {
 				public void actionPerformed(ActionEvent actionEvent) {
-					closeButton_.doClick();
+					_closeButton.doClick();
 				}
 			}, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 			stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
 			rootPane.registerKeyboardAction(new ActionListener() {
 				public void actionPerformed(ActionEvent actionEvent) {
-					findButton_.doClick();
+					_findButton.doClick();
 				}
 			}, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 			return rootPane;

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.util.ArrayList;
+
 import javax.swing.JTextPane;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.BadLocationException;
@@ -17,6 +19,7 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.TabSet;
 import javax.swing.text.TabStop;
+import javax.swing.text.Utilities;
 
 public class SearchableTextPane extends JTextPane {
 	private int lastSearchPos = -1;
@@ -138,20 +141,28 @@ public class SearchableTextPane extends JTextPane {
 				flags |= SearchEngine.REGEX;
 			}
 
-			lineResults = new SearchEngine(this).search(term, flags);
-			for (int i = 0; i < lineResults.length; i++) {
-				int lineStart = lineResults[i].start;
-				int lineEnd = lineResults[i].end;
-				// highlight the whole line
-				addHighlight(lineStart, lineEnd - lineStart, lineHighlighter);
-				WordResult[] wordResults = lineResults[i].getWordResults();
-				for (int j = 0; j < wordResults.length; j++) {
-					// highlight the searched term
-					int wordStart = wordResults[j].start;
-					int wordEnd = wordResults[j].end;
-					addHighlight(wordStart, wordEnd - wordStart, wordHighlighter);
-					Thread.yield();
+			try {
+				Document doc = getDocument();
+				String text = doc.getText(0, doc.getLength());
+				WordResult[] searchResults = new SearchEngine(flags).search(term, text);
+				lineResults = convertWords2Lines(searchResults);
+				for (int i = 0; i < lineResults.length; i++) {
+					int lineStart = lineResults[i].start;
+					int lineEnd = lineResults[i].end;
+					// highlight the whole line
+					addHighlight(lineStart, lineEnd - lineStart, lineHighlighter);
+					WordResult[] wordResults = lineResults[i].getWordResults();
+					for (int j = 0; j < wordResults.length; j++) {
+						// highlight the searched term
+						int wordStart = wordResults[j].start;
+						int wordEnd = wordResults[j].end;
+						addHighlight(wordStart, wordEnd - wordStart, wordHighlighter);
+						Thread.yield();
+					}
 				}
+			}
+			catch (BadLocationException e) {
+				lineResults = null;
 			}
 		}
 		return lineResults;
@@ -286,5 +297,40 @@ public class SearchableTextPane extends JTextPane {
 		Element map = getDocument().getDefaultRootElement();
 		Element lineElem = map.getElement(line);
 		return lineElem.getEndOffset();
+	}
+	
+	private LineResult[] convertWords2Lines(WordResult[] words) {
+		ArrayList lines = new ArrayList();
+		LineResult tempLine = null;
+		int lastLine = -1;
+		for (int i = 0; i < words.length; i++) {
+			WordResult word = words[i];
+			int line = getLineOfOffset(word.start);
+			if (line != lastLine) {
+				if (tempLine != null) {
+					lines.add(tempLine);
+				}
+				Element elem = Utilities.getParagraphElement(this, word.start);
+				int lineStart = elem.getStartOffset();
+				int lineEnd = elem.getEndOffset();
+				tempLine = new LineResult(line, lineStart, lineEnd);
+			}
+			updateWordResult(word, tempLine);
+			lastLine = line;
+            // allow other things to happen in case the search takes a while
+            Thread.yield();
+		}
+		return (LineResult[]) lines.toArray(new LineResult[lines.size()]);
+	}
+	
+	private void updateWordResult(WordResult wordResult, LineResult lineResult) {
+		lineResult.addWord(wordResult);
+		// increase by 1 because offset starts at 0.
+		// 1 is clearer to the user since most people don't start counting
+		// at 0
+		int line = getLineOfOffset(wordResult.start);
+		wordResult.parent.lineNumber = line + 1;
+		int lineOffset = getLineStartOffset(line);
+		wordResult.setLineOffset(lineOffset);
 	}
 }

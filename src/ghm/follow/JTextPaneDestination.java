@@ -28,7 +28,7 @@ import javax.swing.text.BadLocationException;
  * 
  * @see OutputDestination
  * @see JTextPane
- * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
+ * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public class JTextPaneDestination implements OutputDestination {
 
@@ -55,6 +55,25 @@ public class JTextPaneDestination implements OutputDestination {
 	}
 
 	/**
+	 * Add a filtered view to this destination. Filtered views show only a
+	 * subset of the total output based on filter conditions.
+	 * 
+	 * @since 1.8.0
+	 */
+	public void addFilteredView() {
+
+	}
+
+	/**
+	 * Remove a filtered view
+	 * 
+	 * @since 1.8.0
+	 */
+	public void removeFilteredView() {
+
+	}
+
+	/**
 	 * @return whether caret will be automatically moved to the bottom of the
 	 *         text area when text is appended
 	 */
@@ -77,7 +96,8 @@ public class JTextPaneDestination implements OutputDestination {
 			if (autoPositionCaret_) {
 				jTextPane_.setCaretPosition(jTextPane_.getDocument().getLength());
 			}
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			// just ignore, nothing we can do
 		}
 	}

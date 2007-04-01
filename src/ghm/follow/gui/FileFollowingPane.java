@@ -40,9 +40,18 @@ import javax.swing.text.Document;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class FileFollowingPane extends JScrollPane {
+	/** FileFollower used to print to this component */
+	protected FileFollower _fileFollower;
+
+	/** Text area into which followed file's contents are printed */
+	protected SearchableTextPane _textPane;
+
+	/** OutputDestination used w/FileFollower */
+	protected JTextPaneDestination _destination;
+
 	/**
 	 * @param file
-	 *            text file which is to be followed
+	 *            text file to be followed
 	 * @param bufferSize
 	 *            size of the character buffer inside the FileFollower used to
 	 *            follow the supplied file
@@ -51,13 +60,14 @@ public class FileFollowingPane extends JScrollPane {
 	 */
 	public FileFollowingPane(File file, int bufferSize, int latency, boolean autoPositionCaret,
 			Font font, int tabSize) {
-		textPane_ = new SearchableTextPane(font, tabSize);
-		textPane_.setEditable(false);
-		destination_ = new JTextPaneDestination(textPane_, autoPositionCaret);
-		fileFollower_ = new FileFollower(file, bufferSize, latency,
-				new OutputDestination[] { destination_ });
-		add(textPane_);
-		setViewportView(textPane_);
+		_textPane = new SearchableTextPane(font, tabSize);
+		_textPane.setEditable(false);
+		_textPane.setEditorKit(new LineEditorKit());
+		_destination = new JTextPaneDestination(_textPane, autoPositionCaret);
+		_fileFollower = new FileFollower(file, bufferSize, latency,
+				new OutputDestination[] { _destination });
+		add(_textPane);
+		setViewportView(_textPane);
 	}
 
 	/**
@@ -67,7 +77,7 @@ public class FileFollowingPane extends JScrollPane {
 	 * @return text area containing followed file's contents
 	 */
 	public SearchableTextPane getTextPane() {
-		return textPane_;
+		return _textPane;
 	}
 
 	/**
@@ -77,7 +87,7 @@ public class FileFollowingPane extends JScrollPane {
 	 * @return whether caret is automatically repositioned on append
 	 */
 	public boolean autoPositionCaret() {
-		return destination_.autoPositionCaret();
+		return _destination.autoPositionCaret();
 	}
 
 	/**
@@ -88,7 +98,7 @@ public class FileFollowingPane extends JScrollPane {
 	 *            whether caret is automatically repositioned on append
 	 */
 	public void setAutoPositionCaret(boolean value) {
-		destination_.setAutoPositionCaret(value);
+		_destination.setAutoPositionCaret(value);
 	}
 
 	/**
@@ -98,7 +108,7 @@ public class FileFollowingPane extends JScrollPane {
 	 * @return FileFollower used by this component
 	 */
 	public FileFollower getFileFollower() {
-		return fileFollower_;
+		return _fileFollower;
 	}
 
 	/**
@@ -106,35 +116,35 @@ public class FileFollowingPane extends JScrollPane {
 	 * getFileFollower().getFollowedFile()
 	 */
 	public File getFollowedFile() {
-		return fileFollower_.getFollowedFile();
+		return _fileFollower.getFollowedFile();
 	}
 
 	/**
 	 * Convenience method; equivalent to calling getFileFollower().start()
 	 */
 	public void startFollowing() {
-		fileFollower_.start();
+		_fileFollower.start();
 	}
 
 	/**
 	 * Convenience method; equivalent to calling getFileFollower().stop()
 	 */
 	public void stopFollowing() {
-		fileFollower_.stop();
+		_fileFollower.stop();
 	}
 
 	/**
 	 * Convenience method; equivalent to calling getFileFollower().restart()
 	 */
 	public void restartFollowing() {
-		fileFollower_.restart();
+		_fileFollower.restart();
 	}
 
 	/**
 	 * Convenience method; equivalent to calling getFileFollower().stopAndWait()
 	 */
 	public void stopFollowingAndWait() throws InterruptedException {
-		fileFollower_.stopAndWait();
+		_fileFollower.stopAndWait();
 	}
 
 	/**
@@ -144,19 +154,19 @@ public class FileFollowingPane extends JScrollPane {
 	 * @return
 	 */
 	public boolean isFollowing() {
-		return fileFollower_.isBeingFollowed();
+		return _fileFollower.isBeingFollowed();
 	}
 
 	/**
 	 * Clears the contents of this FileFollowingPane synchronously.
 	 */
 	public void clear() throws IOException {
-		if (fileFollower_.getFollowedFile().length() == 0L) {
+		if (_fileFollower.getFollowedFile().length() == 0L) {
 			return;
 		}
-		synchronized (fileFollower_) {
+		synchronized (_fileFollower) {
 			try {
-				fileFollower_.stopAndWait();
+				_fileFollower.stopAndWait();
 			}
 			catch (InterruptedException interruptedException) {
 				// Handle this better later
@@ -164,12 +174,12 @@ public class FileFollowingPane extends JScrollPane {
 			}
 
 			// This has the effect of clearing the contents of the followed file
-			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(fileFollower_
+			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(_fileFollower
 					.getFollowedFile()));
 			bos.close();
 
 			// Update textarea contents to reflect freshly cleared file
-			Document doc = textPane_.getDocument();
+			Document doc = _textPane.getDocument();
 			try {
 				doc.remove(0, doc.getLength());
 			}
@@ -178,16 +188,7 @@ public class FileFollowingPane extends JScrollPane {
 				badLocationException.printStackTrace(System.err);
 			}
 
-			fileFollower_.start();
+			_fileFollower.start();
 		}
 	}
-
-	/** FileFollower used to print to this component */
-	protected FileFollower fileFollower_;
-
-	/** Text area into which followed file's contents are printed */
-	protected SearchableTextPane textPane_;
-
-	/** OutputDestination used w/FileFollower */
-	protected JTextPaneDestination destination_;
 }

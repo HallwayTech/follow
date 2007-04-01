@@ -4,9 +4,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JTextPane;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -27,17 +31,52 @@ public class SearchableTextPane extends JTextPane {
 	private final MutableAttributeSet lineHighlighter = new SimpleAttributeSet();
 	private final MutableAttributeSet wordHighlighter = new SimpleAttributeSet();
 	private final MutableAttributeSet clearHighlighter = new SimpleAttributeSet();
-//	private SearchEngine searchEngine;
 	private int tabSize;
-	private LineResult[] lineResults;
+	private ArrayList highlights;
+	private int selectedIndex = -1;
 
 	public SearchableTextPane(Font font, int tabSize) {
-		StyleConstants.setBackground(lineHighlighter, Color.YELLOW);
-		StyleConstants.setBackground(wordHighlighter, Color.LIGHT_GRAY);
+		StyleConstants.setBackground(lineHighlighter, Color.YELLOW.brighter());
+		StyleConstants.setBackground(wordHighlighter, Color.YELLOW);
+		StyleConstants.setBold(wordHighlighter, true);
 		StyleConstants.setBackground(clearHighlighter, Color.WHITE);
+		StyleConstants.setBold(clearHighlighter, false);
 		// set the display font
 		setFont(font);
 		setTabSize(tabSize);
+		addCaretListener(new CaretListener() {
+			public void caretUpdate(CaretEvent e) {
+				Document doc = getDocument();
+				Element map = doc.getDefaultRootElement();
+				if (selectedIndex > -1) {
+					try {
+						// unhighlight previous selected line
+						Element previous = map.getElement(selectedIndex);
+						if (previous != null) {
+							Rectangle rec = modelToView(previous.getStartOffset());
+							if (rec != null) {
+								rec.width = getWidth();
+								repaint(rec);
+							}
+						}
+					}
+					catch (BadLocationException e1) {
+					}
+				}
+				// highlight current selected line
+				// the work for this is done by LineView
+				int index = map.getElementIndex(e.getDot());
+				if (getSelectionStart() == getSelectionEnd()) {
+					selectedIndex = index;
+				}
+				else {
+					selectedIndex = -1;
+				}
+				Element selected = map.getElement(index);
+				getUI().damageRange(SearchableTextPane.this, selected.getStartOffset(),
+						selected.getEndOffset() - 1);
+			}
+		});
 	}
 
 	/**
@@ -126,20 +165,20 @@ public class SearchableTextPane extends JTextPane {
 	 * @param useRegularExpression
 	 * @return
 	 */
-	public LineResult[] highlight(String term, boolean caseSensitive, boolean useRegularExpression) {
-		lineResults = null;
+	public LineResult[] highlight(String term, int flags) {
+		LineResult[] lineResults = new LineResult[0];
 		// Remove all old highlights
 		removeHighlights();
 		// Search for pattern
 		if ((term != null) && (term.length() > 0)) {
 			// look for instances of the term in the text
-			int flags = 0;
-			if (caseSensitive) {
-				flags |= SearchEngine.CASE_SENSITIVE;
-			}
-			if (useRegularExpression) {
-				flags |= SearchEngine.REGEX;
-			}
+//			int flags = 0;
+//			if (caseSensitive) {
+//				flags |= SearchEngine.CASE_SENSITIVE;
+//			}
+//			if (useRegularExpression) {
+//				flags |= SearchEngine.REGEX;
+//			}
 
 			try {
 				Document doc = getDocument();
@@ -147,10 +186,11 @@ public class SearchableTextPane extends JTextPane {
 				WordResult[] searchResults = new SearchEngine(flags).search(term, text);
 				lineResults = convertWords2Lines(searchResults);
 				for (int i = 0; i < lineResults.length; i++) {
-					int lineStart = lineResults[i].start;
-					int lineEnd = lineResults[i].end;
+					// int lineStart = lineResults[i].start;
+					// int lineEnd = lineResults[i].end;
 					// highlight the whole line
-					addHighlight(lineStart, lineEnd - lineStart, lineHighlighter);
+					// addHighlight(lineStart, lineEnd - lineStart,
+					// lineHighlighter);
 					WordResult[] wordResults = lineResults[i].getWordResults();
 					for (int j = 0; j < wordResults.length; j++) {
 						// highlight the searched term
@@ -162,7 +202,7 @@ public class SearchableTextPane extends JTextPane {
 				}
 			}
 			catch (BadLocationException e) {
-				lineResults = null;
+				lineResults = new LineResult[0];
 			}
 		}
 		return lineResults;
@@ -176,26 +216,26 @@ public class SearchableTextPane extends JTextPane {
 	 * @param highlighter
 	 */
 	private void addHighlight(int wordStart, int length, MutableAttributeSet highlighter) {
-		getStyledDocument().setCharacterAttributes(wordStart, length, highlighter, true);
+		getStyledDocument().setCharacterAttributes(wordStart, length, highlighter, false);
+		if (highlights == null) {
+			highlights = new ArrayList();
+		}
+		highlights.add(new Highlight(wordStart, length));
 	}
 
 	/**
 	 * Removes highlights from text area
 	 */
 	public void removeHighlights() {
-		if (lineResults != null) {
+		if (highlights != null) {
 			StyledDocument sdoc = getStyledDocument();
-			// Document doc = getDocument();
-			for (int i = 0; i < lineResults.length; i++) {
-				int start = lineResults[i].start;
-				int end = lineResults[i].end;
-				sdoc.setCharacterAttributes(start, end - start, clearHighlighter, false);
-				Thread.yield();
+			Iterator hs = highlights.iterator();
+			while (hs.hasNext()) {
+				Highlight h = (Highlight) hs.next();
+				sdoc.setCharacterAttributes(h.start, h.length, clearHighlighter, false);
 			}
+			highlights.clear();
 		}
-		// getStyledDocument().setCharacterAttributes(0,
-		// getDocument().getLength(), clearHighlighter,
-		// true);
 	}
 
 	/**
@@ -298,7 +338,13 @@ public class SearchableTextPane extends JTextPane {
 		Element lineElem = map.getElement(line);
 		return lineElem.getEndOffset();
 	}
-	
+
+	/**
+	 * Converts word results from search into line results
+	 * 
+	 * @param words
+	 * @return
+	 */
 	private LineResult[] convertWords2Lines(WordResult[] words) {
 		ArrayList lines = new ArrayList();
 		LineResult tempLine = null;
@@ -317,12 +363,18 @@ public class SearchableTextPane extends JTextPane {
 			}
 			updateWordResult(word, tempLine);
 			lastLine = line;
-            // allow other things to happen in case the search takes a while
-            Thread.yield();
+			// allow other things to happen in case the search takes a while
+			Thread.yield();
 		}
 		return (LineResult[]) lines.toArray(new LineResult[lines.size()]);
 	}
-	
+
+	/**
+	 * Adds word result to line resuls and updates line information
+	 * 
+	 * @param wordResult
+	 * @param lineResult
+	 */
 	private void updateWordResult(WordResult wordResult, LineResult lineResult) {
 		lineResult.addWord(wordResult);
 		// increase by 1 because offset starts at 0.
@@ -332,5 +384,19 @@ public class SearchableTextPane extends JTextPane {
 		wordResult.parent.lineNumber = line + 1;
 		int lineOffset = getLineStartOffset(line);
 		wordResult.setLineOffset(lineOffset);
+	}
+
+	private class Highlight {
+		int start;
+		int length;
+
+		Highlight(int start, int length) {
+			this.start = start;
+			this.length = length;
+		}
+	}
+
+	public int getSelectedIndex() {
+		return selectedIndex;
 	}
 }

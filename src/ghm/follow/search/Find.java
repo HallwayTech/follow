@@ -69,12 +69,17 @@ public class Find extends FollowAppAction {
 		FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
 		// search the tab with the given text
 		SearchableTextPane textArea = pane.getTextPane();
-		// textArea.selectAll();
-		LineResult[] results = textArea.highlight(_find.getText(), _caseSensitive.isSelected(),
-				_regEx.isSelected());
-		if (results == null)
-			results = new LineResult[0];
+		int flags = 0;
+		
+		if (_caseSensitive.isSelected()) {
+			flags |= SearchEngine.CASE_SENSITIVE;
+		}
+		if (_regEx.isSelected()) {
+			flags |= SearchEngine.REGEX;
+		}
+		LineResult[] results = textArea.highlight(_find.getText(), flags);
 		// select search term for convenience
+		_find.grabFocus();
 		_find.selectAll();
 		return results;
 	}
@@ -140,45 +145,9 @@ public class Find extends FollowAppAction {
 					"dialog.Find.findButton.mnemonic").charAt(0));
 			_findButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					clearResults();
-					LineResult[] results = doFind();
-					if (results != null) {
-						if (results.length == 0) {
-							_statusBar.setText("Search term not found.");
-						}
-						else {
-							JList resultList = showResults(results);
-							resultList.addListSelectionListener(new ListSelectionListener() {
-								/**
-								 * Catches selection events and sets the caret
-								 * within the view so that the screen scrolls
-								 * 
-								 * @author chall
-								 */
-								public void valueChanged(ListSelectionEvent ev) {
-									if (!ev.getValueIsAdjusting()) {
-										JList list = (JList) ev.getSource();
-										int pos = list.getSelectedIndex();
-										if (pos >= 0) {
-											// get the result associated to the
-											// selected position
-											LineResult result = (LineResult) list.getModel()
-													.getElementAt(pos);
-
-											// get the current selected tab
-											// and text area
-											FileFollowingPane pane = getApp()
-													.getSelectedFileFollowingPane();
-											SearchableTextPane textArea = pane.getTextPane();
-											// move the caret to the chosen text
-											textArea
-													.setCaretPosition(result.getFirstWordPosition());
-										}
-									}
-								}
-							});
-						}
-					}
+					findButton_clicked(e);
+					_find.grabFocus();
+					_find.selectAll();
 				}
 			});
 
@@ -189,13 +158,9 @@ public class Find extends FollowAppAction {
 					"dialog.Find.clearButton.mnemonic").charAt(0));
 			_clearButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// get the current selected tab
-					FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
-					// clear the highlights from the searched tab
-					SearchableTextPane textArea = pane.getTextPane();
-					textArea.removeHighlights();
-					// clear the status bar and result list
-					clearResults();
+					clearButton_clicked(e);
+					_find.grabFocus();
+					_find.selectAll();
 				}
 			});
 
@@ -234,6 +199,66 @@ public class Find extends FollowAppAction {
 		}
 
 		/**
+		 * Override method to add ESCAPE key action for window close
+		 * 
+		 * @author chall
+		 */
+		protected JRootPane createRootPane() {
+			KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+			JRootPane rootPane = new JRootPane();
+			rootPane.registerKeyboardAction(new ActionListener() {
+				public void actionPerformed(ActionEvent actionEvent) {
+					_closeButton.doClick();
+				}
+			}, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+			stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+			rootPane.registerKeyboardAction(new ActionListener() {
+				public void actionPerformed(ActionEvent actionEvent) {
+					_findButton.doClick();
+				}
+			}, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+			return rootPane;
+		}
+
+		private void findButton_clicked(ActionEvent e) {
+			getApp().setCursor(Cursor.WAIT_CURSOR);
+			clearResults();
+			LineResult[] results = doFind();
+			if (results != null) {
+				if (results.length == 0) {
+					_statusBar.setText("Search term not found.");
+				}
+				else {
+					JList resultList = showResults(results);
+					resultList.addListSelectionListener(new ListSelectionListener() {
+						/**
+						 * Catches selection events and sets the caret within
+						 * the view so that the screen scrolls
+						 * 
+						 * @author chall
+						 */
+						public void valueChanged(ListSelectionEvent ev) {
+							resultList_changed(ev);
+						}
+					});
+				}
+			}
+			getApp().setCursor(Cursor.DEFAULT_CURSOR);
+		}
+
+		private void clearButton_clicked(ActionEvent e) {
+			getApp().setCursor(Cursor.WAIT_CURSOR);
+			// get the current selected tab
+			FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
+			// clear the highlights from the searched tab
+			SearchableTextPane textArea = pane.getTextPane();
+			textArea.removeHighlights();
+			// clear the status bar and result list
+			clearResults();
+			getApp().setCursor(Cursor.DEFAULT_CURSOR);
+		}
+
+		/**
 		 * Show results some results by creating a list and updating the status
 		 * bar
 		 * 
@@ -259,6 +284,25 @@ public class Find extends FollowAppAction {
 			return resultList;
 		}
 
+		private void resultList_changed(ListSelectionEvent ev) {
+			if (!ev.getValueIsAdjusting()) {
+				JList list = (JList) ev.getSource();
+				int pos = list.getSelectedIndex();
+				if (pos >= 0) {
+					// get the result associated to the
+					// selected position
+					LineResult result = (LineResult) list.getModel().getElementAt(pos);
+
+					// get the current selected tab
+					// and text area
+					FileFollowingPane ffp = getApp().getSelectedFileFollowingPane();
+					SearchableTextPane tp = ffp.getTextPane();
+					// move the caret to the chosen text
+					tp.setCaretPosition(result.getFirstWordPosition());
+				}
+			}
+		}
+
 		private int countResults(LineResult[] results) {
 			int count = 0;
 			for (int i = 0; i < results.length; i++) {
@@ -282,28 +326,6 @@ public class Find extends FollowAppAction {
 
 			// resize the dialog
 			_dialog.pack();
-		}
-
-		/**
-		 * Override method to add ESCAPE key action for window close
-		 * 
-		 * @author chall
-		 */
-		protected JRootPane createRootPane() {
-			KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-			JRootPane rootPane = new JRootPane();
-			rootPane.registerKeyboardAction(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-					_closeButton.doClick();
-				}
-			}, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-			stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-			rootPane.registerKeyboardAction(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-					_findButton.doClick();
-				}
-			}, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-			return rootPane;
 		}
 	}
 }

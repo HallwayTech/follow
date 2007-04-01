@@ -20,7 +20,7 @@
 package ghm.follow.gui;
 
 import ghm.follow.FileFollower;
-import ghm.follow.JTextPaneDestination;
+import ghm.follow.JTextComponentDestination;
 import ghm.follow.OutputDestination;
 import ghm.follow.search.SearchableTextPane;
 
@@ -44,10 +44,10 @@ public class FileFollowingPane extends JScrollPane {
 	protected FileFollower _fileFollower;
 
 	/** Text area into which followed file's contents are printed */
-	protected SearchableTextPane _textPane;
+	protected SearchableTextPane _textArea;
 
 	/** OutputDestination used w/FileFollower */
-	protected JTextPaneDestination _destination;
+	protected JTextComponentDestination _destination;
 
 	/**
 	 * @param file
@@ -60,14 +60,14 @@ public class FileFollowingPane extends JScrollPane {
 	 */
 	public FileFollowingPane(File file, int bufferSize, int latency, boolean autoPositionCaret,
 			Font font, int tabSize) {
-		_textPane = new SearchableTextPane(font, tabSize);
-		_textPane.setEditable(false);
-		_textPane.setEditorKit(new LineEditorKit());
-		_destination = new JTextPaneDestination(_textPane, autoPositionCaret);
+		_textArea = new SearchableTextPane(font, tabSize);
+		_textArea.setEditable(false);
+		_textArea.setUI(new LineTextUI());
+		_destination = new JTextComponentDestination(_textArea, autoPositionCaret);
 		_fileFollower = new FileFollower(file, bufferSize, latency,
 				new OutputDestination[] { _destination });
-		add(_textPane);
-		setViewportView(_textPane);
+		add(_textArea);
+		setViewportView(_textArea);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class FileFollowingPane extends JScrollPane {
 	 * @return text area containing followed file's contents
 	 */
 	public SearchableTextPane getTextPane() {
-		return _textPane;
+		return _textArea;
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class FileFollowingPane extends JScrollPane {
 			bos.close();
 
 			// Update textarea contents to reflect freshly cleared file
-			Document doc = _textPane.getDocument();
+			Document doc = _textArea.getDocument();
 			try {
 				doc.remove(0, doc.getLength());
 			}

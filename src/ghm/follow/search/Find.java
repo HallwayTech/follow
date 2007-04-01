@@ -230,6 +230,7 @@ public class Find extends FollowAppAction {
 				}
 				else {
 					JList resultList = showResults(results);
+					System.out.println(resultList.getSelectionBackground());
 					resultList.addListSelectionListener(new ListSelectionListener() {
 						/**
 						 * Catches selection events and sets the caret within

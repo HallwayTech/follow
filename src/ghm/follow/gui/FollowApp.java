@@ -70,42 +70,24 @@ import javax.swing.SwingUtilities;
  */
 public class FollowApp {
 	private int currentCursor_ = Cursor.DEFAULT_CURSOR;
-
 	private Cursor defaultCursor_;
-
 	private Cursor waitCursor_;
-
 	private FollowAppAttributes attributes_;
-
 	private Map fileToFollowingPaneMap_ = new HashMap();
-
 	private JFrame frame_;
-
 	private JTabbedPane tabbedPane_;
-
 	private ToolBar toolBar_;
-
 	private PopupMenu popupMenu_;
-
 	private Menu recentFilesMenu_;
-
 	private MouseListener rightClickListener_;
-
 	private ResourceBundle resBundle_ = ResourceBundle
 			.getBundle("ghm.follow.gui.FollowAppResourceBundle");
-
 	private HashMap actions_ = new HashMap();
-
 	private SystemInterface systemInterface_;
-
 	private static FollowApp instance_;
-
 	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
-
 	public static final String MESSAGE_LINE_SEPARATOR = "\n";
-
 	public static final boolean DEBUG = Boolean.getBoolean("follow.debug");
-
 	public static boolean HAS_SOLARIS_BUG = false;
 
 	public FollowAppAction getAction(String name) {
@@ -245,8 +227,7 @@ public class FollowApp {
 			file = files[i];
 			try {
 				open(file, false);
-			}
-			catch (FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				// This file has been deleted since the previous execution.
 				// Remove it from the list of followed files
 				getAttributes().removeFollowedFile(file);

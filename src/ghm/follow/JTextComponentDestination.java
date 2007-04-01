@@ -98,8 +98,10 @@ public class JTextComponentDestination extends FilterableOutputDestination {
 			if (autoPositionCaret_) {
 				_comp.setCaretPosition(_comp.getDocument().getLength());
 			}
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			// just ignore, nothing we can do
+			e.printStackTrace(System.err);
 		}
 	}
 

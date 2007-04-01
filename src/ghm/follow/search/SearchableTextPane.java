@@ -67,7 +67,9 @@ public class SearchableTextPane extends JTextArea {
 						Thread.yield();
 					}
 				}
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
+				e.printStackTrace(System.err);
 				lineResults = new LineResult[0];
 			}
 		}
@@ -81,8 +83,7 @@ public class SearchableTextPane extends JTextArea {
 	 * @param wordEnd
 	 * @param highlighter
 	 */
-	private void addHighlight(int start, int length)
-			throws BadLocationException {
+	private void addHighlight(int start, int length) throws BadLocationException {
 		getHighlighter().addHighlight(start, start + length, wordPainter);
 	}
 
@@ -116,14 +117,16 @@ public class SearchableTextPane extends JTextArea {
 					pos = lastSearchPos + lastSearchTerm.length();
 				}
 				lastSearchPos = search(lastSearchTerm, pos);
-			} else {
+			}
+			else {
 				lastSearchPos = search(term, 0);
 			}
 		}
 		// remember the term if it was found
 		if (lastSearchPos == -1) {
 			lastSearchTerm = null;
-		} else {
+		}
+		else {
 			lastSearchTerm = term;
 		}
 		return lastSearchPos;
@@ -149,8 +152,10 @@ public class SearchableTextPane extends JTextArea {
 
 			// Search for pattern
 			pos = text.indexOf(term, startPos);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			// just return -1;
+			e.printStackTrace(System.err);
 			pos = -1;
 		}
 		return pos;
@@ -195,7 +200,8 @@ public class SearchableTextPane extends JTextArea {
 	 * @param wordResult
 	 * @param lineResult
 	 */
-	private void updateWordResult(WordResult wordResult, LineResult lineResult) throws BadLocationException {
+	private void updateWordResult(WordResult wordResult, LineResult lineResult)
+			throws BadLocationException {
 		lineResult.addWord(wordResult);
 		// increase by 1 because offset starts at 0.
 		// 1 is clearer to the user since most people don't start counting

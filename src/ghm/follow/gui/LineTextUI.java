@@ -17,8 +17,7 @@ import javax.swing.text.View;
  * @author Carl Hall
  */
 public class LineTextUI extends BasicTextAreaUI {
-
-	int selectedIndex = 0;
+	int selectedIndex = -1;
 	private JTextComponent comp;
 
 	public View create(Element elem) {
@@ -35,25 +34,27 @@ public class LineTextUI extends BasicTextAreaUI {
 				Document doc = comp.getDocument();
 				Element map = doc.getDefaultRootElement();
 				int index = map.getElementIndex(e.getDot());
-				if (index == selectedIndex)
-					return;
 
-				try {
-					// unhighlight previous Selected line
-					Element previous = map.getElement(selectedIndex);
-					if (previous != null) {
-						Rectangle rec = comp.modelToView(previous.getStartOffset());
-						if (rec != null) {
-							rec.width = comp.getWidth();
-							comp.repaint(rec);
+				if (selectedIndex > -1) {
+					try {
+						// unhighlight previous Selected line
+						Element previous = map.getElement(selectedIndex);
+						if (previous != null) {
+							Rectangle rec = comp.modelToView(previous.getStartOffset());
+							if (rec != null) {
+								rec.width = comp.getWidth();
+								comp.repaint(rec);
+							}
 						}
 					}
-				} catch (BadLocationException e1) {
-					e1.printStackTrace();
+					catch (BadLocationException e1) {
+						e1.printStackTrace(System.err);
+					}
 				}
 				if (comp.getSelectionStart() == comp.getSelectionEnd()) {
 					selectedIndex = index;
-				} else {
+				}
+				else {
 					selectedIndex = -1;
 				}
 

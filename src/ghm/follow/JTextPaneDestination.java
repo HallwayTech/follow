@@ -99,6 +99,7 @@ public class JTextPaneDestination implements OutputDestination {
 		}
 		catch (BadLocationException e) {
 			// just ignore, nothing we can do
+			e.printStackTrace(System.err);
 		}
 	}
 

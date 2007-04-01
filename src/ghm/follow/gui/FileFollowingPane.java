@@ -183,9 +183,9 @@ public class FileFollowingPane extends JScrollPane {
 			try {
 				doc.remove(0, doc.getLength());
 			}
-			catch (BadLocationException badLocationException) {
+			catch (BadLocationException e) {
 				// Handle this better later
-				badLocationException.printStackTrace(System.err);
+				e.printStackTrace(System.err);
 			}
 
 			_fileFollower.start();

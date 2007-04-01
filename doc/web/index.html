@@ -1,153 +1,197 @@
 <html>
 
 <head>
-<title>Follow</title>
+<title>*New Release [2007/03/26]* - Follow 1.7.0</title>
 <link rel="stylesheet" type="text/css" href="follow.css">
 </head>
 
 <body>
-<table width=100%><tr>
-<td><img src="follow1.4.png"></td>
-<td align=right valign=bottom><a href="http://sf.net/projects/follow"><img border=0 src="http://sourceforge.net/sflogo.php?group_id=11206&type=1"></a></td>
-</tr></table>
-<p>Follow is a simple Java application which allows a user
-to monitor several log files concurrently.
-The name and behavior of this application are inspired by the "f" (follow) 
-flag of the UNIX command "tail".
-<p>Follow is licensed under the <a href="http://www.gnu.org/copyleft/gpl.html">GNU GPL</a>.  
-For more information on the GNU GPL & <a href="http://www.fsf.org/philosophy/free-sw.html">free software</a>, please visit
-<a href="http://www.gnu.org">wwww.gnu.org</a>.
+<table width=100%>
+	<tr>
+		<td><img src="follow.png"><big><big><strong>1.7</strong></big></big></td>
+		<td align=right valign=bottom><a
+			href="http://sf.net/projects/follow"><img border=0
+			src="http://sourceforge.net/sflogo.php?group_id=11206&type=1"></a></td>
+	</tr>
+</table>
 
-<p align=center>
-[ <a href="#Features">Features</a>
-| <a href="#Screenshots">Screenshots</a>
-| <a href="#Download">Download</a>
-| <a href="#Install">Install</a>
-| <a href="#Uninstall">Uninstall</a>
-| <a href="#VersionHistory">Version History</a>
-| <a href="#Acknowledgements">Acknowledgements</a>
-]<br>
-[ <a href="docs/index.html">Javadocs</a>
-| <a href="http://sf.net/projects/follow">SourceForge Project Page</a>
-| <a href="mailto:greghmerrill@yahoo.com">Feedback</a>
-]
+<p>Follow is a simple Java application which allows a user to
+monitor several log files concurrently. The name and behavior of this
+application are inspired by the "f" (follow) flag of the UNIX command
+"tail".</p>
+<p>Follow is licensed under the <a
+	href="http://www.gnu.org/copyleft/gpl.html">GNU GPL</a>. For more
+information on the GNU GPL & <a
+	href="http://www.fsf.org/philosophy/free-sw.html">free software</a>,
+please visit <a href="http://www.gnu.org">wwww.gnu.org</a>.
+<p align=center>[ <a href="#Features">Features</a> | <a
+	href="#Screenshots">Screenshots</a> | <a href="#Download">Download</a>
 
-<a name="Features"><p></a>
+| <a href="#Install">Install</a> | <a href="#Uninstall">Uninstall</a> |
+<a href="#VersionHistory">Version History</a> | <a
+	href="#Acknowledgements">Acknowledgements</a> ]<br>
+
+[ <a href="docs/index.html">Javadocs</a> | <a
+	href="http://sf.net/projects/follow">SourceForge Project Page</a> | <a
+	href="mailto:chall@cfhdev.com">Feedback</a> ]
+</p>	
+<a name="Features">
 <span class=header>Features</span>
 <p>The Follow application allows a user to ...
 <ul>
-<li>Monitor ("follow") text files to which information is being appended 
-  asynchronously (e.g. log files)
-<li>Jump quickly to the top or bottom of followed files
-<li>Clear the contents of the text areas which display the contents of
-  followed files (singly or all-at-once)
-<li>Delete the contents of followed files (singly or all-at-once)
-<li>Configure the buffering strategy & latency of the threads which follow files
-<li>Open files using Drag-and-Drop
-<li>Maintain session data across invocations of Follow (i.e. Follow remembers
-  which files a user opens so it can re-open those files the next time it runs)
+	<li>Monitor ("follow") text files to which information is being
+	appended asynchronously (e.g. log files)</li>
+
+	<li>Jump quickly to the top or bottom of followed files</li>
+
+	<li>Clear the contents of the text areas which display the
+	contents of followed files (singly or all-at-once)</li>
+
+	<li>Delete the contents of followed files (singly or all-at-once)</li>
+
+	<li>Configure the buffering strategy & latency of the threads
+	which follow files</li>
+
+	<li>Open files using Drag-and-Drop</li>
+
+	<li>Maintain session data across invocations of Follow (i.e.
+	Follow remembers which files a user opens so it can re-open those files
+	the next time it runs)</li>
+
+	<li>Pause log files and replay where paused</li>
+
+	<li>Search and highlight text within a log view</li>
+
+	<li>Restart a log while following</li>
 </ul>
 
-<a name="Screenshots"><p></a>
-<span class=header>Screenshots</span>
+<a name="Screenshots" /> <span class=header>Screenshots</span>
+
 <ul>
-<li><a href="mainApplicationWindow.jpg">Main application window</a> (45KB)
-<li><a href="configurationDialog.jpg">Configuration dialog</a> (36KB)
+	<li><a href="mainApplicationWindow.jpg">Main application
+	window</a> (45KB)</li>
+
+	<li><a href="configurationDialog.jpg">Configuration dialog</a>
+	(36KB)</li>
 </ul>
 
-<a name="Download"><p></a>
-<span class=header>Download</span>
-<p>
-<tt><a href="http://prdownloads.sourceforge.net/follow/follow1.4.3.jar">follow1.4.3.jar</a></tt>
-(115KB - contains classes & source code)<br>
-Additionally, you will need the Java 2 Runtime Environment (v1.2 or better) to run Follow.
-To download a free copy of the latest Java 2 Runtime Environment, visit Sun's
-Java site at <a href="http://java.sun.com">java.sun.com</a>.
+<a name="Download" /> <span class=header>Download</span>
 
-<a name="Install"><p></a>
-<span class=header>Install</span>
-<p>Once you have downloaded Follow, and assuming you have installed Java, no
-installation is necessary. To start Follow, simple invoke:
+<p><tt><a
+	href="http://prdownloads.sourceforge.net/follow/follow1.7.0.jar">follow1.7.0.jar</a></tt>
+
+(~200KB - contains classes & source code)<br>
+
+Additionally, you will need the Java 2 Runtime Environment (v1.4 or
+better) to run Follow. To download a free copy of the latest Java 2
+Runtime Environment, visit Sun's Java site at <a
+	href="http://java.sun.com">java.sun.com</a>.</p>
+
+<a name="Install" /> <span class=header>Install</span>
+<p>Once you have downloaded Follow, and assuming you have installed
+Java, no installation is necessary. To start Follow, simple invoke:
 <pre>
-     java -jar follow1.4.3.jar
-</pre>
-<p>Depending on how your environment is set up, you may have to type the absolute
-path to the java executable (for example 
-<tt>"c:\Program Files\JavaSoft\JRE\1.2\bin\java.exe" -jar follow1.4.3.jar</tt>).
 
-<a name="Uninstall"><p></a>
-<span class=header>Uninstall</span>
-<p>
-To "uninstall" Follow:
+     java -jar follow1.7.0.jar
+
+</pre>
+
+<p>Depending on how your environment is set up, you may have to type
+the absolute path to the java executable (for example <tt>"{$JAVA_HOME}\JRE\1.4.2\bin\java.exe"
+-jar follow1.5.0.jar</tt>). <a name="Uninstall" /> <span class=header>Uninstall</span>
+<p>To "uninstall" Follow:
 <ol>
-<li>Remove <tt>follow1.4.3.jar</tt> from your machine
-<li>Go to your user directory (<tt>~</tt> in unix/linux, <tt>c:\Windows</tt> on Win9x) and delete the file called <tt>.followApp.properties</tt>.  This file  contains your preference settings for Follow.  (It is created the first time you start the application.) 
+
+	<li>Remove <tt>follow1.7.0.jar</tt> from your machine
+	<li>Go to your user directory and delete the file named <tt>.followApp.properties</tt>.
+	This file contains your preference settings for Follow. (It is created
+	the first time you start the application.)
 </ol>
 
-<a name="VersionHistory"><p></a>
-<span class=header>Version History</span>
+<a name="VersionHistory" /> <span class=header>Version History</span>
+
 <dl>
-<dt><b>1.4.3</b> (April 6, 2003)
-<dd><img src="bug.png">Bug fixed: Fixed a CPU saturation (busy wait) bug on empty files.
-<dt><b>1.4.2</b> (July 1, 2003)
-<dd>"Auto-reload" functionality (restart if the file was deleted and recreated) added.
-<dd>Configurable external editor capability added.
-<dd>Workaround implemented for a Solaris swing bug.
-<dd>Now only the end of the file is initially loaded (like 'tail' does it).
-<dd>
-<dt><b>1.4.1</b> (August 25, 2001)
-<dd>Documentation/Copyright/License update; no functional change from version 1.4.
-<dt><b>1.4</b> (June 21, 2001)
-<dd><img src="bug.png">Bug fixed: threading problem "resolved" in 1.3.2 has now <i>actually</i> been resolved.
-<dd>The oft-requested auto-scroll feature has been added.
-<dt><b>1.3.2</b> (May 1, 2001)
-<dd><img src="bug.png">Bug fixed: threading problem which occasionally caused
-application to hang on startup has been resolved (I think...)
-<dt><b>1.3.1</b> (September 7, 2000)
-<dd><img src="bug.png">Bug fixed: jdk1.3 startup-related issues resolved.
-<dt><b>1.3</b> (September 4, 2000)
-<dd>"Clear" and "Clear All" actions redefined to simply clear the text area(s)
-<dd>"Delete" and "Delete All" actions introduced to perform the function previously 
-  performed by "Clear" and "Clear All"
-<dd><img src="bug.png">Bug fixed: Configuration dialog now properly displays
-  the currently selected font each time it is invoked
-<dt><b>1.2</b> (August 20, 2000)
-<dd>Font is now configurable
-<dt><b>1.1</b> (July 26, 2000)
-<dd>New in this release:
-  <ul>
-    <li>"Clear All" action (has the same effect as performing the "Clear" action
-on each followed file)
-    <li>Right-click menu (contains essentially the same actions as the toolbar)
-    <li>Bigger toolbar buttons (a slight nod to 
-<a href="http://www.asktog.com/columns/022DesignedToGiveFitts.html">Fitts' Law</a>)
-    <li>Configurable tab placement (with the top of the main text area being 
-      the new default, rather than the bottom)
-  </ul>
-<dt><b>1.0.1</b> (June 27, 2000)
-<dd><img src="bug.png">Bug fixed: Stream opened on a followed file now properly closed when the 
-"Close" action is performed
-<dt><b>1.0</b> (June 15, 2000)
-<dd>Initial release
+	<dt><b>1.7.0</b> (March 26, 2007)</dt>
+	<dd>Updated find functionality to include search results</dd>
+	<dd><img src="bug.png">Bug fixed: Fixed a CPU saturation
+	(busy wait) bug on opening empty files.
+	<dt><b>1.5.0</b> (April 11, 2006)</dt>
+	<dd>Added find functionality</dd>
+	<dd>Added pause functionality</dd>
+	<dd>Merged reset functionality from contributed source</dd>
+	<dd>Updated copyright/license to list new developers</dd>
+
+	<dt><b>1.4.3</b> (April 6, 2003)</dt>
+	<dd><img src="bug.png">Bug fixed: Fixed a CPU saturation
+	(busy wait) bug on empty files.
+	<dt><b>1.4.2</b> (July 1, 2003)
+	<dd>"Auto-reload" functionality (restart if the file was deleted
+	and recreated) added.
+	<dd>Configurable external editor capability added.
+	<dd>Workaround implemented for a Solaris swing bug.
+	<dd>Now only the end of the file is initially loaded (like 'tail'
+	does it).
+	<dd>
+	<dt><b>1.4.1</b> (August 25, 2001)
+	<dd>Documentation/Copyright/License update; no functional change
+	from version 1.4.
+	<dt><b>1.4</b> (June 21, 2001)
+	<dd><img src="bug.png">Bug fixed: threading problem
+	"resolved" in 1.3.2 has now <i>actually</i> been resolved.
+	<dd>The oft-requested auto-scroll feature has been added.
+	<dt><b>1.3.2</b> (May 1, 2001)
+	<dd><img src="bug.png">Bug fixed: threading problem which
+	occasionally caused application to hang on startup has been resolved (I
+	think...)
+	<dt><b>1.3.1</b> (September 7, 2000)
+	<dd><img src="bug.png">Bug fixed: jdk1.3 startup-related
+	issues resolved.
+	<dt><b>1.3</b> (September 4, 2000)
+	<dd>"Clear" and "Clear All" actions redefined to simply clear the
+	text area(s)
+	<dd>"Delete" and "Delete All" actions introduced to perform the
+	function previously performed by "Clear" and "Clear All"
+	<dd><img src="bug.png">Bug fixed: Configuration dialog now
+	properly displays the currently selected font each time it is invoked
+	<dt><b>1.2</b> (August 20, 2000)
+	<dd>Font is now configurable
+	<dt><b>1.1</b> (July 26, 2000)
+	<dd>New in this release:
+
+	<ul>
+
+		<li>"Clear All" action (has the same effect as performing the
+		"Clear" action on each followed file)
+		<li>Right-click menu (contains essentially the same actions as
+		the toolbar)
+		<li>Bigger toolbar buttons (a slight nod to <a
+			href="http://www.asktog.com/columns/022DesignedToGiveFitts.html">Fitts'
+		Law</a>)
+		<li>Configurable tab placement (with the top of the main text
+		area being the new default, rather than the bottom)
+	</ul>
+	<dt><b>1.0.1</b> (June 27, 2000)
+	<dd><img src="bug.png">Bug fixed: Stream opened on a
+	followed file now properly closed when the "Close" action is performed
+
+	
+	<dt><b>1.0</b> (June 15, 2000)
+	<dd>Initial release
 </dl>
 
-<a name="Acknowledgements"><p></a>
-<span class=header>Acknowledgements</span>
-<p>
-<a href="http://sourceforge.net"
- ><img src="http://sourceforge.net/sflogo.php?group_id=11206&type=1" width="88" height="31" border="0" alt="SourceForge Logo"
- ></a>
- As of September 11, 2000, I'm using 
-<a href="http://sourceforge.net">SourceForge</a> to assist with bug tracking,
-version control, and distribution. Be sure to visit Follow's 
-<a href="http://sourceforge.net/projects/follow">SourceForge project 
-page</a>.
-<p>
- Also, thanks to the <a href="http://www.gnu.org">GNU project</a> for putting a link to Follow on their
- <a href="http://www.gnu.org/software/java/java-software.html">Java Software</a>
- page.
-<script language="javascript" src="footer.js"></script>
+<a name="Acknowledgements" /> <span class=header>Acknowledgements</span>
 
+<p><a href="http://sourceforge.net"><img
+	src="http://sourceforge.net/sflogo.php?group_id=11206&type=1"
+	width="88" height="31" border="0" alt="SourceForge Logo"></a> As of
+September 11, 2000, I'm using <a href="http://sourceforge.net">SourceForge</a>
+to assist with bug tracking, version control, and distribution. Be sure
+to visit Follow's <a href="http://sourceforge.net/projects/follow">SourceForge
+project page</a>.</p>
+<p>Also, thanks to the <a href="http://www.gnu.org">GNU project</a>
+for putting a link to Follow on their <a
+	href="http://www.gnu.org/software/java/java-software.html">Java
+Software</a> page. <script language="javascript" src="footer.js"></script>
 </body>
 
 </html>

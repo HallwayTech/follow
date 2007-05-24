@@ -411,7 +411,10 @@ public class FollowApp {
 	 */
 	void open(File file, boolean addFileToAttributes, boolean startFollowing)
 			throws FileNotFoundException {
-		if (file == null || !file.exists()) {
+		if (file == null) {
+			throw new FileNotFoundException("file is null.");
+		}
+		if (!file.exists()) {
 			throw new FileNotFoundException(file.getName() + " not found.");
 		}
 		FileFollowingPane fileFollowingPane = (FileFollowingPane) fileToFollowingPaneMap_.get(file);

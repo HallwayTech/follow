@@ -53,49 +53,50 @@ public class FollowAppAttributes {
 			FileInputStream fis = new FileInputStream(PROPERTY_FILE);
 			properties_.load(fis);
 			switch (getAttributesVersion()) {
-			case UNVERSIONED:
-				// Migrate unversioned attributes to 1.1 attributes
-				System.out.println("Migrating pre-v1.1 properties to v1.1.");
-				setAttributesVersion(v1_1);
-				setTabPlacement(getDefaultAttributes().getTabPlacement());
-			case v1_1:
-				// Migrate 1.1 attributes to 1.2 attributes
-				System.out.println("Migrating v1.1 properties to v1.2.");
-				setAttributesVersion(v1_2);
-				setFont(getDefaultAttributes().getFont());
-			case v1_2:
-				// Migrate 1.2 attributes to 1.3 attributes
-				System.out.println("Migrating v1.2 properties to v1.3.");
-				setAttributesVersion(v1_3);
-				setConfirmDelete(true);
-				setConfirmDeleteAll(true);
-				// Additionally, it is necessary to warn the user about the
-				// changes to
-				// Clear and ClearAll and the introduction of Delete and
-				// DeleteAll
-				JOptionPane.showMessageDialog(null, app.getResourceBundle().getString(
-						"v1.3.warning.text"), app.getResourceBundle().getString(
-						"v1.3.warning.title"), JOptionPane.WARNING_MESSAGE);
-			case v1_3:
-			case v1_3_2:
-				// Migrate 1.3 attributes to 1.4 attributes
-				System.out.println("Migrating v1.3 properties to v1.4.");
-				setAttributesVersion(v1_4);
-				setAutoScroll(true);
-				// Inform the user of the new AutoScroll feature
-				JOptionPane.showMessageDialog(null, app.getResourceBundle().getString(
-						"v1.4.info.text"), app.getResourceBundle().getString("v1.4.info.title"),
-						JOptionPane.INFORMATION_MESSAGE);
-			case v1_4:
-				// Migrate 1.4 attributes to 1.5 attributes
-				System.out.println("Migrating v1.4 properties to v.1.5.");
-				setAttributesVersion(v1_5_0);
-				setTabSize(4);
-			case v1_5_0:
-				// Migrate 1.5.0 attributes to 1.6.0 attributes
-				System.out.println("Migrating v1.5 properties to 1.6.0.");
-				setAttributesVersion(v1_6_0);
-				setRecentFilesMax(5);
+				case UNVERSIONED:
+					// Migrate unversioned attributes to 1.1 attributes
+					System.out.println("Migrating pre-v1.1 properties to v1.1.");
+					setAttributesVersion(v1_1);
+					setTabPlacement(getDefaultAttributes().getTabPlacement());
+				case v1_1:
+					// Migrate 1.1 attributes to 1.2 attributes
+					System.out.println("Migrating v1.1 properties to v1.2.");
+					setAttributesVersion(v1_2);
+					setFont(getDefaultAttributes().getFont());
+				case v1_2:
+					// Migrate 1.2 attributes to 1.3 attributes
+					System.out.println("Migrating v1.2 properties to v1.3.");
+					setAttributesVersion(v1_3);
+					setConfirmDelete(true);
+					setConfirmDeleteAll(true);
+					// Additionally, it is necessary to warn the user about the
+					// changes to
+					// Clear and ClearAll and the introduction of Delete and
+					// DeleteAll
+					JOptionPane.showMessageDialog(null, app.getResourceBundle().getString(
+							"v1.3.warning.text"), app.getResourceBundle().getString(
+							"v1.3.warning.title"), JOptionPane.WARNING_MESSAGE);
+				case v1_3:
+				case v1_3_2:
+					// Migrate 1.3 attributes to 1.4 attributes
+					System.out.println("Migrating v1.3 properties to v1.4.");
+					setAttributesVersion(v1_4);
+					setAutoScroll(true);
+					// Inform the user of the new AutoScroll feature
+					JOptionPane.showMessageDialog(null, app.getResourceBundle().getString(
+							"v1.4.info.text"),
+							app.getResourceBundle().getString("v1.4.info.title"),
+							JOptionPane.INFORMATION_MESSAGE);
+				case v1_4:
+					// Migrate 1.4 attributes to 1.5 attributes
+					System.out.println("Migrating v1.4 properties to v.1.5.");
+					setAttributesVersion(v1_5_0);
+					setTabSize(4);
+				case v1_5_0:
+					// Migrate 1.5.0 attributes to 1.6.0 attributes
+					System.out.println("Migrating v1.5 properties to 1.6.0.");
+					setAttributesVersion(v1_6_0);
+					setRecentFilesMax(5);
 			}
 			fis.close();
 		}
@@ -223,6 +224,7 @@ public class FollowAppAttributes {
 
 	/**
 	 * Removes a file from the list of followed files
+	 * 
 	 * @param file
 	 */
 	public void removeFollowedFile(File file) {
@@ -363,6 +365,7 @@ public class FollowAppAttributes {
 
 	/**
 	 * Adds a file to the list of recent files
+	 * 
 	 * @param file
 	 */
 	public void addRecentFile(File file) {
@@ -403,7 +406,7 @@ public class FollowAppAttributes {
 	public int getRecentFilesMax() {
 		return getInt(RECENT_FILES_MAX_KEY);
 	}
-	
+
 	public void setRecentFilesMax(String max) {
 		setRecentFilesMax(Integer.parseInt(max));
 	}
@@ -418,7 +421,7 @@ public class FollowAppAttributes {
 		}
 		setInt(RECENT_FILES_MAX_KEY, max);
 	}
-	
+
 	public void store() throws IOException {
 		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(propertyFileName));
 		properties_.store(bos, null);
@@ -468,9 +471,9 @@ public class FollowAppAttributes {
 
 	private EnumeratedProperties getDefaultProperties() throws IOException {
 		if (defaultProperties_ == null) {
-          InputStream in = this.getClass().getResourceAsStream(PROPERTY_PROTOTYPE_FILE_NAME);
+			InputStream in = this.getClass().getResourceAsStream(PROPERTY_PROTOTYPE_FILE_NAME);
 			BufferedInputStream bis = new BufferedInputStream(in);
-            FileOutputStream fos = new FileOutputStream(PROPERTY_FILE);
+			FileOutputStream fos = new FileOutputStream(PROPERTY_FILE);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			byte[] byteArray = new byte[BUFFER_SIZE];
 			int len;

@@ -503,25 +503,25 @@ public class Configure extends FollowAppAction {
 		public TabPlacementValue(int value) {
 			value_ = value;
 			switch (value) {
-			case JTabbedPane.TOP:
-				displayValue_ = getApp().getResourceBundle().getString(
-						"dialog.Configure.tabPlacement.Top.displayValue");
-				break;
-			case JTabbedPane.BOTTOM:
-				displayValue_ = getApp().getResourceBundle().getString(
-						"dialog.Configure.tabPlacement.Bottom.displayValue");
-				break;
-			case JTabbedPane.LEFT:
-				displayValue_ = getApp().getResourceBundle().getString(
-						"dialog.Configure.tabPlacement.Left.displayValue");
-				break;
-			case JTabbedPane.RIGHT:
-				displayValue_ = getApp().getResourceBundle().getString(
-						"dialog.Configure.tabPlacement.Right.displayValue");
-				break;
-			default:
-				throw new IllegalArgumentException(
-						"int value must be one of the tab placement values from JTabbedPane");
+				case JTabbedPane.TOP:
+					displayValue_ = getApp().getResourceBundle().getString(
+							"dialog.Configure.tabPlacement.Top.displayValue");
+					break;
+				case JTabbedPane.BOTTOM:
+					displayValue_ = getApp().getResourceBundle().getString(
+							"dialog.Configure.tabPlacement.Bottom.displayValue");
+					break;
+				case JTabbedPane.LEFT:
+					displayValue_ = getApp().getResourceBundle().getString(
+							"dialog.Configure.tabPlacement.Left.displayValue");
+					break;
+				case JTabbedPane.RIGHT:
+					displayValue_ = getApp().getResourceBundle().getString(
+							"dialog.Configure.tabPlacement.Right.displayValue");
+					break;
+				default:
+					throw new IllegalArgumentException(
+							"int value must be one of the tab placement values from JTabbedPane");
 			}
 		}
 
@@ -534,7 +534,7 @@ public class Configure extends FollowAppAction {
 		}
 
 		public boolean equals(Object o) {
-			if (o.getClass() == getClass()) {
+			if (o != null && o.getClass() == getClass()) {
 				return value_ == ((TabPlacementValue) o).value_;
 			}
 			return false;

@@ -5,7 +5,7 @@ the UNIX command "tail".  For more information about Follow,
 please visit http://follow.sf.net
 
 Copyright (C) 2000-2006 Greg Merrill (greghmerrill@yahoo.com),
-Murali Krishnan (murali24@yahoo.com), Carl Hall (chall@cfhdev.com)
+Murali Krishnan (murali24@yahoo.com), Carl Hall (carl.hall@gmail.com)
 
 Follow is free software; you can redistribute it and/or modify
 it under the terms of version 2 of the GNU General Public

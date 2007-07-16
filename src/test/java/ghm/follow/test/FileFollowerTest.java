@@ -35,12 +35,20 @@ public class FileFollowerTest extends BaseTestCase {
 	}
 
 	public void testSmallBufferSize() throws Exception {
+		int bufferSize = 10;
 		follower_ = new FileFollower(followedFile_, new OutputDestination[] { testination_ });
-		follower_.setBufferSize(8);
+		follower_.setBufferSize(bufferSize);
 		follower_.start();
 		String control = "32098jaspfj234-08uewrfiojsad;lfkjqw4poiru2340ruwefkjasd;lkjq2po43iu123-4r098uasdfl;asdclkjasdfasdf9834roaerf";
+		String subcontrol = control.substring(control.length() - bufferSize);
+		// initial read of the 'file' will only contain as many characters as
+		// the buffer size
 		writeToFollowedFileAndWait(control);
-		assertEquals(control, testination_.strBuf_.toString());
+		assertEquals(subcontrol, testination_.strBuf_.toString());
+		// subsequent reads of the 'file' will contain all previous characters
+		// and any newly added ones
+		writeToFollowedFileAndWait(control);
+		assertEquals(subcontrol + control, testination_.strBuf_.toString());
 	}
 
 	public void testMultipleDestinations() throws Exception {

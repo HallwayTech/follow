@@ -88,17 +88,32 @@ public class FileFollower {
 	/**
 	 * Cause this FileFollower to spawn a thread which will follow the file
 	 * supplied in the constructor and send its contents to all of the
-	 * FileFollower's OutputDestinations.
+	 * FileFollower's OutputDestinations.<br>
+	 * <br>
+	 * If this FileFollower is paused, this method equates to calling unpause().
 	 */
 	public synchronized void start() {
-		continueRunning_ = true;
-		runnerThread_ = new Thread(new Runner(), getFollowedFile().getName());
-		runnerThread_.start();
+		if (paused_) {
+			unpause();
+		}
+		else {
+			continueRunning_ = true;
+			runnerThread_ = new Thread(new Runner(), getFollowedFile().getName());
+			runnerThread_.start();
+		}
+	}
+
+	public synchronized void pause() {
+		paused_ = true;
+	}
+
+	public synchronized void unpause() {
+		flushBuffer();
+		paused_ = false;
 	}
 
 	public synchronized void restart() {
 		needsRestart_ = true;
-		startingPoint_ = -1;
 		runnerThread_.interrupt();
 	}
 
@@ -121,6 +136,41 @@ public class FileFollower {
 		stop();
 		while (runnerThread_.isAlive()) {
 			Thread.yield();
+		}
+	}
+
+	public synchronized void flushBuffer() {
+		print(buffer_.toString());
+		buffer_ = null;
+	}
+
+	/**
+	 * Send the supplied string to all OutputDestinations
+	 * 
+	 * @param s
+	 */
+	private synchronized void print(String s) {
+		if (paused_) {
+			if (buffer_ == null) {
+				buffer_ = new StringBuffer();
+			}
+			buffer_.append(s);
+		}
+		else {
+			Iterator i = outputDestinations_.iterator();
+			while (i.hasNext()) {
+				((OutputDestination) i.next()).print(s);
+			}
+		}
+	}
+
+	/**
+	 * Clear all OutputDestinations
+	 */
+	private synchronized void clear() {
+		Iterator i = outputDestinations_.iterator();
+		while (i.hasNext()) {
+			((OutputDestination) i.next()).clear();
 		}
 	}
 
@@ -238,11 +288,18 @@ public class FileFollower {
 
 	protected Thread runnerThread_;
 
-	protected long startingPoint_ = -1;
+	protected long startingPoint_;
 
-	/*
+	protected boolean paused_;
+
+	private StringBuffer buffer_;
+
+	/**
 	 * Instances of this class are used to run a thread which follows a
 	 * FileFollower's file and sends prints its contents to OutputDestinations.
+	 * This class should only handle the gathering of data from the followed
+	 * file. Actually writing to the output destinations is handled by the outer
+	 * class (FileFollower).
 	 */
 	class Runner implements Runnable {
 
@@ -262,22 +319,18 @@ public class FileFollower {
 				long lastActivityTime = 0;
 
 				FileInputStream fis = new FileInputStream(file_);
+				BufferedInputStream bis = new BufferedInputStream(fis);
 				// == -1 indicates that the default buffer size should be used
 				// > -1 indicates that the file is being restarted and should
-				// start back at the original position
-				if (startingPoint_ == -1) {
-					// Skip to the end of the file.
-					if (fileSize > bufferSize_) {
-						startingPoint_ = fileSize - bufferSize_;
-					}
-					// start at the beginning
-					else {
-						startingPoint_ = 0;
-					}
+				// Skip to the end of the file.
+				if (fileSize > bufferSize_) {
+					startingPoint_ = fileSize - bufferSize_;
 				}
-				fis.skip(startingPoint_);
-
-				BufferedInputStream bis = new BufferedInputStream(fis);
+				// start at the beginning
+				else {
+					startingPoint_ = 0;
+				}
+				bis.skip(startingPoint_);
 
 				while (continueRunning_ && !needsRestart_) {
 					numBytesRead = bis.read(byteArray, 0, byteArray.length);
@@ -286,15 +339,13 @@ public class FileFollower {
 					if (dataWasFound) {
 						print(new String(byteArray, 0, numBytesRead));
 						lastActivityTime = System.currentTimeMillis();
-					} else {
+					}
+					else {
 						// Now check if the filehandle has become stale (file
-						// was modified, but no data could be read).
-						boolean fileNonEmpty = file_.exists() && (file_.length() > 0);
-						boolean fileHasChanged = fileNonEmpty
-								&& (file_.lastModified() > lastActivityTime);
-						if (fileHasChanged) {
+						// was modified, but no data was read).
+						boolean fileHasChanged = file_.lastModified() > lastActivityTime;
+						if (file_.exists() && fileHasChanged) {
 							needsRestart_ = true;
-							startingPoint_ = -1;
 						}
 					}
 
@@ -302,37 +353,21 @@ public class FileFollower {
 					if (noDataLeft && !needsRestart_) {
 						try {
 							Thread.sleep(latency_);
-						} catch (InterruptedException e) {
+						}
+						catch (InterruptedException e) {
 							// Interrupt may be thrown manually by stop()
 						}
 					}
 				}
 				bis.close();
 				fis.close();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace(System.err);
 			}
 		}
-
-		/* send the supplied string to all OutputDestinations */
-		void print(String s) {
-			Iterator i = outputDestinations_.iterator();
-			while (i.hasNext()) {
-				((OutputDestination) i.next()).print(s);
-			}
-		}
-
-		/* clear all OutputDestinations */
-		void clear() {
-			Iterator i = outputDestinations_.iterator();
-			while (i.hasNext()) {
-				((OutputDestination) i.next()).clear();
-			}
-		}
-
 	}
 
 	/** Line separator, retrieved from System properties & stored statically. */
 	protected static final String lineSeparator = System.getProperty("line.separator");
-
 }

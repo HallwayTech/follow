@@ -141,6 +141,20 @@ public class FileFollowingPane extends JScrollPane {
 	}
 
 	/**
+	 * Convenience method; equivalent to calling getFileFollower().pause()
+	 */
+	public void pauseFollowing() {
+		_fileFollower.pause();
+	}
+
+	/**
+	 * Convenience method; equivalent to calling getFileFollower().unpause()
+	 */
+	public void unpauseFollowing() {
+		_fileFollower.unpause();
+	}
+
+	/**
 	 * Convenience method; equivalent to calling getFileFollower().stopAndWait()
 	 */
 	public void stopFollowingAndWait() throws InterruptedException {

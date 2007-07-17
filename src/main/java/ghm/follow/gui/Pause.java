@@ -31,10 +31,11 @@ public class Pause extends FollowAppAction {
 	public static final String NAME = "pause";
 
 	public Pause(FollowApp app) {
+		// false is passed into getIcon(..) because a file follower never
+		// starts in a paused state
 		super(app, app.getResourceBundle().getString("action.Pause.name"), app.getResourceBundle()
 				.getString("action.Pause.mnemonic"), app.getResourceBundle().getString(
-				"action.Pause.accelerator"), getIcon(app.getAttributes().autoScroll(), app
-				.getResourceBundle()));
+				"action.Pause.accelerator"), getIcon(false, app.getResourceBundle()));
 	}
 
 	/**
@@ -54,31 +55,33 @@ public class Pause extends FollowAppAction {
 	 */
 	public void playPausePane(FileFollowingPane pane) {
 		if (pane.isFollowing()) {
-			pane.pauseFollowing();
+			if (pane.isFollowingPaused()) {
+				pane.unpauseFollowing();
+			}
+			else {
+				pane.pauseFollowing();
+			}
+			setIconByState(pane.isFollowingPaused());
 		}
-		else {
-			pane.unpauseFollowing();
-		}
-		setIconByState(pane.isFollowing());
 	}
 
 	/**
-	 * Sets the icon of this action based on the provided follow state
+	 * Sets the icon of this action based on the provided pause state.
 	 * 
-	 * @param follow
+	 * @param paused
 	 */
-	public void setIconByState(boolean follow) {
+	public void setIconByState(boolean paused) {
 		// get the icon to be set
 		ImageIcon icon = new ImageIcon(getApp().getClass().getResource(
-				Pause.getIcon(follow, getApp().getResourceBundle())));
+				Pause.getIcon(paused, getApp().getResourceBundle())));
 		// set the icon in the action. when updating here, the icon is changed
 		// whether the event is caused by menu, button click or key combo
 		getApp().getAction(Pause.NAME).putValue(Action.SMALL_ICON, icon);
 	}
 
-	private static String getIcon(boolean following, ResourceBundle resBundle) {
-		String image = (following ? resBundle.getString("action.Pause.onIcon") : resBundle
-				.getString("action.Pause.offIcon"));
+	private static String getIcon(boolean paused, ResourceBundle resBundle) {
+		String image = (paused ? resBundle.getString("action.Pause.offIcon") : resBundle
+				.getString("action.Pause.onIcon"));
 		return image;
 	}
 }

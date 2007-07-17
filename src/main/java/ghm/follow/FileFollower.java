@@ -90,14 +90,15 @@ public class FileFollower {
 	 * supplied in the constructor and send its contents to all of the
 	 * FileFollower's OutputDestinations.<br>
 	 * <br>
-	 * If this FileFollower is paused, this method equates to calling unpause().
+	 * If this FileFollower is running but paused, this method equates to calling unpause().
 	 */
 	public synchronized void start() {
-		if (paused_) {
+		if (continueRunning_ && paused_) {
 			unpause();
 		}
 		else {
 			continueRunning_ = true;
+			paused_ = false;
 			runnerThread_ = new Thread(new Runner(), getFollowedFile().getName());
 			runnerThread_.start();
 		}
@@ -108,7 +109,6 @@ public class FileFollower {
 	}
 
 	public synchronized void unpause() {
-		flushBuffer();
 		paused_ = false;
 	}
 
@@ -139,28 +139,15 @@ public class FileFollower {
 		}
 	}
 
-	public synchronized void flushBuffer() {
-		print(buffer_.toString());
-		buffer_ = null;
-	}
-
 	/**
 	 * Send the supplied string to all OutputDestinations
 	 * 
 	 * @param s
 	 */
 	private synchronized void print(String s) {
-		if (paused_) {
-			if (buffer_ == null) {
-				buffer_ = new StringBuffer();
-			}
-			buffer_.append(s);
-		}
-		else {
-			Iterator i = outputDestinations_.iterator();
-			while (i.hasNext()) {
-				((OutputDestination) i.next()).print(s);
-			}
+		Iterator i = outputDestinations_.iterator();
+		while (i.hasNext()) {
+			((OutputDestination) i.next()).print(s);
 		}
 	}
 
@@ -222,6 +209,15 @@ public class FileFollower {
 	 */
 	public boolean isBeingFollowed() {
 		return continueRunning_;
+	}
+	
+	/**
+	 * Returns the pause state of the follower.
+	 * 
+	 * @return true if paused, false otherwise
+	 */
+	public boolean isPaused() {
+		return paused_;
 	}
 
 	/**
@@ -288,11 +284,7 @@ public class FileFollower {
 
 	protected Thread runnerThread_;
 
-	protected long startingPoint_;
-
 	protected boolean paused_;
-
-	private StringBuffer buffer_;
 
 	/**
 	 * Instances of this class are used to run a thread which follows a
@@ -316,47 +308,45 @@ public class FileFollower {
 				long fileSize = file_.length();
 				byte[] byteArray = new byte[bufferSize_];
 				int numBytesRead;
-				long lastActivityTime = 0;
-
+				long lastActivityTime = file_.lastModified();
+				// create some stream readers to handle the file
 				FileInputStream fis = new FileInputStream(file_);
 				BufferedInputStream bis = new BufferedInputStream(fis);
-				// == -1 indicates that the default buffer size should be used
-				// > -1 indicates that the file is being restarted and should
-				// Skip to the end of the file.
+				// start at the beginning of the file
+				long startingPoint_ = 0;
+				// if the file size is bigger than the buffer size, skip to the
+				// end of the file.
 				if (fileSize > bufferSize_) {
 					startingPoint_ = fileSize - bufferSize_;
-				}
-				// start at the beginning
-				else {
-					startingPoint_ = 0;
 				}
 				bis.skip(startingPoint_);
 
 				while (continueRunning_ && !needsRestart_) {
-					numBytesRead = bis.read(byteArray, 0, byteArray.length);
-
-					boolean dataWasFound = (numBytesRead > 0);
-					if (dataWasFound) {
-						print(new String(byteArray, 0, numBytesRead));
-						lastActivityTime = System.currentTimeMillis();
+					if (!paused_) {
+					    numBytesRead = bis.read(byteArray, 0, byteArray.length);
+	
+					    boolean dataWasFound = (numBytesRead > 0);
+					    if (dataWasFound) {
+							print(new String(byteArray, 0, numBytesRead));
+							lastActivityTime = System.currentTimeMillis();
+						}
+						else {
+							// Now check if the file handle has become stale (file
+							// was modified, but no data was read).
+//							boolean fileExists = file_.exists() && (file_.length() > 0);
+							boolean fileHasChanged = file_.lastModified() > lastActivityTime;
+							if (file_.exists() && fileHasChanged) {
+								needsRestart_ = true;
+							}
+						}
+	
+						boolean noDataLeft = (numBytesRead < byteArray.length);
+						if (noDataLeft && !needsRestart_) {
+							sleep();
+						}
 					}
 					else {
-						// Now check if the filehandle has become stale (file
-						// was modified, but no data was read).
-						boolean fileHasChanged = file_.lastModified() > lastActivityTime;
-						if (file_.exists() && fileHasChanged) {
-							needsRestart_ = true;
-						}
-					}
-
-					boolean noDataLeft = (numBytesRead < byteArray.length);
-					if (noDataLeft && !needsRestart_) {
-						try {
-							Thread.sleep(latency_);
-						}
-						catch (InterruptedException e) {
-							// Interrupt may be thrown manually by stop()
-						}
+						sleep();
 					}
 				}
 				bis.close();
@@ -364,6 +354,15 @@ public class FileFollower {
 			}
 			catch (IOException e) {
 				e.printStackTrace(System.err);
+			}
+		}
+		
+		private void sleep() {
+			try {
+				Thread.sleep(latency_);
+			}
+			catch (InterruptedException e) {
+				// Interrupt may be thrown manually by stop()
 			}
 		}
 	}

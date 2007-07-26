@@ -448,7 +448,6 @@ public class FollowApp {
 				public void componentShown(ComponentEvent e) {
 					FileFollowingPane ffp = (FileFollowingPane) e.getSource();
 					Pause pause = (Pause) getAction(Pause.NAME);
-					pause.setIconByState(ffp.isFollowing());
 				}
 			});
 			if (!getAction(Close.NAME).isEnabled()) {

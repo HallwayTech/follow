@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>follow</groupId>
 	<artifactId>follow</artifactId>
-	<packaging>jar</packaging>
 	<version>1.7.2</version>
+	<packaging>jar</packaging>
 	<name>Follow</name>
-	<url>http://maven.apache.org</url>
+	<url>http://follow.sf.net</url>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -16,4 +16,18 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>ghm.follow.gui.FollowApp</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

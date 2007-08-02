@@ -27,6 +27,8 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+import org.apache.log4j.Logger;
+
 /**
  * Base class for all actions in the Follow application.
  * 
@@ -51,13 +53,13 @@ public abstract class FollowAppAction extends AbstractAction {
 			setMnemonic(mnemonic);
 		}
 		catch (InvalidVkException e) {
-			e.printStackTrace(System.err);
+			getLog().error("Invalid mnemonic", e);
 		}
 		try {
 			setAccelerator(accelerator);
 		}
 		catch (InvalidVkException e) {
-			e.printStackTrace(System.err);
+			getLog().error("Invalid accelerator", e);
 		}
 	}
 
@@ -107,6 +109,15 @@ public abstract class FollowAppAction extends AbstractAction {
 
 	public FollowApp getApp() {
 		return app_;
+	}
+
+	private transient Logger log;
+
+	private Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(FollowAppAction.class);
+		}
+		return log;
 	}
 
 	private FollowApp app_;

@@ -57,7 +57,9 @@ public class Open extends FollowAppAction {
 				getApp().open(recentFile, getApp().getAttributes().autoScroll());
 			} else {
 				f = getApp().getSystemInterface().getFileFromUser();
-				getApp().open(f, getApp().getAttributes().autoScroll());
+				if (f != null) {
+					getApp().open(f, getApp().getAttributes().autoScroll());
+				}
 			}
 		} catch (FileNotFoundException ex) {
 			String msg = MessageFormat.format(getApp().getResourceBundle().getString(

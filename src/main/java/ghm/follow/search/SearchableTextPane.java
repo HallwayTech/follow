@@ -13,6 +13,8 @@ import javax.swing.text.Element;
 import javax.swing.text.Utilities;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
+import org.apache.log4j.Logger;
+
 public class SearchableTextPane extends JTextArea {
 	private int lastSearchPos = -1;
 	private String lastSearchTerm;
@@ -69,7 +71,7 @@ public class SearchableTextPane extends JTextArea {
 				}
 			}
 			catch (BadLocationException e) {
-				e.printStackTrace(System.err);
+				getLog().error("BadLocationException in SearchableTextPane", e);
 				lineResults = new LineResult[0];
 			}
 		}
@@ -155,7 +157,7 @@ public class SearchableTextPane extends JTextArea {
 		}
 		catch (BadLocationException e) {
 			// just return -1;
-			e.printStackTrace(System.err);
+			getLog().error("BadLocationException in SearchableTextPane", e);
 			pos = -1;
 		}
 		return pos;
@@ -195,7 +197,7 @@ public class SearchableTextPane extends JTextArea {
 	}
 
 	/**
-	 * Adds word result to line resuls and updates line information
+	 * Adds word result to line result and updates line information
 	 * 
 	 * @param wordResult
 	 * @param lineResult
@@ -210,5 +212,14 @@ public class SearchableTextPane extends JTextArea {
 		wordResult.parent.lineNumber = line + 1;
 		int lineOffset = getLineStartOffset(line);
 		wordResult.setLineOffset(lineOffset);
+	}
+
+	private transient Logger log;
+
+	private Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(SearchableTextPane.class);
+		}
+		return log;
 	}
 }

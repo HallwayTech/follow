@@ -11,6 +11,8 @@ import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
 
+import org.apache.log4j.Logger;
+
 /**
  * UI implementation that highlights the line where the caret is found.
  * 
@@ -48,7 +50,7 @@ public class LineTextUI extends BasicTextAreaUI {
 						}
 					}
 					catch (BadLocationException e1) {
-						e1.printStackTrace(System.err);
+						getLog().error("BadLocationException in LineTextUI", e1);
 					}
 				}
 				if (comp.getSelectionStart() == comp.getSelectionEnd()) {
@@ -64,6 +66,15 @@ public class LineTextUI extends BasicTextAreaUI {
 			}
 		});
 		super.installUI(c);
+	}
+
+	private transient Logger log;
+
+	private Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(LineTextUI.class);
+		}
+		return log;
 	}
 
 	public int getSelectedIndex() {

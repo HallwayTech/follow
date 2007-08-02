@@ -33,6 +33,8 @@ import javax.swing.JScrollPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
+import org.apache.log4j.Logger;
+
 /**
  * A component which allows one to view a text file to which information is
  * being asynchronously appended.
@@ -193,7 +195,7 @@ public class FileFollowingPane extends JScrollPane {
 			}
 			catch (InterruptedException interruptedException) {
 				// Handle this better later
-				interruptedException.printStackTrace(System.err);
+				getLog().error("InterrupedException in FileFollowingPane", interruptedException);
 			}
 
 			// This has the effect of clearing the contents of the followed file
@@ -208,10 +210,19 @@ public class FileFollowingPane extends JScrollPane {
 			}
 			catch (BadLocationException e) {
 				// Handle this better later
-				e.printStackTrace(System.err);
+				getLog().error("BadLocationException in FileFolloingPane", e);
 			}
 
 			_fileFollower.start();
 		}
+	}
+
+	private transient Logger log;
+
+	private Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(FileFollowingPane.class);
+		}
+		return log;
 	}
 }

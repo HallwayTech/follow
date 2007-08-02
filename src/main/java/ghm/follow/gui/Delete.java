@@ -23,6 +23,8 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
+
 /**
  * Action which deletes the contents of the currently followed file.
  * 
@@ -67,12 +69,21 @@ public class Delete extends FollowAppAction {
 			fileFollowingPane.clear();
 		}
 		catch (IOException ioe) {
-			ioe.printStackTrace(System.err);
+			getLog().error("IOException in Delete", ioe);
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
 			JOptionPane.showMessageDialog(getApp().getFrame(), getApp().getResourceBundle().getString(
 					"message.unableToDelete.text"), getApp().getResourceBundle().getString(
 					"message.unableToDelete.title"), JOptionPane.WARNING_MESSAGE);
 		}
 		getApp().setCursor(Cursor.DEFAULT_CURSOR);
+	}
+
+	private transient Logger log;
+
+	private Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(Delete.class);
+		}
+		return log;
 	}
 }

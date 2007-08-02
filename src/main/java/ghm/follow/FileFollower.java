@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 /**
  * Instances of this class 'follow' a particular text file, assmebling that
  * file's characters into Strings and sending them to instances of
@@ -294,11 +296,23 @@ public class FileFollower {
 	 * class (FileFollower).
 	 */
 	class Runner implements Runnable {
+		private transient Logger log;
+
+		private Logger getLog() {
+			if (log == null) {
+				log = Logger.getLogger(Runner.class);
+			}
+			return log;
+		}
 
 		public void run() {
+			getLog().debug("Starting to follow...");
+
 			while (continueRunning_) {
 				runAction();
 			}
+
+			getLog().debug("No more following.");
 		}
 
 		protected void runAction() {
@@ -309,60 +323,80 @@ public class FileFollower {
 				byte[] byteArray = new byte[bufferSize_];
 				int numBytesRead;
 				long lastActivityTime = file_.lastModified();
+
 				// create some stream readers to handle the file
 				FileInputStream fis = new FileInputStream(file_);
 				BufferedInputStream bis = new BufferedInputStream(fis);
+
 				// start at the beginning of the file
 				long startingPoint_ = 0;
+
 				// if the file size is bigger than the buffer size, skip to the
 				// end of the file.
 				if (fileSize > bufferSize_) {
 					startingPoint_ = fileSize - bufferSize_;
 				}
+
+				getLog().debug("Starting point: " + startingPoint_ + "; Last activity: " + lastActivityTime);
+
 				bis.skip(startingPoint_);
 
 				while (continueRunning_ && !needsRestart_) {
 					if (!paused_) {
 					    numBytesRead = bis.read(byteArray, 0, byteArray.length);
-	
+
 					    boolean dataWasFound = (numBytesRead > 0);
+
+					    getLog().debug("Bytes read: " + numBytesRead + "; dataWasFound: " + dataWasFound);
+
 					    if (dataWasFound) {
-							print(new String(byteArray, 0, numBytesRead));
+					    	String output = new String(byteArray, 0, numBytesRead);
+
+							print(output);
+
+							getLog().debug("Printed data: " + output.substring(output.length() - 15));
+
 							lastActivityTime = System.currentTimeMillis();
 						}
 						else {
 							// Now check if the file handle has become stale (file
 							// was modified, but no data was read).
-//							boolean fileExists = file_.exists() && (file_.length() > 0);
+							boolean fileExists = file_.exists(); // && (file_.length() > 0);
 							boolean fileHasChanged = file_.lastModified() > lastActivityTime;
-							if (file_.exists() && fileHasChanged) {
+
+							if (fileExists && fileHasChanged) {
+								getLog().debug("Needs restart [fileExists=" + fileExists + "; fileHasChanged=" + fileHasChanged + "]");
 								needsRestart_ = true;
 							}
 						}
-	
-						boolean noDataLeft = (numBytesRead < byteArray.length);
-						if (noDataLeft && !needsRestart_) {
+
+						boolean allDataRead = (numBytesRead < byteArray.length);
+
+						if (allDataRead && !needsRestart_) {
+							getLog().debug("Sleeping for " + latency_ + "ms [allDataRead:" + allDataRead + ";needsRestart:" + needsRestart_ + "]");
 							sleep();
 						}
 					}
 					else {
+						getLog().debug("Runner paused.");
 						sleep();
 					}
 				}
+				getLog().debug("Finished running [continueRunning_=" + continueRunning_ + "; needsRestart_=" + needsRestart_ + "]");
 				bis.close();
 				fis.close();
 			}
 			catch (IOException e) {
-				e.printStackTrace(System.err);
+				getLog().error("IOException while following file", e);
 			}
 		}
 		
 		private void sleep() {
 			try {
 				Thread.sleep(latency_);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				// Interrupt may be thrown manually by stop()
+				getLog().debug("DIED IN MY SLEEP");
 			}
 		}
 	}

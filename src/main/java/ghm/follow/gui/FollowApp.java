@@ -50,6 +50,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +62,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.helpers.Loader;
+import org.apache.log4j.xml.DOMConfigurator;
 
 /**
  * This class' main() method is the entry point into the Follow application.
@@ -133,7 +139,7 @@ public class FollowApp {
 			if (!file.exists()) {
 				String msg = MessageFormat.format(getResourceBundle().getString(
 						"message.cmdLineFileNotFound.text"), new Object[] { file });
-				System.out.println(msg);
+				getLog().info(msg);
 			} else if (!getAttributes().followedFileListContains(file)) {
 				getAttributes().addFollowedFile(file);
 			}
@@ -204,8 +210,7 @@ public class FollowApp {
 				try {
 					getAttributes().store();
 				} catch (IOException ioe) {
-					System.err.println("Error encountered while storing properties...");
-					ioe.printStackTrace(System.err);
+					getLog().error("Error encountered while storing properties...", ioe);
 				} finally {
 					systemInterface_.exit(0);
 				}
@@ -448,6 +453,7 @@ public class FollowApp {
 				public void componentShown(ComponentEvent e) {
 					FileFollowingPane ffp = (FileFollowingPane) e.getSource();
 					Pause pause = (Pause) getAction(Pause.NAME);
+					pause.setIconByState(ffp.isFollowingPaused());
 				}
 			});
 			if (!getAction(Close.NAME).isEnabled()) {
@@ -604,6 +610,15 @@ public class FollowApp {
 				(int) (screenSize.getHeight() / 2 - windowSize.getHeight() / 2));
 	}
 
+	private transient static Logger log;
+
+	private static Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(FollowApp.class);
+		}
+		return log;
+	}
+
 	/**
 	 * Invoke this method to start the Follow application. If any command-line
 	 * arguments are passed in, they are assume to be filenames and are opened
@@ -629,7 +644,7 @@ public class FollowApp {
 			// ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
 			// }
 		} catch (Throwable t) {
-			t.printStackTrace();
+			getLog().error("Unhandled exception", t);
 			System.exit(-1);
 		}
 	}

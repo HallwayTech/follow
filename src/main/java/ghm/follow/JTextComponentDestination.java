@@ -22,6 +22,8 @@ package ghm.follow;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 
+import org.apache.log4j.Logger;
+
 /**
  * Implementation of {@link OutputDestination} which appends Strings to a
  * {@link JTextComponent}.
@@ -101,7 +103,7 @@ public class JTextComponentDestination extends FilterableOutputDestination {
 		}
 		catch (BadLocationException e) {
 			// just ignore, nothing we can do
-			e.printStackTrace(System.err);
+			getLog().error("BadLocationException in JTextComponentDestination", e);
 		}
 	}
 
@@ -110,5 +112,14 @@ public class JTextComponentDestination extends FilterableOutputDestination {
 		if (autoPositionCaret_) {
 			_comp.setCaretPosition(0);
 		}
+	}
+
+	private transient Logger log;
+
+	private Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(JTextComponentDestination.class);
+		}
+		return log;
 	}
 }

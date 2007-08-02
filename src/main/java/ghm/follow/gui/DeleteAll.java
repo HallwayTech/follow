@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
+
 /**
  * Action which deletes the contents of all followed files.
  * 
@@ -76,11 +78,20 @@ public class DeleteAll extends FollowAppAction {
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
 		}
 		catch (IOException ioe) {
-			ioe.printStackTrace(System.err);
+			getLog().error("IOException error in DeleteAll", ioe);
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
 			JOptionPane.showMessageDialog(getApp().getFrame(), getApp().getResourceBundle().getString(
 					"message.unableToDeleteAll.text"), getApp().getResourceBundle().getString(
 					"message.unableToDeleteAll.title"), JOptionPane.WARNING_MESSAGE);
 		}
+	}
+
+	private transient Logger log;
+
+	private Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(DeleteAll.class);
+		}
+		return log;
 	}
 }

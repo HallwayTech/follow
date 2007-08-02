@@ -22,6 +22,8 @@ package ghm.follow;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 
+import org.apache.log4j.Logger;
+
 /**
  * Implementation of {@link OutputDestination} which appends Strings to a
  * {@link JTextPane}.
@@ -99,7 +101,7 @@ public class JTextPaneDestination implements OutputDestination {
 		}
 		catch (BadLocationException e) {
 			// just ignore, nothing we can do
-			e.printStackTrace(System.err);
+			getLog().error("BadLocationException in JTextPaneDestination", e);
 		}
 	}
 
@@ -108,6 +110,15 @@ public class JTextPaneDestination implements OutputDestination {
 		if (autoPositionCaret_) {
 			jTextPane_.setCaretPosition(0);
 		}
+	}
+
+	private transient Logger log;
+
+	private Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(JTextPaneDestination.class);
+		}
+		return log;
 	}
 
 	protected JTextPane jTextPane_;

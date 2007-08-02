@@ -33,6 +33,8 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
@@ -43,10 +45,10 @@ public class FollowAppAttributes {
 			// If the property file doesn't exist, we create a default property
 			// file using a prototype property file stored somewhere on the
 			// classpath
-			System.out.println("No property file for the Follow application is present; creating "
+			getLog().info("No property file for the Follow application is present; creating "
 					+ PROPERTY_FILE.getAbsolutePath() + " (with default values) ...");
 			properties_ = (EnumeratedProperties) getDefaultProperties().clone();
-			System.out.println("... property file created successfully.");
+			getLog().info("... property file created successfully.");
 		}
 		else {
 			properties_ = new EnumeratedProperties();
@@ -55,17 +57,17 @@ public class FollowAppAttributes {
 			switch (getAttributesVersion()) {
 				case UNVERSIONED:
 					// Migrate unversioned attributes to 1.1 attributes
-					System.out.println("Migrating pre-v1.1 properties to v1.1.");
+					getLog().info("Migrating pre-v1.1 properties to v1.1.");
 					setAttributesVersion(v1_1);
 					setTabPlacement(getDefaultAttributes().getTabPlacement());
 				case v1_1:
 					// Migrate 1.1 attributes to 1.2 attributes
-					System.out.println("Migrating v1.1 properties to v1.2.");
+					getLog().info("Migrating v1.1 properties to v1.2.");
 					setAttributesVersion(v1_2);
 					setFont(getDefaultAttributes().getFont());
 				case v1_2:
 					// Migrate 1.2 attributes to 1.3 attributes
-					System.out.println("Migrating v1.2 properties to v1.3.");
+					getLog().info("Migrating v1.2 properties to v1.3.");
 					setAttributesVersion(v1_3);
 					setConfirmDelete(true);
 					setConfirmDeleteAll(true);
@@ -79,7 +81,7 @@ public class FollowAppAttributes {
 				case v1_3:
 				case v1_3_2:
 					// Migrate 1.3 attributes to 1.4 attributes
-					System.out.println("Migrating v1.3 properties to v1.4.");
+					getLog().info("Migrating v1.3 properties to v1.4.");
 					setAttributesVersion(v1_4);
 					setAutoScroll(true);
 					// Inform the user of the new AutoScroll feature
@@ -89,12 +91,12 @@ public class FollowAppAttributes {
 							JOptionPane.INFORMATION_MESSAGE);
 				case v1_4:
 					// Migrate 1.4 attributes to 1.5 attributes
-					System.out.println("Migrating v1.4 properties to v.1.5.");
+					getLog().info("Migrating v1.4 properties to v.1.5.");
 					setAttributesVersion(v1_5_0);
 					setTabSize(4);
 				case v1_5_0:
 					// Migrate 1.5.0 attributes to 1.6.0 attributes
-					System.out.println("Migrating v1.5 properties to 1.6.0.");
+					getLog().info("Migrating v1.5 properties to 1.6.0.");
 					setAttributesVersion(v1_6_0);
 					setRecentFilesMax(5);
 			}
@@ -460,7 +462,7 @@ public class FollowAppAttributes {
 				}
 			}
 			if (!defaultFontIsAvailable) {
-				System.out.println("Font family " + defaultFont.getFamily()
+				getLog().info("Font family " + defaultFont.getFamily()
 						+ " is unavailable; using " + availableFontFamilyNames[0] + " instead.");
 				defaultAttributes_.setFont(new Font(availableFontFamilyNames[0], defaultFont
 						.getStyle(), defaultFont.getSize()));
@@ -489,6 +491,14 @@ public class FollowAppAttributes {
 		return defaultProperties_;
 	}
 
+	private Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(FollowAppAttributes.class);
+		}
+		return log;
+	}
+
+	private transient Logger log;
 	EnumeratedProperties properties_;
 	private EnumeratedProperties defaultProperties_;
 	private FollowAppAttributes defaultAttributes_;

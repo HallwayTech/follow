@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 /**
  * Action which closes the currently followed file.
  * 
@@ -122,16 +124,24 @@ public class ExternalEditor extends Object {
 	public void exec(File file) {
 		String fullPath = file.getAbsolutePath();
 		String[] cmd = toCmdArray(fullPath);
-		System.out.println("Exec'ing " + Arrays.asList(cmd) + ".");
+		getLog().info("Exec'ing " + Arrays.asList(cmd) + ".");
 
 		try {
 			Runtime.getRuntime().exec(cmd);
 		}
 		catch (IOException ioe) {
 			String errmsg = "Could not exec [" + getCmdString() + "] with [" + fullPath + "].";
-			System.err.println(errmsg);
-			ioe.printStackTrace();
+			getLog().error(errmsg, ioe);
 		}
+	}
+	
+	private transient Logger log;
+
+	private Logger getLog() {
+		if (log == null) {
+			log = Logger.getLogger(ExternalEditor.class);
+		}
+		return log;
 	}
 
 }

@@ -36,6 +36,10 @@ public abstract class BaseTestCase extends TestCase {
 		Thread.sleep(follower_.getLatency() + 100);
 	}
 	
+	protected void clearFollowedFile() throws Exception {
+		new FileWriter(followedFile_, false).write("");
+	}
+	
 	protected FileFollower follower_;
 	protected File followedFile_;
 	protected Writer followedFileWriter_;

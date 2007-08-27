@@ -18,6 +18,7 @@ public abstract class AppLaunchingTestCase extends TestCase {
     if (FollowAppAttributes.PROPERTY_FILE.exists()) {
       FollowAppAttributes.PROPERTY_FILE.delete();
     }
+    FollowAppAttributes.PROPERTY_FILE.deleteOnExit();
     FollowApp.main(new String[0]);
     doPostLaunch();
   }
@@ -32,7 +33,8 @@ public abstract class AppLaunchingTestCase extends TestCase {
     invokeAction(app_.getAction(Exit.NAME));
     while (!systemInterface_.exitCalled()) { Thread.sleep(250); }
     if (!FollowAppAttributes.PROPERTY_FILE.delete()) {
-      fail("Couldn't delete property file");
+		fail("Couldn't delete property file [" + FollowAppAttributes.PROPERTY_FILE.getAbsolutePath()
+				+ "]");
     }
   }
 

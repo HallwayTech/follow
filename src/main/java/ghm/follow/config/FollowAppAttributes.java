@@ -199,13 +199,10 @@ public class FollowAppAttributes {
 		if (fileList != null && file != null) {
 			for (int i = 0; i < fileList.size(); i++) {
 				String nextFile = (String) fileList.get(i);
-				try {
-					if (nextFile.equals(file.getCanonicalPath())) {
-						retval = true;
-						break;
-					}
-				}
-				catch (IOException e) {
+				// be sure to check the same thing that is added in
+				// addFollowedFile(File)
+				if (nextFile.equals(file.getAbsolutePath())) {
+					retval = true;
 					break;
 				}
 			}

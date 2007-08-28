@@ -72,8 +72,8 @@ public class FileFollowerTest extends BaseTestCase {
 		Date start = new Date();
 		long end = start.getTime() + (2 * 1000 * 60);
 		Random rand = new Random();
-		StringBuffer sb = new StringBuffer();
 		while (end > new Date().getTime()) {
+			StringBuffer sb = new StringBuffer();
 			double length = rand.nextDouble() * 100;
 			while (length > 0) {
 				sb.append((char) (length-- % 26));

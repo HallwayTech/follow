@@ -47,12 +47,12 @@ class StartupStatus extends JWindow {
     allTasks_.add(CREATE_WIDGETS);
 
     int taskWeightSummation = 0;
-    for (int i=0; i < allTasks_.size(); i++) {
-      taskWeightSummation += ((Task)allTasks_.get(i)).weight_;
+    for (Task task : allTasks_) {
+      taskWeightSummation += task.weight_;
     }
     progressBar_ = new JProgressBar(0, taskWeightSummation);    
     progressBar_.setStringPainted(true);
-    progressBar_.setString(((Task)allTasks_.get(0)).inProgressMessage_);
+    progressBar_.setString(allTasks_.get(0).inProgressMessage_);
 
     BorderLayout borderLayout = new BorderLayout();
     borderLayout.setVgap(6);
@@ -81,7 +81,7 @@ class StartupStatus extends JWindow {
 
   // Must be final to force clients to use the Tasks declared 'final' when 
   // marking Tasks as done
-  private final List allTasks_ = new ArrayList();
+  private final List<Task> allTasks_ = new ArrayList<Task>();
   
   // Complete set of Tasks which need to be completed to start the Follow app
   final Task LOAD_SYSTEM_FONTS;

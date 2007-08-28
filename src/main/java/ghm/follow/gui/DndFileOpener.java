@@ -28,7 +28,6 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -62,10 +61,9 @@ public class DndFileOpener implements DropTargetListener {
 				boolean dropCompleted = false;
 				Transferable transferable = e.getTransferable();
 				try {
-					List fileList = (List) transferable.getTransferData(flavors[i]);
-					Iterator iterator = fileList.iterator();
-					while (iterator.hasNext()) {
-						app_.open((File) iterator.next(), true);
+					List<File> fileList = (List<File>) transferable.getTransferData(flavors[i]);
+					for (File file : fileList) {
+						app_.open(file, true);
 					}
 					dropCompleted = true;
 				}

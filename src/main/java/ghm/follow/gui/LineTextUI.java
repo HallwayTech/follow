@@ -1,6 +1,9 @@
 package ghm.follow.gui;
 
 import java.awt.Rectangle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.JComponent;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -10,8 +13,6 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
-
-import org.apache.log4j.Logger;
 
 /**
  * UI implementation that highlights the line where the caret is found.
@@ -50,7 +51,7 @@ public class LineTextUI extends BasicTextAreaUI {
 						}
 					}
 					catch (BadLocationException e1) {
-						getLog().error("BadLocationException in LineTextUI", e1);
+						getLog().log(Level.SEVERE, "BadLocationException in LineTextUI", e1);
 					}
 				}
 				if (comp.getSelectionStart() == comp.getSelectionEnd()) {
@@ -72,7 +73,7 @@ public class LineTextUI extends BasicTextAreaUI {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(LineTextUI.class);
+			log = Logger.getLogger(LineTextUI.class.getName());
 		}
 		return log;
 	}

@@ -1,13 +1,12 @@
 package ghm.follow;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public abstract class FilterableOutputDestination implements OutputDestination {
-	private ArrayList _views;
+	private ArrayList<OutputDestination> _views;
 	
 	public FilterableOutputDestination() {
-		_views = new ArrayList();
+		_views = new ArrayList<OutputDestination>();
 	}
 
 	/**
@@ -28,9 +27,8 @@ public abstract class FilterableOutputDestination implements OutputDestination {
 	}
 
 	protected void notifyViews(String s) {
-		Iterator i = _views.iterator();
-		while (i.hasNext()) {
-			((OutputDestination) i.next()).print(s);
+		for (OutputDestination view : _views) {
+			view.print(s);
 		}
 	}
 

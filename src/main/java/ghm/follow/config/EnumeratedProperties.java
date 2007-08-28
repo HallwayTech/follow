@@ -39,8 +39,8 @@ public class EnumeratedProperties extends Properties {
   @param key lookup of the enumerated property to be retrieved.
   @return list containing String values
   */
-  public List getEnumeratedProperty (String key) {
-    List values = new ArrayList();
+  public List<String> getEnumeratedProperty (String key) {
+    ArrayList<String> values = new ArrayList<String>();
     int i = 0;
     String value;
     while ((value = this.getProperty(key + delimiter + i++)) != null) {
@@ -54,25 +54,17 @@ public class EnumeratedProperties extends Properties {
   @param key property lookup
   @param values values to be associated with the property lookup
   */  
-  public void setEnumeratedProperty (String key, String[] values) {
-    int i;
-    for (i=0; i < values.length; i++) {
-      this.setProperty(key + delimiter + i, values[i]);
+  public void setEnumeratedProperty (String key, List<String> values) {
+    int i = 0;
+    for (; i < values.size(); i++) {
+      setProperty(key + delimiter + i, values.get(i));
     }
-    while (this.getProperty(key + delimiter + i) != null) {
-      this.remove(key + delimiter + i);
+    while (getProperty(key + delimiter + i) != null) {
+      remove(key + delimiter + i);
       i++;
     }
   }
   
-  /**
-  Convenience method; equivalent to calling
-  setEnumeratedProperty(key, (String[])values.toArray(new String[] {}));
-  */
-  public void setEnumeratedProperty (String key, List values) {
-    this.setEnumeratedProperty(key, (String[])values.toArray(new String[] {}));
-  }
-
   /** Delimiter between property name & list member index */
   protected static char delimiter = '.';
   

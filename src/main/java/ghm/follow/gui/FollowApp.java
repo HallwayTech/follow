@@ -56,13 +56,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-
-import org.apache.log4j.Logger;
 
 /**
  * This class' main() method is the entry point into the Follow application.
@@ -75,7 +76,7 @@ public class FollowApp {
 	private Cursor defaultCursor_;
 	private Cursor waitCursor_;
 	private FollowAppAttributes attributes_;
-	private Map fileToFollowingPaneMap_ = new HashMap();
+	private Map<File, FileFollowingPane> fileToFollowingPaneMap_ = new HashMap<File, FileFollowingPane>();
 	private JFrame frame_;
 	private JTabbedPane tabbedPane_;
 	private ToolBar toolBar_;
@@ -84,7 +85,7 @@ public class FollowApp {
 	private MouseListener rightClickListener_;
 	private ResourceBundle resBundle_ = ResourceBundle
 			.getBundle("ghm.follow.gui.FollowAppResourceBundle");
-	private HashMap actions_ = new HashMap();
+	private HashMap<String, FollowAppAction> actions_ = new HashMap<String, FollowAppAction>();
 	private SystemInterface systemInterface_;
 	private static FollowApp instance_;
 	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -92,19 +93,16 @@ public class FollowApp {
 	public static final boolean DEBUG = Boolean.getBoolean("follow.debug");
 	public static boolean HAS_SOLARIS_BUG = false;
 
-	public FollowAppAction getAction(String name) {
-		return (FollowAppAction) actions_.get(name);
-	}
-
-	public void putAction(String name, FollowAppAction action) {
-		actions_.put(name, action);
-	}
-
 	/**
 	 * @param fileNames
 	 *            names of files to be opened
 	 */
-	FollowApp(String[] fileNames) throws IOException, InterruptedException,
+	FollowApp(List<String> fileNames) throws IOException, InterruptedException,
+			InvocationTargetException {
+		this(fileNames, null);
+	}
+
+	FollowApp(List<String> fileNames, File propertyFile) throws IOException, InterruptedException,
 			InvocationTargetException {
 		// Create & show startup status window
 		startupStatus_ = new StartupStatus(getResourceBundle());
@@ -129,9 +127,9 @@ public class FollowApp {
 		frame_ = new JFrame(getResourceBundle().getString("frame.title"));
 
 		// initialize attributes
-		attributes_ = new FollowAppAttributes(this);
-		for (int i = 0; i < fileNames.length; i++) {
-			File file = new File(fileNames[i]);
+		attributes_ = new FollowAppAttributes(this, propertyFile);
+		for (String fileName : fileNames) {
+			File file = new File(fileName);
 			if (!file.exists()) {
 				String msg = MessageFormat.format(getResourceBundle().getString(
 						"message.cmdLineFileNotFound.text"), new Object[] { file });
@@ -206,7 +204,7 @@ public class FollowApp {
 				try {
 					getAttributes().store();
 				} catch (IOException ioe) {
-					getLog().error("Error encountered while storing properties...", ioe);
+					getLog().log(Level.SEVERE, "Error encountered while storing properties...", ioe);
 				} finally {
 					systemInterface_.exit(0);
 				}
@@ -220,12 +218,10 @@ public class FollowApp {
 		// before frame creation (as in v1.0), frame creation may take longer
 		// because there are more threads (spawned in the course of open())
 		// contending for processor time.
-		File[] files = getAttributes().getFollowedFiles();
+		List<File> files = getAttributes().getFollowedFiles();
 		StringBuffer nonexistentFilesBuffer = null;
 		int nonexistentFileCount = 0;
-		File file;
-		for (int i = 0; i < files.length; i++) {
-			file = files[i];
+		for (File file : files) {
 			try {
 				open(file, false);
 			} catch (FileNotFoundException e) {
@@ -349,10 +345,10 @@ public class FollowApp {
 	public void refreshRecentFilesMenu() {
 		if (recentFilesMenu_ != null) {
 			recentFilesMenu_.removeAll();
-			File[] recentFiles = getAttributes().getRecentFiles();
+			List<File> recentFiles = getAttributes().getRecentFiles();
 			// descend down the list to order files by last opened
-			for (int i = recentFiles.length - 1; i >= 0; i--) {
-				recentFilesMenu_.add(new Open(this, recentFiles[i]));
+			for (int i = recentFiles.size() - 1; i >= 0; i--) {
+				recentFilesMenu_.add(new Open(this, recentFiles.get(i)));
 			}
 		}
 	}
@@ -403,6 +399,14 @@ public class FollowApp {
 
 	public void show() {
 		frame_.setVisible(true);
+	}
+
+	public FollowAppAction getAction(String name) {
+		return actions_.get(name);
+	}
+
+	public void putAction(String name, FollowAppAction action) {
+		actions_.put(name, action);
 	}
 
 	/**
@@ -538,11 +542,11 @@ public class FollowApp {
 		return (FileFollowingPane) tabbedPane_.getSelectedComponent();
 	}
 
-	public List getAllFileFollowingPanes() {
+	public List<FileFollowingPane> getAllFileFollowingPanes() {
 		int tabCount = tabbedPane_.getTabCount();
-		List allFileFollowingPanes = new ArrayList();
+		List<FileFollowingPane> allFileFollowingPanes = new ArrayList<FileFollowingPane>();
 		for (int i = 0; i < tabCount; i++) {
-			allFileFollowingPanes.add(tabbedPane_.getComponentAt(i));
+			allFileFollowingPanes.add((FileFollowingPane) tabbedPane_.getComponentAt(i));
 		}
 		return allFileFollowingPanes;
 	}
@@ -551,7 +555,7 @@ public class FollowApp {
 		return attributes_;
 	}
 
-	public Map getFileToFollowingPaneMap() {
+	public Map<File, FileFollowingPane> getFileToFollowingPaneMap() {
 		return fileToFollowingPaneMap_;
 	}
 
@@ -610,7 +614,7 @@ public class FollowApp {
 
 	private static Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(FollowApp.class);
+			log = Logger.getLogger(FollowApp.class.getName());
 		}
 		return log;
 	}
@@ -625,7 +629,19 @@ public class FollowApp {
 	 */
 	public static void main(String[] args) {
 		try {
-			instance_ = new FollowApp(args);
+			ArrayList<String> fileNames = new ArrayList<String>();
+			File propFile = null;
+			for (int i = 0; i < args.length; i++) {
+				if (args[i].startsWith("-")) {
+					if ("-propFile".equalsIgnoreCase(args[i])) {
+						propFile = new File(args[++i]);
+					}
+				}
+				else {
+					fileNames.add(args[i]);
+				}
+			}
+			instance_ = new FollowApp(fileNames, propFile);
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
 					// ensure all widgets inited before opening files
@@ -640,7 +656,7 @@ public class FollowApp {
 			// ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
 			// }
 		} catch (Throwable t) {
-			getLog().error("Unhandled exception", t);
+			getLog().log(Level.SEVERE, "Unhandled exception", t);
 			System.exit(-1);
 		}
 	}

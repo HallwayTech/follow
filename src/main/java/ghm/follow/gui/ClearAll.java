@@ -20,7 +20,6 @@ package ghm.follow.gui;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -39,11 +38,8 @@ public class ClearAll extends FollowAppAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		List allFileFollowingPanes = getApp().getAllFileFollowingPanes();
-		Iterator i = allFileFollowingPanes.iterator();
-		FileFollowingPane fileFollowingPane;
-		while (i.hasNext()) {
-			fileFollowingPane = (FileFollowingPane) i.next();
+		List<FileFollowingPane> allFileFollowingPanes = getApp().getAllFileFollowingPanes();
+		for (FileFollowingPane fileFollowingPane : allFileFollowingPanes) {
 			fileFollowingPane.getTextPane().setText("");
 		}
 	}

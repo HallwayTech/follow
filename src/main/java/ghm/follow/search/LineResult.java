@@ -2,6 +2,7 @@ package ghm.follow.search;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Keeps results information about a line in the searchable text.
@@ -19,7 +20,7 @@ public class LineResult {
 	public int end;
 
 	// word results found on this line
-	private ArrayList wordResults;
+	private List<WordResult> wordResults;
 
 	// keeps track of lower caret position for display scrolling
 	private int firstPosition;
@@ -31,7 +32,7 @@ public class LineResult {
 	 * @param lineNumber
 	 */
 	public LineResult(int lineNumber, int start, int end) {
-		wordResults = new ArrayList();
+		wordResults = new ArrayList<WordResult>();
 		this.lineNumber = lineNumber;
 		this.start = start;
 		this.end = end;
@@ -44,9 +45,8 @@ public class LineResult {
 	 * @author chall
 	 * @return
 	 */
-	public WordResult[] getWordResults() {
-		WordResult[] res = (WordResult[]) wordResults.toArray(new WordResult[wordResults.size()]);
-		return res;
+	public List<WordResult> getWordResults() {
+		return wordResults;
 	}
 
 	/**
@@ -95,10 +95,10 @@ public class LineResult {
 
 		if (wordResults.size() > 0) {
 			retval.append(" (");
-			Iterator words = wordResults.iterator();
+			Iterator<WordResult> words = wordResults.iterator();
 
 			while (words.hasNext()) {
-				WordResult word = (WordResult) words.next();
+				WordResult word = words.next();
 				String wordString = word.toString();
 
 				if (wordString.length() > 0) {

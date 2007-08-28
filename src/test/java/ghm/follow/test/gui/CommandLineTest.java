@@ -1,10 +1,10 @@
 package ghm.follow.test.gui;
 
-import ghm.follow.config.FollowAppAttributes;
 import ghm.follow.gui.Exit;
 import ghm.follow.gui.FollowApp;
 
 import java.io.File;
+import java.util.List;
 
 public class CommandLineTest extends AppLaunchingTestCase {
 
@@ -12,59 +12,98 @@ public class CommandLineTest extends AppLaunchingTestCase {
 		super(name);
 	}
 
-	public void setUp() throws Exception {
-		if (FollowAppAttributes.PROPERTY_FILE.exists()) {
-			FollowAppAttributes.PROPERTY_FILE.delete();
-		}
-	}
-
 	public void testNoArgs() throws Exception {
-		FollowApp.main(new String[0]);
+		FollowApp.main(appendPropFileArg(null));
 		doPostLaunch();
 		// should be no file as we're opening a new instance (no history) with
 		// no arguments (no requested files)
-		assertEquals(true, FollowApp.getInstance().getAttributes().getFollowedFiles().length == 0);
+		assertEquals(true, _app.getAttributes().getFollowedFiles().size() == 0);
 	}
 
 	public void testOneArg() throws Exception {
 		File temp = createTempFile();
-		FollowApp.main(new String[] { temp.toString() });
+		String[] args = new String[] { temp.toString() };
+		args = appendPropFileArg(args);
+		FollowApp.main(args);
 		doPostLaunch();
-		File[] followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
-		File followedFile = (File) followedFiles[0];
-		assertEquals(false, followedFiles.length > 1);
-		assertEquals(temp, followedFile);
-		invokeAction(app_.getAction(Exit.NAME));
-		while (!systemInterface_.exitCalled()) {
+		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
+		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles.size() == 1);
+		File followedFile = followedFiles.get(0);
+		assertEquals("File found doesn't match expected file", temp, followedFile);
+	}
+
+	public void testOneArgDuplicate() throws Exception {
+		File temp = createTempFile();
+		String[] args = new String[] { temp.toString() };
+		args = appendPropFileArg(args);
+		FollowApp.main(args);
+		doPostLaunch();
+		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
+		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles.size() == 1);
+		File followedFile = followedFiles.get(0);
+		assertEquals("File found doesn't match expected file", temp, followedFile);
+		invokeAction(_app.getAction(Exit.NAME));
+		while (!_systemInterface.exitCalled()) {
 			Thread.sleep(250);
 		}
-		FollowApp.main(new String[] { temp.toString() });
+		// reopen app with same file as argument
+		FollowApp.main(args);
 		doPostLaunch();
-		followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
-		// should still be null because Follow won't open the same file twice
-		assertEquals(false, followedFiles.length > 1);
+		followedFiles = _app.getAttributes().getFollowedFiles();
+		// should still be one because Follow shouldn't open the same file twice
+		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles.size() == 1);
 		// make sure followedFile is the expected file
-		followedFile = (File) followedFiles[0];
+		followedFile = (File) followedFiles.get(0);
+		assertEquals(temp, followedFile);
+	}
+
+	public void testOneArgReopen() throws Exception {
+		File temp = createTempFile();
+		String[] args = new String[] { temp.toString() };
+		args = appendPropFileArg(args);
+		FollowApp.main(args);
+		doPostLaunch();
+		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
+		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles.size() == 1);
+		File followedFile = followedFiles.get(0);
+		assertEquals("File found doesn't match expected file", temp, followedFile);
+		invokeAction(_app.getAction(Exit.NAME));
+		while (!_systemInterface.exitCalled()) {
+			Thread.sleep(250);
+		}
+		// reopen app with same file as argument
+		FollowApp.main(new String[0]);
+		doPostLaunch();
+		followedFiles = _app.getAttributes().getFollowedFiles();
+		// should still be one because Follow shouldn't open the same file twice
+		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles.size() == 1);
+		// make sure followedFile is the expected file
+		followedFile = (File) followedFiles.get(0);
 		assertEquals(temp, followedFile);
 	}
 
 	public void testTwoArgs() throws Exception {
-		File[] temp = new File[] { createTempFile(), createTempFile() };
-		FollowApp.main(new String[] { temp[0].toString(), temp[1].toString() });
+		File[] temp = new File[2];
+		temp[0] = createTempFile();
+		temp[1] = createTempFile();
+		String[] args = new String[] { temp[0].toString(), temp[1].toString() };
+		args = appendPropFileArg(args);
+		FollowApp.main(args);
 		doPostLaunch();
-		File[] followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
-		assertEquals(temp[0], followedFiles[0]);
-		assertEquals(temp[1], followedFiles[1]);
-		assertEquals(false, followedFiles.length > 2);
+		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
+		assertEquals(true, followedFiles.size() == 2);
+		assertEquals(temp[0], followedFiles.get(0));
+		assertEquals(temp[1], followedFiles.get(1));
 	}
 
 	public void testDuplicateArgs() throws Exception {
 		File temp = createTempFile();
-		FollowApp
-				.main(new String[] { temp.toString(), createTempFile().toString(), temp.toString() });
+		String[] args = new String[] { temp.toString(), createTempFile().toString(), temp.toString() };
+		args = appendPropFileArg(args);
+		FollowApp.main(args);
 		doPostLaunch();
-		File[] followedFiles = FollowApp.getInstance().getAttributes().getFollowedFiles();
-		assertEquals(temp, followedFiles[0]);
-		assertEquals(false, followedFiles.length > 2);
+		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
+		assertEquals(temp, followedFiles.get(0));
+		assertEquals(true, followedFiles.size() == 2);
 	}
 }

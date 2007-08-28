@@ -6,19 +6,22 @@ import ghm.follow.OutputDestination;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
-import java.util.Date;
 
 import junit.framework.TestCase;
 
 public abstract class BaseTestCase extends TestCase {
+	protected FileFollower follower_;
+	protected File followedFile_;
+	protected Writer followedFileWriter_;
 
 	public BaseTestCase(String name) {
 		super(name);
 	}
 
 	public void setUp() throws Exception {
-		followedFile_ = File.createTempFile(new Date().toString(), null);
+		followedFile_ = createTempFile();
 		followedFile_.deleteOnExit();
 		followedFileWriter_ = new BufferedWriter(new FileWriter(followedFile_));
 		follower_ = new FileFollower(followedFile_, new OutputDestination[0]);
@@ -35,12 +38,15 @@ public abstract class BaseTestCase extends TestCase {
 		followedFileWriter_.flush();
 		Thread.sleep(follower_.getLatency() + 100);
 	}
-	
+
 	protected void clearFollowedFile() throws Exception {
+		followedFileWriter_.close();
 		new FileWriter(followedFile_, false).write("");
 	}
-	
-	protected FileFollower follower_;
-	protected File followedFile_;
-	protected Writer followedFileWriter_;
+
+	protected File createTempFile() throws IOException {
+		File file = File.createTempFile("followedFile", null);
+		file.deleteOnExit();
+		return file;
+	}
 }

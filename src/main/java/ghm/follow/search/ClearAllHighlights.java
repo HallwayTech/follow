@@ -23,7 +23,6 @@ import ghm.follow.gui.FollowApp;
 import ghm.follow.gui.FollowAppAction;
 
 import java.awt.event.ActionEvent;
-import java.util.Iterator;
 
 /**
  * Action which clears the highlighted search in the current pane
@@ -40,10 +39,8 @@ public class ClearAllHighlights extends FollowAppAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		Iterator panes = getApp().getFileToFollowingPaneMap().values().iterator();
-		while (panes.hasNext()) {
+		for (FileFollowingPane pane : getApp().getFileToFollowingPaneMap().values()) {
 			// get the current selected tab
-			FileFollowingPane pane = (FileFollowingPane) panes.next();
 			// search the tab with the given text
 			SearchableTextPane textArea = pane.getTextPane();
 			textArea.removeHighlights();

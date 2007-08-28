@@ -21,11 +21,11 @@ package ghm.follow.gui;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * Action which deletes the contents of all followed files.
@@ -67,18 +67,15 @@ public class DeleteAll extends FollowAppAction {
 
 	private void performDelete() {
 		getApp().setCursor(Cursor.WAIT_CURSOR);
-		List allFileFollowingPanes = getApp().getAllFileFollowingPanes();
-		Iterator i = allFileFollowingPanes.iterator();
-		FileFollowingPane fileFollowingPane;
+		List<FileFollowingPane> allFileFollowingPanes = getApp().getAllFileFollowingPanes();
 		try {
-			while (i.hasNext()) {
-				fileFollowingPane = (FileFollowingPane) i.next();
+			for (FileFollowingPane fileFollowingPane : allFileFollowingPanes) {
 				fileFollowingPane.clear();
 			}
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
 		}
 		catch (IOException ioe) {
-			getLog().error("IOException error in DeleteAll", ioe);
+			getLog().log(Level.SEVERE, "IOException error in DeleteAll", ioe);
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
 			JOptionPane.showMessageDialog(getApp().getFrame(), getApp().getResourceBundle().getString(
 					"message.unableToDeleteAll.text"), getApp().getResourceBundle().getString(
@@ -90,7 +87,7 @@ public class DeleteAll extends FollowAppAction {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(DeleteAll.class);
+			log = Logger.getLogger(DeleteAll.class.getName());
 		}
 		return log;
 	}

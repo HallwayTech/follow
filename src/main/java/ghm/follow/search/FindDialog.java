@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -189,9 +190,9 @@ public class FindDialog extends JDialog {
 	private void findButton_clicked(ActionEvent e) {
 		_findAction.getApp().setCursor(Cursor.WAIT_CURSOR);
 		clearResults();
-		LineResult[] results = doFind();
+		List<LineResult> results = doFind();
 		if (results != null) {
-			if (results.length == 0) {
+			if (results.size() == 0) {
 				_statusBar.setText("Search term not found.");
 			}
 			else {
@@ -232,9 +233,9 @@ public class FindDialog extends JDialog {
 	 * @param results
 	 * @return
 	 */
-	private JList showResults(LineResult[] results) {
+	private JList showResults(List<LineResult> results) {
 		// create a list of the results
-		JList resultList = new JList(results);
+		JList resultList = new JList(results.toArray());
 		resultList.setFont(new Font("Arial", Font.PLAIN, 10));
 
 		// set the status bar
@@ -269,10 +270,10 @@ public class FindDialog extends JDialog {
 		}
 	}
 
-	private int countResults(LineResult[] results) {
+	private int countResults(List<LineResult> results) {
 		int count = 0;
-		for (int i = 0; i < results.length; i++) {
-			count += results[i].getWordResults().length;
+		for (LineResult result : results) {
+			count += result.getWordResults().size();
 		}
 		return count;
 	}
@@ -294,7 +295,7 @@ public class FindDialog extends JDialog {
 		pack();
 	}
 	
-	private LineResult[] doFind() {
+	private List<LineResult> doFind() {
 		// get the current selected tab
 		FileFollowingPane pane = _findAction.getApp().getSelectedFileFollowingPane();
 		// search the tab with the given text
@@ -307,7 +308,7 @@ public class FindDialog extends JDialog {
 		if (_regEx.isSelected()) {
 			flags |= SearchEngine.REGEX;
 		}
-		LineResult[] results = textArea.highlight(_find.getText(), flags);
+		List<LineResult> results = textArea.highlight(_find.getText(), flags);
 		// select search term for convenience
 		_find.grabFocus();
 		_find.selectAll();

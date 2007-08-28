@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Action which closes the currently followed file.
@@ -62,7 +62,7 @@ public class ExternalEditor extends Object {
 
 		if (!string.equals("")) {
 			string = string + " "; // space terminate the last part.
-			List list = new ArrayList();
+			List<String> list = new ArrayList<String>();
 			boolean inQuoteSingle = false;
 			boolean inQuoteDouble = false;
 			boolean inWhitespace = false;
@@ -131,7 +131,7 @@ public class ExternalEditor extends Object {
 		}
 		catch (IOException ioe) {
 			String errmsg = "Could not exec [" + getCmdString() + "] with [" + fullPath + "].";
-			getLog().error(errmsg, ioe);
+			getLog().log(Level.SEVERE, errmsg, ioe);
 		}
 	}
 	
@@ -139,7 +139,7 @@ public class ExternalEditor extends Object {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(ExternalEditor.class);
+			log = Logger.getLogger(ExternalEditor.class.getName());
 		}
 		return log;
 	}

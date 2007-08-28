@@ -1,59 +1,72 @@
 package ghm.follow.test.gui;
 
+import java.io.File;
+
 import ghm.follow.config.FollowAppAttributes;
 import ghm.follow.gui.Exit;
 import ghm.follow.gui.FollowApp;
+import ghm.follow.test.BaseTestCase;
 
-import java.io.File;
-import java.io.IOException;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
-import junit.framework.TestCase;
 
-public abstract class AppLaunchingTestCase extends TestCase {
+public abstract class AppLaunchingTestCase extends BaseTestCase {
 
-  public AppLaunchingTestCase (String name) { super(name); }
+	protected FollowApp _app;
+	protected TestSystemInterface _systemInterface;
+	protected String _propertyFileName;
 
-  public void setUp () throws Exception {
-    if (FollowAppAttributes.PROPERTY_FILE.exists()) {
-      FollowAppAttributes.PROPERTY_FILE.delete();
-    }
-    FollowAppAttributes.PROPERTY_FILE.deleteOnExit();
-    FollowApp.main(new String[0]);
-    doPostLaunch();
-  }
+	public AppLaunchingTestCase(String name) {
+		super(name);
+	}
 
-  protected void doPostLaunch () throws Exception {
-    app_ = FollowApp.getInstance();
-    systemInterface_ = new TestSystemInterface();
-    app_.setSystemInterface(systemInterface_);
-  }
+	public void setUp() throws Exception {
+		String[] args = appendPropFileArg(null);
+		FollowApp.main(args);
+		doPostLaunch();
+	}
 
-  public void tearDown () throws Exception {
-    invokeAction(app_.getAction(Exit.NAME));
-    while (!systemInterface_.exitCalled()) { Thread.sleep(250); }
-    if (!FollowAppAttributes.PROPERTY_FILE.delete()) {
-		fail("Couldn't delete property file [" + FollowAppAttributes.PROPERTY_FILE.getAbsolutePath()
-				+ "]");
-    }
-  }
+	protected void doPostLaunch() throws Exception {
+		_app = FollowApp.getInstance();
+		_systemInterface = new TestSystemInterface();
+		_app.setSystemInterface(_systemInterface);
+	}
 
-  protected void invokeAndWait (Runnable runnable) {
-    try { SwingUtilities.invokeAndWait(runnable); }
-    catch (Exception e) { throw new RuntimeException(e.getMessage()); }
-  }
+	public void tearDown() throws Exception {
+		invokeAction(_app.getAction(Exit.NAME));
+		while (!_systemInterface.exitCalled()) {
+			Thread.sleep(250);
+		}
+		File propFile = new File(_propertyFileName);
+		propFile.delete();
+	}
 
-  protected void invokeAction (final Action action) {
-    invokeAndWait(new Runnable () { public void run () { action.actionPerformed(null); } });
-  }
+	protected void invokeAndWait(Runnable runnable) {
+		try {
+			SwingUtilities.invokeAndWait(runnable);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
 
-  protected File createTempFile () throws IOException {
-    File file = File.createTempFile("followedFile", null);
-    file.deleteOnExit();
-    return file;
-  }
+	protected void invokeAction(final Action action) {
+		invokeAndWait(new Runnable() {
+			public void run() {
+				action.actionPerformed(null);
+			}
+		});
+	}
 
-  protected FollowApp app_;
-  protected TestSystemInterface systemInterface_;
+	protected String[] appendPropFileArg(String[] argv) {
+		_propertyFileName = System.getProperty("java.io.tmpdir")
+				+ FollowAppAttributes.PROPERTY_FILE_NAME;
+		int length = ((argv != null) ? argv.length : 0) + 2;
+		String[] args = new String[length];
+		for (int i = 0; i < args.length - 2; i++) {
+			args[i] = argv[i];
+		}
+		args[length - 2] = "-propFile";
+		args[length - 1] = _propertyFileName;
+		return args;
+	}
 }
-

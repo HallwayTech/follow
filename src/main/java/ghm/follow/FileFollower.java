@@ -23,10 +23,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Instances of this class 'follow' a particular text file, assmebling that
@@ -66,7 +65,7 @@ public class FileFollower {
 
 		int initOutputDestsSize = (initialOutputDestinations != null) ? initialOutputDestinations.length
 				: 0;
-		outputDestinations_ = new ArrayList(initOutputDestsSize);
+		outputDestinations_ = new ArrayList<OutputDestination>(initOutputDestsSize);
 		for (int i = 0; i < initOutputDestsSize; i++) {
 			outputDestinations_.add(initialOutputDestinations[i]);
 		}
@@ -92,13 +91,13 @@ public class FileFollower {
 	 * supplied in the constructor and send its contents to all of the
 	 * FileFollower's OutputDestinations.<br>
 	 * <br>
-	 * If this FileFollower is running but paused, this method equates to calling unpause().
+	 * If this FileFollower is running but paused, this method equates to
+	 * calling unpause().
 	 */
 	public synchronized void start() {
 		if (continueRunning_ && paused_) {
 			unpause();
-		}
-		else {
+		} else {
 			continueRunning_ = true;
 			paused_ = false;
 			runnerThread_ = new Thread(new Runner(), getFollowedFile().getName());
@@ -147,9 +146,8 @@ public class FileFollower {
 	 * @param s
 	 */
 	private synchronized void print(String s) {
-		Iterator i = outputDestinations_.iterator();
-		while (i.hasNext()) {
-			((OutputDestination) i.next()).print(s);
+		for (OutputDestination out : outputDestinations_) {
+			out.print(s);
 		}
 	}
 
@@ -157,9 +155,8 @@ public class FileFollower {
 	 * Clear all OutputDestinations
 	 */
 	private synchronized void clear() {
-		Iterator i = outputDestinations_.iterator();
-		while (i.hasNext()) {
-			((OutputDestination) i.next()).clear();
+		for (OutputDestination out : outputDestinations_) {
+			out.clear();
 		}
 	}
 
@@ -191,7 +188,7 @@ public class FileFollower {
 	 * 
 	 * @return contains all OutputDestinations for this FileFollower
 	 */
-	public List getOutputDestinations() {
+	public List<OutputDestination> getOutputDestinations() {
 		return outputDestinations_;
 	}
 
@@ -212,7 +209,7 @@ public class FileFollower {
 	public boolean isBeingFollowed() {
 		return continueRunning_;
 	}
-	
+
 	/**
 	 * Returns the pause state of the follower.
 	 * 
@@ -278,7 +275,7 @@ public class FileFollower {
 
 	protected File file_;
 
-	protected List outputDestinations_;
+	protected List<OutputDestination> outputDestinations_;
 
 	protected boolean continueRunning_;
 
@@ -300,25 +297,24 @@ public class FileFollower {
 
 		private Logger getLog() {
 			if (log == null) {
-				log = Logger.getLogger(Runner.class);
+				log = Logger.getLogger(Runner.class.getName());
 			}
 			return log;
 		}
 
 		public void run() {
-			getLog().debug("Starting to follow...");
+			getLog().entering("FileFollower", "run");
 
 			while (continueRunning_) {
 				runAction();
 			}
 
-			getLog().debug("No more following.");
+			getLog().exiting("FileFollower", "run");
 		}
 
 		protected void runAction() {
 			try {
 				clear();
-				needsRestart_ = false;
 				long fileSize = file_.length();
 				byte[] byteArray = new byte[bufferSize_];
 				int numBytesRead;
@@ -332,40 +328,59 @@ public class FileFollower {
 				long startingPoint_ = 0;
 
 				// if the file size is bigger than the buffer size, skip to the
-				// end of the file.
-				if (fileSize > bufferSize_) {
+				// end of the file if not performing a restart
+				if (!needsRestart_ && fileSize > bufferSize_) {
 					startingPoint_ = fileSize - bufferSize_;
 				}
+				// reset the restart flag
+				needsRestart_ = false;
 
-				getLog().debug("Starting point: " + startingPoint_ + "; Last activity: " + lastActivityTime);
+				if (getLog().isLoggable(Level.FINEST))
+					getLog().finest(
+							"Starting point: " + startingPoint_ + "; Last activity: "
+									+ lastActivityTime);
 
 				bis.skip(startingPoint_);
 
 				while (continueRunning_ && !needsRestart_) {
 					if (!paused_) {
-					    numBytesRead = bis.read(byteArray, 0, byteArray.length);
+						numBytesRead = bis.read(byteArray, 0, byteArray.length);
 
-					    boolean dataWasFound = (numBytesRead > 0);
+						boolean dataWasFound = (numBytesRead > 0);
 
-					    getLog().debug("Bytes read: " + numBytesRead + "; dataWasFound: " + dataWasFound);
+						if (getLog().isLoggable(Level.FINEST))
+							getLog().finest(
+									"Bytes read: " + numBytesRead + "; dataWasFound: "
+											+ dataWasFound);
 
-					    if (dataWasFound) {
-					    	String output = new String(byteArray, 0, numBytesRead);
+						// if data was found, print it and log activity time
+						if (dataWasFound) {
+							String output = new String(byteArray, 0, numBytesRead);
 
 							print(output);
 
-							getLog().debug("Printed data: " + output.substring(output.length() - 15));
+							int length = (output.length() - 15 < 0) ? output.length() : output
+									.length() - 15;
+
+							if (getLog().isLoggable(Level.FINEST))
+								getLog().finest("Printed data: " + output.substring(length));
 
 							lastActivityTime = System.currentTimeMillis();
 						}
+						// no data found so check the file and restart if needed
 						else {
-							// Now check if the file handle has become stale (file
+							// check if the file handle has become stale (file
 							// was modified, but no data was read).
-							boolean fileExists = file_.exists(); // && (file_.length() > 0);
+							boolean fileExists = file_.exists(); // &&
+																	// (file_.length()
+																	// > 0);
 							boolean fileHasChanged = file_.lastModified() > lastActivityTime;
 
 							if (fileExists && fileHasChanged) {
-								getLog().debug("Needs restart [fileExists=" + fileExists + "; fileHasChanged=" + fileHasChanged + "]");
+								if (getLog().isLoggable(Level.FINEST))
+									getLog().finest(
+											"Needs restart [fileExists=" + fileExists
+													+ "; fileHasChanged=" + fileHasChanged + "]");
 								needsRestart_ = true;
 							}
 						}
@@ -373,30 +388,39 @@ public class FileFollower {
 						boolean allDataRead = (numBytesRead < byteArray.length);
 
 						if (allDataRead && !needsRestart_) {
-							getLog().debug("Sleeping for " + latency_ + "ms [allDataRead:" + allDataRead + ";needsRestart:" + needsRestart_ + "]");
+							if (getLog().isLoggable(Level.FINEST))
+								getLog().finest(
+										"Sleeping for " + latency_ + "ms [allDataRead:"
+												+ allDataRead + ";needsRestart:" + needsRestart_
+												+ "]");
 							sleep();
 						}
-					}
-					else {
-						getLog().debug("Runner paused.");
+					} else {
+						if (getLog().isLoggable(Level.FINEST))
+							getLog().finest("Runner paused.");
 						sleep();
 					}
 				}
-				getLog().debug("Finished running [continueRunning_=" + continueRunning_ + "; needsRestart_=" + needsRestart_ + "]");
+				getLog()
+						.exiting(
+								"Runner",
+								"runAction",
+								"continueRunning_=" + continueRunning_ + "; needsRestart_="
+										+ needsRestart_);
 				bis.close();
 				fis.close();
-			}
-			catch (IOException e) {
-				getLog().error("IOException while following file", e);
+			} catch (IOException e) {
+				getLog().log(Level.SEVERE, "IOException while following file", e);
 			}
 		}
-		
+
 		private void sleep() {
 			try {
 				Thread.sleep(latency_);
 			} catch (InterruptedException e) {
 				// Interrupt may be thrown manually by stop()
-				getLog().debug("DIED IN MY SLEEP");
+				if (getLog().isLoggable(Level.FINEST))
+					getLog().finest("DIED IN MY SLEEP");
 			}
 		}
 	}

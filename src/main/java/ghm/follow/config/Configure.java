@@ -35,7 +35,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -393,11 +392,7 @@ public class Configure extends FollowAppAction {
 									"Programmatic error; supposedly impossible scenario has occurred.");
 						}
 						getApp().getAttributes().setFont(selectedFont);
-						Iterator followers = getApp().getFileToFollowingPaneMap().values()
-								.iterator();
-						FileFollowingPane pane;
-						while (followers.hasNext()) {
-							pane = (FileFollowingPane) followers.next();
+						for (FileFollowingPane pane : getApp().getFileToFollowingPaneMap().values()) {
 							pane.getFileFollower().setBufferSize(
 									getApp().getAttributes().getBufferSize());
 							pane.getFileFollower()

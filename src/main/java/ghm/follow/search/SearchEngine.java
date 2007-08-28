@@ -1,6 +1,7 @@
 package ghm.follow.search;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,8 +34,8 @@ public class SearchEngine {
 	 * @param term
 	 * @return An array of found positions of term
 	 */
-	public WordResult[] search(String term, String text) {
-		WordResult[] retval = null;
+	public List<WordResult> search(String term, String text) {
+		List<WordResult> retval = null;
 		// search using a case sensitive regular expression
 		if (((flags & CASE_SENSITIVE) != 0) && ((flags & REGEX) != 0)) {
 			Pattern p = Pattern.compile(term, Pattern.MULTILINE);
@@ -69,8 +70,8 @@ public class SearchEngine {
 	 * @param text
 	 * @return
 	 */
-	protected WordResult[] textSearch(String term, String text) {
-		ArrayList results = new ArrayList();
+	protected List<WordResult> textSearch(String term, String text) {
+		ArrayList<WordResult> results = new ArrayList<WordResult>();
 		if (term != null && term.length() > 0 && text != null && text.length() > 0) {
 			int pos = 0;
 			while ((pos = text.indexOf(term, pos)) > -1) {
@@ -80,8 +81,7 @@ public class SearchEngine {
 				Thread.yield();
 			}
 		}
-		WordResult[] retval = (WordResult[]) results.toArray(new WordResult[results.size()]);
-		return retval;
+		return results;
 	}
 
 	/**
@@ -94,18 +94,13 @@ public class SearchEngine {
 	 * @param text
 	 * @return
 	 */
-	protected WordResult[] regexSearch(Pattern p, String text) {
+	protected List<WordResult> regexSearch(Pattern p, String text) {
 		Matcher m = p.matcher(text);
-		ArrayList results = new ArrayList();
-		LineResult tempLine = null;
-		// int lastLine = -1;
+		ArrayList<WordResult> results = new ArrayList<WordResult>();
 		while (m.find()) {
 			results.add(new WordResult(m.start(), m.end(), m.group()));
 			Thread.yield();
 		}
-		if (tempLine != null) {
-			results.add(tempLine);
-		}
-		return (WordResult[]) results.toArray(new WordResult[results.size()]);
+		return results;
 	}
 }

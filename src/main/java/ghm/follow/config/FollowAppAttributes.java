@@ -29,30 +29,85 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class FollowAppAttributes {
+	private transient Logger log;
+	EnumeratedProperties properties_;
+	private EnumeratedProperties defaultProperties_;
+	private FollowAppAttributes defaultAttributes_;
+	static final String userHome = System.getProperty("user.home");
+	public static final String PROPERTY_FILE_NAME = ".followApp.properties";
+	static final String defaultPropertyFileName = userHome + FollowApp.FILE_SEPARATOR
+			+ PROPERTY_FILE_NAME;
+	private File _propertyFile;
+	public static final String PROPERTY_PROTOTYPE_FILE_NAME = "followApp.properties.prototype";
+	public static final int BUFFER_SIZE = 32768;
+
+	public static final String HEIGHT_KEY = "height";
+	public static final String WIDTH_KEY = "width";
+	public static final String X_KEY = "x";
+	public static final String Y_KEY = "y";
+	public static final String FOLLOWED_FILES_KEY = "followedFiles";
+	public static final String TAB_PLACEMENT_KEY = "tabs.placement";
+	public static final String SELECTED_TAB_INDEX_KEY = "tabs.selectedIndex";
+	public static final String LAST_FILE_CHOOSER_DIR_KEY = "fileChooser.lastDir";
+	public static final String BUFFER_SIZE_KEY = "bufferSize";
+	public static final String LATENCY_KEY = "latency";
+	public static final String ATTRIBUTES_VERSION_KEY = "attributesVersion";
+	public static final String FONT_FAMILY_KEY = "fontFamily";
+	public static final String FONT_STYLE_KEY = "fontStyle";
+	public static final String FONT_SIZE_KEY = "fontSize";
+	public static final String CONFIRM_DELETE_KEY = "confirmDelete";
+	public static final String CONFIRM_DELETE_ALL_KEY = "confirmDeleteAll";
+	public static final String AUTO_SCROLL_KEY = "autoScroll";
+	public static final String EDITOR_KEY = "editor";
+	public static final String TAB_SIZE_KEY = "tabSize";
+	public static final String RECENT_FILES_MAX_KEY = "recentFilesMax";
+	public static final String RECENT_FILES_KEY = "recentFiles";
+
+	// Versions
+	public static final int UNVERSIONED = 0;
+	public static final int v1_1 = 1;
+	public static final int v1_2 = 2;
+	public static final int v1_3 = 3;
+	public static final int v1_3_2 = 4;
+	public static final int v1_4 = 5;
+	public static final int v1_5_0 = 6;
+	public static final int v1_6_0 = 7;
 
 	public FollowAppAttributes(FollowApp app) throws IOException {
-		if (!(PROPERTY_FILE.exists())) {
+		this(app, null);
+	}
+
+	public FollowAppAttributes(FollowApp app, File propertyFile) throws IOException {
+		if (propertyFile != null) {
+			_propertyFile = propertyFile;
+		}
+		else {
+			_propertyFile = new File(defaultPropertyFileName);
+		}
+
+		if (!(_propertyFile.exists())) {
 			// If the property file doesn't exist, we create a default property
 			// file using a prototype property file stored somewhere on the
 			// classpath
 			getLog().info("No property file for the Follow application is present; creating "
-					+ PROPERTY_FILE.getAbsolutePath() + " (with default values) ...");
+					+ _propertyFile.getAbsolutePath() + " (with default values) ...");
 			properties_ = (EnumeratedProperties) getDefaultProperties().clone();
 			getLog().info("... property file created successfully.");
 		}
 		else {
 			properties_ = new EnumeratedProperties();
-			FileInputStream fis = new FileInputStream(PROPERTY_FILE);
+			FileInputStream fis = new FileInputStream(_propertyFile);
 			properties_.load(fis);
 			switch (getAttributesVersion()) {
 				case UNVERSIONED:
@@ -145,7 +200,7 @@ public class FollowAppAttributes {
 	 * 
 	 * @return File[] File array of followed files
 	 */
-	public File[] getFollowedFiles() {
+	public List<File> getFollowedFiles() {
 		return getFiles(getFollowedFilesList());
 	}
 
@@ -154,16 +209,14 @@ public class FollowAppAttributes {
 	 * 
 	 * @return List file names as Strings
 	 */
-	private List getFollowedFilesList() {
+	private List<String> getFollowedFilesList() {
 		return properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
 	}
 
-	protected File[] getFiles(List fileList) {
-		File[] files = new File[fileList.size()];
-		Iterator i = fileList.iterator();
-		int count = 0;
-		while (i.hasNext()) {
-			files[count++] = new File((String) i.next());
+	protected List<File> getFiles(List<String> fileList) {
+		ArrayList<File> files = new ArrayList<File>(fileList.size());
+		for (String s : fileList) {
+			files.add(new File(s));
 		}
 		return files;
 	}
@@ -194,7 +247,7 @@ public class FollowAppAttributes {
 	 * @return true iff any File in the List of Files (getFollowedFiles()) has
 	 *         the same Canonical Path as the supplied File
 	 */
-	protected boolean fileListContains(List fileList, File file) {
+	protected boolean fileListContains(List<String> fileList, File file) {
 		boolean retval = false;
 		if (fileList != null && file != null) {
 			for (int i = 0; i < fileList.size(); i++) {
@@ -216,7 +269,7 @@ public class FollowAppAttributes {
 	 * @param file
 	 */
 	public void addFollowedFile(File file) {
-		List fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
+		List<String> fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
 		fileNames.add(file.getAbsolutePath());
 		properties_.setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
 	}
@@ -227,7 +280,7 @@ public class FollowAppAttributes {
 	 * @param file
 	 */
 	public void removeFollowedFile(File file) {
-		List fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
+		List<String> fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
 		fileNames.remove(file.getAbsolutePath());
 		properties_.setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
 	}
@@ -369,7 +422,7 @@ public class FollowAppAttributes {
 	 */
 	public void addRecentFile(File file) {
 		if (!recentFileListContains(file)) {
-			List fileList = getRecentFilesList();
+			List<String> fileList = getRecentFilesList();
 			// check size constraint and add accordingly
 			if (fileList.size() == getRecentFilesMax()) {
 				for (int i = 0; i < fileList.size() - 1; i++) {
@@ -389,7 +442,7 @@ public class FollowAppAttributes {
 	 * 
 	 * @return List recently opened files as Strings
 	 */
-	private List getRecentFilesList() {
+	private List<String> getRecentFilesList() {
 		return properties_.getEnumeratedProperty(RECENT_FILES_KEY);
 	}
 
@@ -398,7 +451,7 @@ public class FollowAppAttributes {
 	 * 
 	 * @return File[] File array of followed files
 	 */
-	public File[] getRecentFiles() {
+	public List<File> getRecentFiles() {
 		return getFiles(getRecentFilesList());
 	}
 
@@ -411,7 +464,7 @@ public class FollowAppAttributes {
 	}
 
 	public void setRecentFilesMax(int max) {
-		List files = getRecentFilesList();
+		List<String> files = getRecentFilesList();
 		if (files.size() > max) {
 			for (int i = files.size() - max; i > 0; i--) {
 				files.remove(0);
@@ -421,8 +474,13 @@ public class FollowAppAttributes {
 		setInt(RECENT_FILES_MAX_KEY, max);
 	}
 
+	public File getPropertyFile() {
+		return _propertyFile;
+	}
+
 	public void store() throws IOException {
-		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(propertyFileName));
+		BufferedOutputStream bos =
+			new BufferedOutputStream(new FileOutputStream(defaultPropertyFileName));
 		properties_.store(bos, null);
 		bos.close();
 	}
@@ -459,8 +517,9 @@ public class FollowAppAttributes {
 				}
 			}
 			if (!defaultFontIsAvailable) {
-				getLog().info("Font family " + defaultFont.getFamily()
-						+ " is unavailable; using " + availableFontFamilyNames[0] + " instead.");
+				if (getLog().isLoggable(Level.INFO))
+					getLog().info("Font family " + defaultFont.getFamily()
+							+ " is unavailable; using " + availableFontFamilyNames[0] + " instead.");
 				defaultAttributes_.setFont(new Font(availableFontFamilyNames[0], defaultFont
 						.getStyle(), defaultFont.getSize()));
 			}
@@ -472,7 +531,7 @@ public class FollowAppAttributes {
 		if (defaultProperties_ == null) {
 			InputStream in = this.getClass().getResourceAsStream(PROPERTY_PROTOTYPE_FILE_NAME);
 			BufferedInputStream bis = new BufferedInputStream(in);
-			FileOutputStream fos = new FileOutputStream(PROPERTY_FILE);
+			FileOutputStream fos = new FileOutputStream(_propertyFile);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			byte[] byteArray = new byte[BUFFER_SIZE];
 			int len;
@@ -483,58 +542,15 @@ public class FollowAppAttributes {
 			bos.close();
 			bis.close();
 			defaultProperties_ = new EnumeratedProperties();
-			defaultProperties_.load(new BufferedInputStream(new FileInputStream(PROPERTY_FILE)));
+			defaultProperties_.load(new BufferedInputStream(new FileInputStream(_propertyFile)));
 		}
 		return defaultProperties_;
 	}
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(FollowAppAttributes.class);
+			log = Logger.getLogger(FollowAppAttributes.class.getName());
 		}
 		return log;
 	}
-
-	private transient Logger log;
-	EnumeratedProperties properties_;
-	private EnumeratedProperties defaultProperties_;
-	private FollowAppAttributes defaultAttributes_;
-	static final String userHome = System.getProperty("user.home");
-	static final String propertyFileName = userHome + FollowApp.FILE_SEPARATOR
-			+ ".followApp.properties";
-	public static final File PROPERTY_FILE = new File(propertyFileName);
-	public static final String PROPERTY_PROTOTYPE_FILE_NAME = "followApp.properties.prototype";
-	public static final int BUFFER_SIZE = 32768;
-
-	public static final String HEIGHT_KEY = "height";
-	public static final String WIDTH_KEY = "width";
-	public static final String X_KEY = "x";
-	public static final String Y_KEY = "y";
-	public static final String FOLLOWED_FILES_KEY = "followedFiles";
-	public static final String TAB_PLACEMENT_KEY = "tabs.placement";
-	public static final String SELECTED_TAB_INDEX_KEY = "tabs.selectedIndex";
-	public static final String LAST_FILE_CHOOSER_DIR_KEY = "fileChooser.lastDir";
-	public static final String BUFFER_SIZE_KEY = "bufferSize";
-	public static final String LATENCY_KEY = "latency";
-	public static final String ATTRIBUTES_VERSION_KEY = "attributesVersion";
-	public static final String FONT_FAMILY_KEY = "fontFamily";
-	public static final String FONT_STYLE_KEY = "fontStyle";
-	public static final String FONT_SIZE_KEY = "fontSize";
-	public static final String CONFIRM_DELETE_KEY = "confirmDelete";
-	public static final String CONFIRM_DELETE_ALL_KEY = "confirmDeleteAll";
-	public static final String AUTO_SCROLL_KEY = "autoScroll";
-	public static final String EDITOR_KEY = "editor";
-	public static final String TAB_SIZE_KEY = "tabSize";
-	public static final String RECENT_FILES_MAX_KEY = "recentFilesMax";
-	public static final String RECENT_FILES_KEY = "recentFiles";
-
-	// Versions
-	public static final int UNVERSIONED = 0;
-	public static final int v1_1 = 1;
-	public static final int v1_2 = 2;
-	public static final int v1_3 = 3;
-	public static final int v1_3_2 = 4;
-	public static final int v1_4 = 5;
-	public static final int v1_5_0 = 6;
-	public static final int v1_6_0 = 7;
 }

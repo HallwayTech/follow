@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JTextArea;
 import javax.swing.plaf.ComponentUI;
@@ -12,8 +15,6 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Utilities;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
-
-import org.apache.log4j.Logger;
 
 public class SearchableTextPane extends JTextArea {
 	private int lastSearchPos = -1;
@@ -46,8 +47,8 @@ public class SearchableTextPane extends JTextArea {
 	 * @param useRegularExpression
 	 * @return
 	 */
-	public LineResult[] highlight(String term, int flags) {
-		LineResult[] lineResults = new LineResult[0];
+	public List<LineResult> highlight(String term, int flags) {
+		List<LineResult> lineResults = new ArrayList<LineResult>();
 		// Remove all old highlights
 		removeHighlights();
 		// Search for pattern
@@ -57,22 +58,22 @@ public class SearchableTextPane extends JTextArea {
 			try {
 				Document doc = getDocument();
 				String text = doc.getText(0, doc.getLength());
-				WordResult[] searchResults = new SearchEngine(flags).search(term, text);
+				List<WordResult> searchResults = new SearchEngine(flags).search(term, text);
 				lineResults = convertWords2Lines(searchResults);
-				for (int i = 0; i < lineResults.length; i++) {
-					WordResult[] wordResults = lineResults[i].getWordResults();
-					for (int j = 0; j < wordResults.length; j++) {
+				for (LineResult lineResult : lineResults) {
+					List<WordResult> wordResults = lineResult.getWordResults();
+					for (WordResult wordResult : wordResults) {
 						// highlight the searched term
-						int wordStart = wordResults[j].start;
-						int wordEnd = wordResults[j].end;
+						int wordStart = wordResult.start;
+						int wordEnd = wordResult.end;
 						addHighlight(wordStart, wordEnd - wordStart);
 						Thread.yield();
 					}
 				}
 			}
 			catch (BadLocationException e) {
-				getLog().error("BadLocationException in SearchableTextPane", e);
-				lineResults = new LineResult[0];
+				getLog().log(Level.SEVERE, "BadLocationException in SearchableTextPane", e);
+				lineResults = new ArrayList<LineResult>();
 			}
 		}
 		return lineResults;
@@ -157,7 +158,7 @@ public class SearchableTextPane extends JTextArea {
 		}
 		catch (BadLocationException e) {
 			// just return -1;
-			getLog().error("BadLocationException in SearchableTextPane", e);
+			getLog().log(Level.SEVERE, "BadLocationException in SearchableTextPane", e);
 			pos = -1;
 		}
 		return pos;
@@ -169,12 +170,11 @@ public class SearchableTextPane extends JTextArea {
 	 * @param words
 	 * @return
 	 */
-	private LineResult[] convertWords2Lines(WordResult[] words) throws BadLocationException {
-		ArrayList lines = new ArrayList();
+	private List<LineResult> convertWords2Lines(List<WordResult> words) throws BadLocationException {
+		ArrayList<LineResult> lines = new ArrayList<LineResult>();
 		LineResult tempLine = null;
 		int lastLine = -1;
-		for (int i = 0; i < words.length; i++) {
-			WordResult word = words[i];
+		for (WordResult word : words) {
 			int line = getLineOfOffset(word.start);
 			if (line != lastLine) {
 				if (tempLine != null) {
@@ -193,7 +193,7 @@ public class SearchableTextPane extends JTextArea {
 		if (tempLine != null) {
 			lines.add(tempLine);
 		}
-		return (LineResult[]) lines.toArray(new LineResult[lines.size()]);
+		return lines;
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class SearchableTextPane extends JTextArea {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(SearchableTextPane.class);
+			log = Logger.getLogger(SearchableTextPane.class.getName());
 		}
 		return log;
 	}

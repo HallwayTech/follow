@@ -19,8 +19,7 @@
 package ghm.follow.gui;
 
 import java.awt.event.ActionEvent;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 /**
  * Perform an action for debugging.
@@ -34,7 +33,7 @@ public class Debug extends FollowAppAction {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(Debug.class);
+			log = Logger.getLogger(Debug.class.getName());
 		}
 		return log;
 	}
@@ -43,6 +42,6 @@ public class Debug extends FollowAppAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		getLog().debug("Debug action.");
+		getLog().finest("Debug action.");
 	}
 }

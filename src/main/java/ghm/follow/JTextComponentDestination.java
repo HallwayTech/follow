@@ -19,8 +19,7 @@
 
 package ghm.follow;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
@@ -104,7 +103,7 @@ public class JTextComponentDestination extends FilterableOutputDestination {
 		}
 		catch (BadLocationException e) {
 			// just ignore, nothing we can do
-			getLog().log(Level.SEVERE, "BadLocationException in JTextComponentDestination", e);
+			getLog().error("BadLocationException in JTextComponentDestination", e);
 		}
 	}
 

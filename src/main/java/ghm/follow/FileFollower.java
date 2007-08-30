@@ -24,8 +24,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 /**
  * Instances of this class 'follow' a particular text file, assmebling that
@@ -303,13 +303,13 @@ public class FileFollower {
 		}
 
 		public void run() {
-			getLog().entering("FileFollower", "run");
+			getLog().debug("entering FileFollower.run()");
 
 			while (continueRunning_) {
 				runAction();
 			}
 
-			getLog().exiting("FileFollower", "run");
+			getLog().debug("exiting FileFollower.run()");
 		}
 
 		protected void runAction() {
@@ -335,9 +335,8 @@ public class FileFollower {
 				// reset the restart flag
 				needsRestart_ = false;
 
-				if (getLog().isLoggable(Level.FINEST))
-					getLog().finest(
-							"Starting point: " + startingPoint_ + "; Last activity: "
+				if (getLog().isDebugEnabled())
+					getLog().debug("Starting point: " + startingPoint_ + "; Last activity: "
 									+ lastActivityTime);
 
 				bis.skip(startingPoint_);
@@ -348,9 +347,8 @@ public class FileFollower {
 
 						boolean dataWasFound = (numBytesRead > 0);
 
-						if (getLog().isLoggable(Level.FINEST))
-							getLog().finest(
-									"Bytes read: " + numBytesRead + "; dataWasFound: "
+						if (getLog().isDebugEnabled())
+							getLog().debug("Bytes read: " + numBytesRead + "; dataWasFound: "
 											+ dataWasFound);
 
 						// if data was found, print it and log activity time
@@ -362,8 +360,8 @@ public class FileFollower {
 							int length = (output.length() - 15 < 0) ? output.length() : output
 									.length() - 15;
 
-							if (getLog().isLoggable(Level.FINEST))
-								getLog().finest("Printed data: " + output.substring(length));
+							if (getLog().isDebugEnabled())
+								getLog().debug("Printed data: " + output.substring(length));
 
 							lastActivityTime = System.currentTimeMillis();
 						}
@@ -377,9 +375,8 @@ public class FileFollower {
 							boolean fileHasChanged = file_.lastModified() > lastActivityTime;
 
 							if (fileExists && fileHasChanged) {
-								if (getLog().isLoggable(Level.FINEST))
-									getLog().finest(
-											"Needs restart [fileExists=" + fileExists
+								if (getLog().isDebugEnabled())
+									getLog().debug("Needs restart [fileExists=" + fileExists
 													+ "; fileHasChanged=" + fileHasChanged + "]");
 								needsRestart_ = true;
 							}
@@ -388,29 +385,25 @@ public class FileFollower {
 						boolean allDataRead = (numBytesRead < byteArray.length);
 
 						if (allDataRead && !needsRestart_) {
-							if (getLog().isLoggable(Level.FINEST))
-								getLog().finest(
-										"Sleeping for " + latency_ + "ms [allDataRead:"
+							if (getLog().isDebugEnabled())
+								getLog().debug("Sleeping for " + latency_ + "ms [allDataRead:"
 												+ allDataRead + ";needsRestart:" + needsRestart_
 												+ "]");
 							sleep();
 						}
 					} else {
-						if (getLog().isLoggable(Level.FINEST))
-							getLog().finest("Runner paused.");
+						if (getLog().isDebugEnabled())
+							getLog().debug("Runner paused.");
 						sleep();
 					}
 				}
-				getLog()
-						.exiting(
-								"Runner",
-								"runAction",
-								"continueRunning_=" + continueRunning_ + "; needsRestart_="
-										+ needsRestart_);
+				if (getLog().isDebugEnabled())
+					getLog().debug("exiting Runner.runAction [continueRunning_=" + continueRunning_
+									+ "; needsRestart_=" + needsRestart_ + "]");
 				bis.close();
 				fis.close();
 			} catch (IOException e) {
-				getLog().log(Level.SEVERE, "IOException while following file", e);
+				getLog().error("IOException while following file", e);
 			}
 		}
 
@@ -419,8 +412,8 @@ public class FileFollower {
 				Thread.sleep(latency_);
 			} catch (InterruptedException e) {
 				// Interrupt may be thrown manually by stop()
-				if (getLog().isLoggable(Level.FINEST))
-					getLog().finest("DIED IN MY SLEEP");
+				if (getLog().isDebugEnabled())
+					getLog().debug("DIED IN MY SLEEP");
 			}
 		}
 	}

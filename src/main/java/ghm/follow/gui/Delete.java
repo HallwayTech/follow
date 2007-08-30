@@ -21,8 +21,7 @@ package ghm.follow.gui;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -70,7 +69,7 @@ public class Delete extends FollowAppAction {
 			fileFollowingPane.clear();
 		}
 		catch (IOException ioe) {
-			getLog().log(Level.SEVERE, "IOException in Delete", ioe);
+			getLog().error("IOException in Delete", ioe);
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
 			JOptionPane.showMessageDialog(getApp().getFrame(), getApp().getResourceBundle().getString(
 					"message.unableToDelete.text"), getApp().getResourceBundle().getString(

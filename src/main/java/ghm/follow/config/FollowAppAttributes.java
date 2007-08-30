@@ -31,8 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -517,9 +516,8 @@ public class FollowAppAttributes {
 				}
 			}
 			if (!defaultFontIsAvailable) {
-				if (getLog().isLoggable(Level.INFO))
-					getLog().info("Font family " + defaultFont.getFamily()
-							+ " is unavailable; using " + availableFontFamilyNames[0] + " instead.");
+				getLog().info("Font family " + defaultFont.getFamily()
+						+ " is unavailable; using " + availableFontFamilyNames[0] + " instead.");
 				defaultAttributes_.setFont(new Font(availableFontFamilyNames[0], defaultFont
 						.getStyle(), defaultFont.getSize()));
 			}

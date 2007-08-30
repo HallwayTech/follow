@@ -22,8 +22,7 @@ import ghm.follow.InvalidVkException;
 
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -53,13 +52,13 @@ public abstract class FollowAppAction extends AbstractAction {
 			setMnemonic(mnemonic);
 		}
 		catch (InvalidVkException e) {
-			getLog().log(Level.SEVERE, "Invalid mnemonic", e);
+			getLog().error("Invalid mnemonic", e);
 		}
 		try {
 			setAccelerator(accelerator);
 		}
 		catch (InvalidVkException e) {
-			getLog().log(Level.SEVERE, "Invalid accelerator", e);
+			getLog().error("Invalid accelerator", e);
 		}
 	}
 

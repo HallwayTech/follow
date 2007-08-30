@@ -56,8 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -204,7 +203,7 @@ public class FollowApp {
 				try {
 					getAttributes().store();
 				} catch (IOException ioe) {
-					getLog().log(Level.SEVERE, "Error encountered while storing properties...", ioe);
+					getLog().error("Error encountered while storing properties...", ioe);
 				} finally {
 					systemInterface_.exit(0);
 				}
@@ -656,7 +655,7 @@ public class FollowApp {
 			// ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
 			// }
 		} catch (Throwable t) {
-			getLog().log(Level.SEVERE, "Unhandled exception", t);
+			getLog().error("Unhandled exception", t);
 			System.exit(-1);
 		}
 	}

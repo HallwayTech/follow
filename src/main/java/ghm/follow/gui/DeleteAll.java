@@ -22,8 +22,7 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -75,7 +74,7 @@ public class DeleteAll extends FollowAppAction {
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
 		}
 		catch (IOException ioe) {
-			getLog().log(Level.SEVERE, "IOException error in DeleteAll", ioe);
+			getLog().error("IOException error in DeleteAll", ioe);
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
 			JOptionPane.showMessageDialog(getApp().getFrame(), getApp().getResourceBundle().getString(
 					"message.unableToDeleteAll.text"), getApp().getResourceBundle().getString(

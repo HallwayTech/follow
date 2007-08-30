@@ -23,8 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Action which closes the currently followed file.
@@ -131,7 +130,7 @@ public class ExternalEditor extends Object {
 		}
 		catch (IOException ioe) {
 			String errmsg = "Could not exec [" + getCmdString() + "] with [" + fullPath + "].";
-			getLog().log(Level.SEVERE, errmsg, ioe);
+			getLog().error(errmsg, ioe);
 		}
 	}
 	

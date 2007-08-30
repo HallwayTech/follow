@@ -5,8 +5,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import javax.swing.JTextArea;
 import javax.swing.plaf.ComponentUI;
@@ -72,7 +71,7 @@ public class SearchableTextPane extends JTextArea {
 				}
 			}
 			catch (BadLocationException e) {
-				getLog().log(Level.SEVERE, "BadLocationException in SearchableTextPane", e);
+				getLog().error("BadLocationException in SearchableTextPane", e);
 				lineResults = new ArrayList<LineResult>();
 			}
 		}
@@ -158,7 +157,7 @@ public class SearchableTextPane extends JTextArea {
 		}
 		catch (BadLocationException e) {
 			// just return -1;
-			getLog().log(Level.SEVERE, "BadLocationException in SearchableTextPane", e);
+			getLog().error("BadLocationException in SearchableTextPane", e);
 			pos = -1;
 		}
 		return pos;

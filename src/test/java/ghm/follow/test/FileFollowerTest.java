@@ -5,22 +5,25 @@ import java.util.Random;
 
 import javax.swing.JTextPane;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import ghm.follow.JTextComponentDestination;
 import ghm.follow.OutputDestination;
 
+import static org.junit.Assert.*;
+
 public class FileFollowerTest extends BaseTestCase {
 
-	public FileFollowerTest(String name) {
-		super(name);
-	}
-
+	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 		testination_ = new Testination();
 		follower_.addOutputDestination(testination_);
 	}
 
-	public void testOutputWritten() throws Exception {
+	@Test
+	public void textShouldMatchInputWhenAddingAfterStart() throws Exception {
 		follower_.start();
 		String control = "control";
 		writeToFollowedFileAndWait(control);
@@ -30,7 +33,8 @@ public class FileFollowerTest extends BaseTestCase {
 		assertEquals(control + control2, testination_.strBuf_.toString());
 	}
 
-	public void testShortLatency() throws Exception {
+	@Test
+	public void testShouldMatchInputWhenLatencyIsShort() throws Exception {
 		follower_.setLatency(100);
 		follower_.start();
 		String control = "control";
@@ -38,7 +42,8 @@ public class FileFollowerTest extends BaseTestCase {
 		assertEquals(control, testination_.strBuf_.toString());
 	}
 
-	public void testSmallBufferSize() throws Exception {
+	@Test
+	public void textShouldMatchInputWhenBufferSizeIsSmall() throws Exception {
 		int bufferSize = 10;
 		follower_.setBufferSize(bufferSize);
 		follower_.start();
@@ -54,7 +59,8 @@ public class FileFollowerTest extends BaseTestCase {
 		assertEquals(subcontrol + control, testination_.strBuf_.toString());
 	}
 
-	public void testMultipleDestinations() throws Exception {
+	@Test
+	public void textInMultipleDestinationsShouldMatch() throws Exception {
 		Testination testination2 = new Testination();
 		follower_.addOutputDestination(testination2);
 		follower_.start();
@@ -64,6 +70,7 @@ public class FileFollowerTest extends BaseTestCase {
 		assertEquals(control, testination2.strBuf_.toString());
 	}
 
+	@Test
 	public void testJTextComponentDestinationFor2Minutes() throws Exception {
 		JTextPane textPane = new JTextPane();
 		JTextComponentDestination dest = new JTextComponentDestination(textPane, true);

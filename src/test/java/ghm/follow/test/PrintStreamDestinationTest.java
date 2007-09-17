@@ -7,12 +7,13 @@ import ghm.follow.PrintStreamDestination;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public class PrintStreamDestinationTest extends BaseTestCase {
 
-	public PrintStreamDestinationTest(String name) {
-		super(name);
-	}
-
+	@Test
 	public void testPrintCalled() throws Exception {
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		PrintStreamDestination dest = new PrintStreamDestination(new PrintStream(byteStream));

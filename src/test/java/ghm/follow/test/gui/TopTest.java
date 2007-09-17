@@ -1,13 +1,14 @@
 package ghm.follow.test.gui;
 
+import org.junit.Test;
+
 import ghm.follow.nav.Top;
+
+import static org.junit.Assert.*;
 
 public class TopTest extends AppLaunchingTestCase {
 
-	public TopTest(String name) {
-		super(name);
-	}
-
+	@Test
 	public void testTop() {
 		assertEquals(false, _app.getAction(Top.NAME).isEnabled());
 	}

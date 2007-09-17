@@ -6,21 +6,25 @@ import ghm.follow.OutputDestination;
 
 import javax.swing.JTextArea;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public class JTextComponentDestinationTest extends BaseTestCase {
 
-	public JTextComponentDestinationTest(String name) {
-		super(name);
-	}
-
+	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 		jTextArea_ = new JTextArea();
 	}
 
+	@Test
 	public void testNoAutoscroll() throws Exception {
 		validateTextContentAndCaretPos(new JTextComponentDestination(jTextArea_, false));
 	}
 
+	@Test
 	public void testAutoscroll() throws Exception {
 		validateTextContentAndCaretPos(new JTextComponentDestination(jTextArea_, true));
 	}
@@ -53,5 +57,4 @@ public class JTextComponentDestinationTest extends BaseTestCase {
 	}
 
 	private JTextArea jTextArea_;
-
 }

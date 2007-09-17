@@ -6,12 +6,13 @@ import ghm.follow.gui.FollowApp;
 import java.io.File;
 import java.util.List;
 
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public class CommandLineTest extends AppLaunchingTestCase {
 
-	public CommandLineTest(String name) {
-		super(name);
-	}
-
+	@Test
 	public void testNoArgs() throws Exception {
 		FollowApp.main(appendPropFileArg(null));
 		doPostLaunch();
@@ -20,6 +21,7 @@ public class CommandLineTest extends AppLaunchingTestCase {
 		assertEquals(true, _app.getAttributes().getFollowedFiles().size() == 0);
 	}
 
+	@Test
 	public void testOneArg() throws Exception {
 		File temp = createTempFile();
 		String[] args = new String[] { temp.toString() };
@@ -32,6 +34,7 @@ public class CommandLineTest extends AppLaunchingTestCase {
 		assertEquals("File found doesn't match expected file", temp, followedFile);
 	}
 
+	@Test
 	public void testOneArgDuplicate() throws Exception {
 		File temp = createTempFile();
 		String[] args = new String[] { temp.toString() };
@@ -57,6 +60,7 @@ public class CommandLineTest extends AppLaunchingTestCase {
 		assertEquals(temp, followedFile);
 	}
 
+	@Test
 	public void testOneArgReopen() throws Exception {
 		File temp = createTempFile();
 		String[] args = new String[] { temp.toString() };
@@ -82,6 +86,7 @@ public class CommandLineTest extends AppLaunchingTestCase {
 		assertEquals(temp, followedFile);
 	}
 
+	@Test
 	public void testTwoArgs() throws Exception {
 		File[] temp = new File[2];
 		temp[0] = createTempFile();
@@ -96,6 +101,7 @@ public class CommandLineTest extends AppLaunchingTestCase {
 		assertEquals(temp[1], followedFiles.get(1));
 	}
 
+	@Test
 	public void testDuplicateArgs() throws Exception {
 		File temp = createTempFile();
 		String[] args = new String[] { temp.toString(), createTempFile().toString(), temp.toString() };

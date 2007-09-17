@@ -6,12 +6,13 @@ import ghm.follow.nav.Bottom;
 
 import java.io.File;
 
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public class BottomTest extends AppLaunchingTestCase {
 
-	public BottomTest(String name) {
-		super(name);
-	}
-
+	@Test
 	public void testEnabled() throws Exception {
 		assertEquals(false, _app.getAction(Bottom.NAME).isEnabled());
 		File file = createTempFile();

@@ -19,175 +19,102 @@
 
 package ghm.follow.test.gui;
 
-
+import org.junit.Test;
 
 import ghm.follow.gui.ExternalEditor;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-
-
-
-public class ExternalEditorTest extends TestCase {
-
-    //------------------------------------------------------------
-    //- Class Variables
-
-
-
-    //------------------------------------------------------------
-    //- Class Functions
-
-    static public Test suite() {
-        TestSuite suite = new TestSuite(ExternalEditorTest.class);
-        return (suite);
-    }
-
-
-
-
-    //------------------------------------------------------------
-    //- Instance Variables
-
-
-
-    //------------------------------------------------------------
-    //- Constructors
-
-    public ExternalEditorTest(String name) {super(name);}
-
-
-
-
-    //------------------------------------------------------------
-    //- Accessors
-
-
-
-    //------------------------------------------------------------
-    //- Settors
-
-
-
-    //------------------------------------------------------------
-    //- Private/Protected Utility Functions
-
-
-
-    //------------------------------------------------------------
-    //- Public Interface Functions
-
-    public void testSimple() {
-        String config = "C:\\WINNT\\notepad.exe";
-        String filename = "C:\\tmp\\test.txt";
-
-        ExternalEditor editor = new ExternalEditor(config);
-        String[] cmd = editor.toCmdArray(filename);
-
-        assertEquals(2, cmd.length);
-        assertEquals(config, cmd[0]);
-        assertEquals(filename, cmd[1]);
-    }
-
-
-    public void testExePlusArgs() {
-        String exe = "C:\\app\\TextPad4\\TextPad.exe";
-        String arg1 = "-somearg";
-        String arg2 = "/OtherArg";
-        String arg3 = "Another";
-        String config = exe + "  " + arg1 + " " + arg2 + "\t" + arg3;
-        String filename = "C:\\tmp\\test.txt";
-
-        ExternalEditor editor = new ExternalEditor(config);
-        String[] cmd = editor.toCmdArray(filename);
-
-        assertEquals(5, cmd.length);
-        assertEquals(exe, cmd[0]);
-        assertEquals(arg1, cmd[1]);
-        assertEquals(arg2, cmd[2]);
-        assertEquals(arg3, cmd[3]);
-        assertEquals(filename, cmd[4]);
-    }
-
-
-    public void testExeWithSpaces() {
-        String exe = "C:\\Program Files\\Internet Explorer\\IEXPLORE.EXE";
-        String config = "'" + exe + "'";
-        String filename = "C:\\tmp\\test.txt";
-
-        ExternalEditor editor = new ExternalEditor(config);
-        String[] cmd = editor.toCmdArray(filename);
-
-        assertEquals(2, cmd.length);
-        assertEquals(exe, cmd[0]);
-        assertEquals(filename, cmd[1]);
-    }
-
-
-    public void testArgsWithSpaces() {
-        String exe = "/usr/openwin/bin/textedit";
-        String arg1 = "Some Arg";
-        String arg2 = "another";
-        String config = exe + " '" + arg1 + "' " + arg2;
-        String filename = "C:\\tmp\\test.txt";
-
-        ExternalEditor editor = new ExternalEditor(config);
-        String[] cmd = editor.toCmdArray(filename);
-
-        assertEquals(4, cmd.length);
-        assertEquals(exe, cmd[0]);
-        assertEquals(arg1, cmd[1]);
-        assertEquals(arg2, cmd[2]);
-        assertEquals(filename, cmd[3]);
-    }
-
-
-    public void testExeAndArgsWithSpaces() {
-        String exe = "C:\\Program Files\\something.exe";
-        String arg = "Some Arg";
-        String config = "'" + exe + "' '" + arg + "' ";
-        String filename = "C:\\tmp\\test.txt";
-
-        ExternalEditor editor = new ExternalEditor(config);
-        String[] cmd = editor.toCmdArray(filename);
-
-        assertEquals(3, cmd.length);
-        assertEquals(exe, cmd[0]);
-        assertEquals(arg, cmd[1]);
-        assertEquals(filename, cmd[2]);
-    }
-
-
-
-
-    //------------------------------------------------------------
-    //- Class Interface Functions
-
-
-
-    protected void setUp() {
-    }
-
-
-
-    protected void tearDown() {
-    }
-
-
-
-
-    //------------------------------------------------------------
-    //- Main
-
-
-
-    static public void main(String[] args) {
-        String[] testCaseName = {ExternalEditorTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
-    }
-
-
-
-
+import junit.framework.JUnit4TestAdapter;
+
+import static org.junit.Assert.*;
+
+public class ExternalEditorTest {
+
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(ExternalEditorTest.class);
+	}
+
+	@Test
+	public void testSimple() {
+		String config = "C:\\WINNT\\notepad.exe";
+		String filename = "C:\\tmp\\test.txt";
+
+		ExternalEditor editor = new ExternalEditor(config);
+		String[] cmd = editor.toCmdArray(filename);
+
+		assertEquals(2, cmd.length);
+		assertEquals(config, cmd[0]);
+		assertEquals(filename, cmd[1]);
+	}
+
+	@Test
+	public void testExePlusArgs() {
+		String exe = "C:\\app\\TextPad4\\TextPad.exe";
+		String arg1 = "-somearg";
+		String arg2 = "/OtherArg";
+		String arg3 = "Another";
+		String config = exe + "  " + arg1 + " " + arg2 + "\t" + arg3;
+		String filename = "C:\\tmp\\test.txt";
+
+		ExternalEditor editor = new ExternalEditor(config);
+		String[] cmd = editor.toCmdArray(filename);
+
+		assertEquals(5, cmd.length);
+		assertEquals(exe, cmd[0]);
+		assertEquals(arg1, cmd[1]);
+		assertEquals(arg2, cmd[2]);
+		assertEquals(arg3, cmd[3]);
+		assertEquals(filename, cmd[4]);
+	}
+
+	@Test
+	public void testExeWithSpaces() {
+		String exe = "C:\\Program Files\\Internet Explorer\\IEXPLORE.EXE";
+		String config = "'" + exe + "'";
+		String filename = "C:\\tmp\\test.txt";
+
+		ExternalEditor editor = new ExternalEditor(config);
+		String[] cmd = editor.toCmdArray(filename);
+
+		assertEquals(2, cmd.length);
+		assertEquals(exe, cmd[0]);
+		assertEquals(filename, cmd[1]);
+	}
+
+	@Test
+	public void testArgsWithSpaces() {
+		String exe = "/usr/openwin/bin/textedit";
+		String arg1 = "Some Arg";
+		String arg2 = "another";
+		String config = exe + " '" + arg1 + "' " + arg2;
+		String filename = "C:\\tmp\\test.txt";
+
+		ExternalEditor editor = new ExternalEditor(config);
+		String[] cmd = editor.toCmdArray(filename);
+
+		assertEquals(4, cmd.length);
+		assertEquals(exe, cmd[0]);
+		assertEquals(arg1, cmd[1]);
+		assertEquals(arg2, cmd[2]);
+		assertEquals(filename, cmd[3]);
+	}
+
+	@Test
+	public void testExeAndArgsWithSpaces() {
+		String exe = "C:\\Program Files\\something.exe";
+		String arg = "Some Arg";
+		String config = "'" + exe + "' '" + arg + "' ";
+		String filename = "C:\\tmp\\test.txt";
+
+		ExternalEditor editor = new ExternalEditor(config);
+		String[] cmd = editor.toCmdArray(filename);
+
+		assertEquals(3, cmd.length);
+		assertEquals(exe, cmd[0]);
+		assertEquals(arg, cmd[1]);
+		assertEquals(filename, cmd[2]);
+	}
+
+	public static void main(String[] args) {
+		String[] testCaseName = { ExternalEditorTest.class.getName() };
+		junit.textui.TestRunner.main(testCaseName);
+	}
 }

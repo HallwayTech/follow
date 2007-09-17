@@ -9,17 +9,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
 
-public abstract class BaseTestCase extends TestCase {
+public abstract class BaseTestCase {
 	protected FileFollower follower_;
 	protected File followedFile_;
 	protected Writer followedFileWriter_;
 
-	public BaseTestCase(String name) {
-		super(name);
-	}
-
+	@Before
 	public void setUp() throws Exception {
 		followedFile_ = createTempFile();
 		followedFile_.deleteOnExit();
@@ -27,6 +25,7 @@ public abstract class BaseTestCase extends TestCase {
 		follower_ = new FileFollower(followedFile_, new OutputDestination[0]);
 	}
 
+	@After
 	public void tearDown() throws Exception {
 		follower_.stopAndWait();
 		followedFileWriter_.flush();

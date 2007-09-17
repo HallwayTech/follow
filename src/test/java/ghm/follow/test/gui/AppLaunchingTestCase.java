@@ -10,16 +10,16 @@ import ghm.follow.test.BaseTestCase;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
+import org.junit.After;
+import org.junit.Before;
+
 public abstract class AppLaunchingTestCase extends BaseTestCase {
 
 	protected FollowApp _app;
 	protected TestSystemInterface _systemInterface;
 	protected String _propertyFileName;
 
-	public AppLaunchingTestCase(String name) {
-		super(name);
-	}
-
+	@Before
 	public void setUp() throws Exception {
 		String[] args = appendPropFileArg(null);
 		FollowApp.main(args);
@@ -32,6 +32,7 @@ public abstract class AppLaunchingTestCase extends BaseTestCase {
 		_app.setSystemInterface(_systemInterface);
 	}
 
+	@After
 	public void tearDown() throws Exception {
 		invokeAction(_app.getAction(Exit.NAME));
 		while (!_systemInterface.exitCalled()) {

@@ -34,20 +34,20 @@ public class Delete extends FollowAppAction {
 	public static final String NAME = "delete";
 
 	public Delete(FollowApp app) throws IOException {
-		super(app, app.getResourceBundle().getString("action.Delete.name"), app.getResourceBundle()
-				.getString("action.Delete.mnemonic"), app.getResourceBundle().getString(
-				"action.Delete.accelerator"), app.getResourceBundle().getString(
+		super(app, FollowApp.getResourceBundle().getString("action.Delete.name"), FollowApp.getResourceBundle()
+				.getString("action.Delete.mnemonic"), FollowApp.getResourceBundle().getString(
+				"action.Delete.accelerator"), FollowApp.getResourceBundle().getString(
 				"action.Delete.icon"));
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (getApp().getAttributes().confirmDelete()) {
-			DisableableConfirm confirm = new DisableableConfirm(getApp().getFrame(), getApp()
-					.getResourceBundle().getString("dialog.confirmDelete.title"), getApp()
-					.getResourceBundle().getString("dialog.confirmDelete.message"), getApp()
-					.getResourceBundle().getString("dialog.confirmDelete.confirmButtonText"), getApp()
+			DisableableConfirm confirm = new DisableableConfirm(getApp().getFrame(), FollowApp
+					.getResourceBundle().getString("dialog.confirmDelete.title"), FollowApp
+					.getResourceBundle().getString("dialog.confirmDelete.message"), FollowApp
+					.getResourceBundle().getString("dialog.confirmDelete.confirmButtonText"), FollowApp
 					.getResourceBundle().getString("dialog.confirmDelete.doNotConfirmButtonText"),
-					getApp().getResourceBundle().getString("dialog.confirmDelete.disableText"));
+					FollowApp.getResourceBundle().getString("dialog.confirmDelete.disableText"));
 			confirm.pack();
 			confirm.setVisible(true);
 			if (confirm.markedDisabled()) {
@@ -71,8 +71,8 @@ public class Delete extends FollowAppAction {
 		catch (IOException ioe) {
 			getLog().error("IOException in Delete", ioe);
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
-			JOptionPane.showMessageDialog(getApp().getFrame(), getApp().getResourceBundle().getString(
-					"message.unableToDelete.text"), getApp().getResourceBundle().getString(
+			JOptionPane.showMessageDialog(getApp().getFrame(), FollowApp.getResourceBundle().getString(
+					"message.unableToDelete.text"), FollowApp.getResourceBundle().getString(
 					"message.unableToDelete.title"), JOptionPane.WARNING_MESSAGE);
 		}
 		getApp().setCursor(Cursor.DEFAULT_CURSOR);

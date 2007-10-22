@@ -129,8 +129,8 @@ public class FollowAppAttributes {
 					// changes to
 					// Clear and ClearAll and the introduction of Delete and
 					// DeleteAll
-					JOptionPane.showMessageDialog(null, app.getResourceBundle().getString(
-							"v1.3.warning.text"), app.getResourceBundle().getString(
+					JOptionPane.showMessageDialog(null, FollowApp.getResourceBundle().getString(
+							"v1.3.warning.text"), FollowApp.getResourceBundle().getString(
 							"v1.3.warning.title"), JOptionPane.WARNING_MESSAGE);
 				case v1_3:
 				case v1_3_2:
@@ -139,9 +139,9 @@ public class FollowAppAttributes {
 					setAttributesVersion(v1_4);
 					setAutoScroll(true);
 					// Inform the user of the new AutoScroll feature
-					JOptionPane.showMessageDialog(null, app.getResourceBundle().getString(
+					JOptionPane.showMessageDialog(null, FollowApp.getResourceBundle().getString(
 							"v1.4.info.text"),
-							app.getResourceBundle().getString("v1.4.info.title"),
+							FollowApp.getResourceBundle().getString("v1.4.info.title"),
 							JOptionPane.INFORMATION_MESSAGE);
 				case v1_4:
 					// Migrate 1.4 attributes to 1.5 attributes

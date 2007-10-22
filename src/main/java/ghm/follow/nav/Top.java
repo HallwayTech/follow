@@ -35,9 +35,9 @@ public class Top extends FollowAppAction {
 	public static final String NAME = "top";
 	
 	public Top(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.Top.name"), app.getResourceBundle()
-				.getString("action.Top.mnemonic"), app.getResourceBundle().getString(
-				"action.Top.accelerator"), app.getResourceBundle().getString("action.Top.icon"));
+		super(app, FollowApp.getResourceBundle().getString("action.Top.name"), FollowApp.getResourceBundle()
+				.getString("action.Top.mnemonic"), FollowApp.getResourceBundle().getString(
+				"action.Top.accelerator"), FollowApp.getResourceBundle().getString("action.Top.icon"));
 	}
 
 	public void actionPerformed(ActionEvent e) {

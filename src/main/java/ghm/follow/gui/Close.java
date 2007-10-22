@@ -32,9 +32,9 @@ public class Close extends FollowAppAction {
 	public static final String NAME = "close";
 
 	public Close(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.Close.name"), app.getResourceBundle()
-				.getString("action.Close.mnemonic"), app.getResourceBundle().getString(
-				"action.Close.accelerator"));
+		super(app, FollowApp.getResourceBundle().getString("action.Close.name"), FollowApp
+				.getResourceBundle().getString("action.Close.mnemonic"), FollowApp
+				.getResourceBundle().getString("action.Close.accelerator"));
 	}
 
 	public void actionPerformed(ActionEvent e) {

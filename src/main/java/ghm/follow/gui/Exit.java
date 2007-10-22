@@ -30,8 +30,8 @@ public class Exit extends FollowAppAction {
 	public static final String NAME = "exit";
 
 	public Exit(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.Exit.name"), app.getResourceBundle()
-				.getString("action.Exit.mnemonic"), app.getResourceBundle().getString(
+		super(app, FollowApp.getResourceBundle().getString("action.Exit.name"), FollowApp.getResourceBundle()
+				.getString("action.Exit.mnemonic"), FollowApp.getResourceBundle().getString(
 				"action.Exit.accelerator"));
 	}
 

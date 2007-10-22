@@ -31,9 +31,9 @@ public class ClearAll extends FollowAppAction {
 	public static final String NAME = "clearAll";
 
 	public ClearAll(FollowApp app) throws IOException {
-		super(app, app.getResourceBundle().getString("action.ClearAll.name"), app
-				.getResourceBundle().getString("action.ClearAll.mnemonic"), app.getResourceBundle()
-				.getString("action.ClearAll.accelerator"), app.getResourceBundle().getString(
+		super(app, FollowApp.getResourceBundle().getString("action.ClearAll.name"), FollowApp
+				.getResourceBundle().getString("action.ClearAll.mnemonic"), FollowApp.getResourceBundle()
+				.getString("action.ClearAll.accelerator"), FollowApp.getResourceBundle().getString(
 				"action.ClearAll.icon"));
 	}
 

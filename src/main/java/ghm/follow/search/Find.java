@@ -11,8 +11,8 @@ public class Find extends FollowAppAction {
 	private FindDialog _dialog;
 
 	public Find(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.Find.name"), app.getResourceBundle()
-				.getString("action.Find.mnemonic"), app.getResourceBundle().getString(
+		super(app, FollowApp.getResourceBundle().getString("action.Find.name"), FollowApp.getResourceBundle()
+				.getString("action.Find.mnemonic"), FollowApp.getResourceBundle().getString(
 				"action.Find.accelerator"));
 	}
 

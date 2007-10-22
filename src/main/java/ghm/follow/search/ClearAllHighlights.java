@@ -33,9 +33,9 @@ public class ClearAllHighlights extends FollowAppAction {
 	public static final String NAME = "clearAllHighlights";
 
 	public ClearAllHighlights(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.ClearAllHighlights.name"), app
-				.getResourceBundle().getString("action.ClearAllHighlights.mnemonic"), app
-				.getResourceBundle().getString("action.ClearAllHighlights.accelerator"));
+		super(app, FollowApp.getResourceBundle().getString("action.ClearAllHighlights.name"),
+				FollowApp.getResourceBundle().getString("action.ClearAllHighlights.mnemonic"),
+				FollowApp.getResourceBundle().getString("action.ClearAllHighlights.accelerator"));
 	}
 
 	public void actionPerformed(ActionEvent e) {

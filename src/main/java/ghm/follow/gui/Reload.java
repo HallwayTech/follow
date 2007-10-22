@@ -29,8 +29,8 @@ public class Reload extends FollowAppAction {
 	public static final String NAME = "reload";
 
 	public Reload(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.Reload.name"), app.getResourceBundle()
-				.getString("action.Reload.mnemonic"), app.getResourceBundle().getString(
+		super(app, FollowApp.getResourceBundle().getString("action.Reload.name"), FollowApp.getResourceBundle()
+				.getString("action.Reload.mnemonic"), FollowApp.getResourceBundle().getString(
 				"action.Reload.accelerator"));
 	}
 

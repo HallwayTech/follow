@@ -47,7 +47,7 @@ public class WhatIsThis extends JButton {
 	public static Icon getWhatIsThisIcon(FollowApp app) {
 		if (whatIsThisIcon == null) {
 			whatIsThisIcon = new ImageIcon(app.getClass().getResource(
-					app.getResourceBundle().getString("WhatIsThis.icon")));
+					FollowApp.getResourceBundle().getString("WhatIsThis.icon")));
 		}
 		return whatIsThisIcon;
 	}

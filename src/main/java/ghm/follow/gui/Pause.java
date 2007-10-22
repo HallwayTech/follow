@@ -33,9 +33,9 @@ public class Pause extends FollowAppAction {
 	public Pause(FollowApp app) {
 		// false is passed into getIcon(..) because a file follower never
 		// starts in a paused state
-		super(app, app.getResourceBundle().getString("action.Pause.name"), app.getResourceBundle()
-				.getString("action.Pause.mnemonic"), app.getResourceBundle().getString(
-				"action.Pause.accelerator"), getIcon(false, app.getResourceBundle()));
+		super(app, FollowApp.getResourceBundle().getString("action.Pause.name"), FollowApp.getResourceBundle()
+				.getString("action.Pause.mnemonic"), FollowApp.getResourceBundle().getString(
+				"action.Pause.accelerator"), getIcon(false, FollowApp.getResourceBundle()));
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class Pause extends FollowAppAction {
 	public void setIconByState(boolean paused) {
 		// get the icon to be set
 		ImageIcon icon = new ImageIcon(getApp().getClass().getResource(
-				Pause.getIcon(paused, getApp().getResourceBundle())));
+				Pause.getIcon(paused, FollowApp.getResourceBundle())));
 		// set the icon in the action. when updating here, the icon is changed
 		// whether the event is caused by menu, button click or key combo
 		getApp().getAction(Pause.NAME).putValue(Action.SMALL_ICON, icon);

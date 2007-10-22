@@ -29,9 +29,9 @@ public class NextTab extends FollowAppAction {
 	public static final String NAME = "nextTab";
 
 	public NextTab(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.NextFile.name"), app
-				.getResourceBundle().getString("action.NextFile.mnemonic"), app.getResourceBundle()
-				.getString("action.NextFile.accelerator"), app.getResourceBundle().getString(
+		super(app, FollowApp.getResourceBundle().getString("action.NextFile.name"), FollowApp
+				.getResourceBundle().getString("action.NextFile.mnemonic"), FollowApp.getResourceBundle()
+				.getString("action.NextFile.accelerator"), FollowApp.getResourceBundle().getString(
 				"action.NextFile.icon"));
 	}
 

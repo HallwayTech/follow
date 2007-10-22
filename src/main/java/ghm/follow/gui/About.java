@@ -30,14 +30,14 @@ public class About extends FollowAppAction {
 	public static final String NAME = "about";
 
 	public About(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.About.name"), app.getResourceBundle()
-				.getString("action.About.mnemonic"), app.getResourceBundle().getString(
+		super(app, FollowApp.getResourceBundle().getString("action.About.name"), FollowApp.getResourceBundle()
+				.getString("action.About.mnemonic"), FollowApp.getResourceBundle().getString(
 				"action.About.accelerator"));
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(getApp().getFrame(), getApp().getResourceBundle().getString(
-				"dialog.About.text"), getApp().getResourceBundle().getString("dialog.About.title"),
+		JOptionPane.showMessageDialog(getApp().getFrame(), FollowApp.getResourceBundle().getString(
+				"dialog.About.text"), FollowApp.getResourceBundle().getString("dialog.About.title"),
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 }

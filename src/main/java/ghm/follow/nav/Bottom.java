@@ -36,9 +36,9 @@ public class Bottom extends FollowAppAction {
 	public static final String NAME = "bottom";
 
 	public Bottom(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.Bottom.name"), app.getResourceBundle()
-				.getString("action.Bottom.mnemonic"), app.getResourceBundle().getString(
-				"action.Bottom.accelerator"), app.getResourceBundle().getString(
+		super(app, FollowApp.getResourceBundle().getString("action.Bottom.name"), FollowApp.getResourceBundle()
+				.getString("action.Bottom.mnemonic"), FollowApp.getResourceBundle().getString(
+				"action.Bottom.accelerator"), FollowApp.getResourceBundle().getString(
 				"action.Bottom.icon"));
 	}
 

@@ -44,8 +44,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -71,22 +69,26 @@ import javax.swing.SwingUtilities;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class FollowApp {
+	private transient static Logger log;
 	private int currentCursor_ = Cursor.DEFAULT_CURSOR;
 	private Cursor defaultCursor_;
 	private Cursor waitCursor_;
-	private FollowAppAttributes attributes_;
 	private Map<File, FileFollowingPane> fileToFollowingPaneMap_ = new HashMap<File, FileFollowingPane>();
-	private JFrame frame_;
 	private JTabbedPane tabbedPane_;
 	private ToolBar toolBar_;
 	private PopupMenu popupMenu_;
 	private Menu recentFilesMenu_;
 	private MouseListener rightClickListener_;
-	private ResourceBundle resBundle_ = ResourceBundle
-			.getBundle("ghm.follow.gui.FollowAppResourceBundle");
 	private HashMap<String, FollowAppAction> actions_ = new HashMap<String, FollowAppAction>();
 	private SystemInterface systemInterface_;
+	private StartupStatus startupStatus_;
+
+	private FollowAppAttributes attributes_;
 	private static FollowApp instance_;
+	private static ResourceBundle resBundle_ = ResourceBundle
+			.getBundle("ghm.follow.gui.FollowAppResourceBundle");
+	private JFrame frame_;
+
 	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
 	public static final String MESSAGE_LINE_SEPARATOR = "\n";
 	public static final boolean DEBUG = Boolean.getBoolean("follow.debug");
@@ -101,8 +103,8 @@ public class FollowApp {
 		this(fileNames, null);
 	}
 
-	FollowApp(List<String> fileNames, File propertyFile) throws IOException, InterruptedException,
-			InvocationTargetException {
+	FollowApp(List<String> fileNames, File propertyFile) throws IOException,
+			InterruptedException, InvocationTargetException {
 		// Create & show startup status window
 		startupStatus_ = new StartupStatus(getResourceBundle());
 		centerWindowInScreen(startupStatus_);
@@ -133,11 +135,113 @@ public class FollowApp {
 				String msg = MessageFormat.format(getResourceBundle().getString(
 						"message.cmdLineFileNotFound.text"), new Object[] { file });
 				getLog().info(msg);
-			} else if (!getAttributes().followedFileListContains(file)) {
+			}
+			else if (!getAttributes().followedFileListContains(file)) {
 				getAttributes().addFollowedFile(file);
 			}
 		}
 
+		// load the actions referenced in the application
+		loadActions();
+
+		// initialize SystemInterface
+		systemInterface_ = new DefaultSystemInterface(this);
+
+		// initialize menubar
+		JMenuBar jMenuBar = MenuBuilder.buildMenuBar(getResourceBundle(), getActions());
+
+		// initialize popupMenu
+		popupMenu_ = MenuBuilder.buildPopupMenu(getActions());
+
+		// initialize toolbar
+		toolBar_ = MenuBuilder.buildToolBar(getActions());
+
+		// initialize tabbedPane, but wait to open files until after frame
+		// initialization
+		tabbedPane_ = new TabbedPane(getAttributes());
+		enableDragAndDrop(tabbedPane_);
+
+		// initialize frame
+		initFrame(jMenuBar);
+
+		// This is an ugly hack. It seems like JFrame.setLocation() is buggy
+		// on Solaris jdk versions before 1.4
+		if (HAS_SOLARIS_BUG) {
+			frame_.setLocation(50, 50);
+		}
+		else {
+			frame_.setLocation(getAttributes().getX(), getAttributes().getY());
+		}
+		// track window close events
+		frame_.addWindowListener(new WindowTracker(getAttributes(), tabbedPane_, systemInterface_));
+		enableDragAndDrop(frame_);
+
+		// Open files from attributes; this is done after the frame is complete
+		// and all components have been added to it to make sure that the frame
+		// can be shown absolutely as soon as possible. If we put this code
+		// before frame creation (as in v1.0), frame creation may take longer
+		// because there are more threads (spawned in the course of open())
+		// contending for processor time.
+		List<File> files = getAttributes().getFollowedFiles();
+		StringBuffer nonexistentFilesBuffer = null;
+		int nonexistentFileCount = 0;
+		for (File file : files) {
+			try {
+				open(file, false);
+			}
+			catch (FileNotFoundException e) {
+				// This file has been deleted since the previous execution.
+				// Remove it from the list of followed files
+				getAttributes().removeFollowedFile(file);
+				nonexistentFileCount++;
+				if (nonexistentFilesBuffer == null) {
+					nonexistentFilesBuffer = new StringBuffer(file.getAbsolutePath());
+				}
+				else {
+					nonexistentFilesBuffer.append(file.getAbsolutePath());
+				}
+				nonexistentFilesBuffer.append(MESSAGE_LINE_SEPARATOR);
+			}
+		}
+		if (nonexistentFileCount > 0) {
+			// Alert the user of the fact that one or more files have been
+			// deleted since the previous execution
+			String text = getResourceBundle().getString(
+					"message.filesDeletedSinceLastExecution.text");
+			String message = MessageFormat.format(text, new Object[] { nonexistentFileCount,
+					nonexistentFilesBuffer.toString() });
+			String title = getResourceBundle().getString(
+					"message.filesDeletedSinceLastExecution.title");
+			JOptionPane.showMessageDialog(frame_, message, title, JOptionPane.WARNING_MESSAGE);
+		}
+		if (tabbedPane_.getTabCount() > 0) {
+			if (tabbedPane_.getTabCount() > getAttributes().getSelectedTabIndex()) {
+				tabbedPane_.setSelectedIndex(getAttributes().getSelectedTabIndex());
+			}
+			else {
+				tabbedPane_.setSelectedIndex(0);
+			}
+		}
+		else {
+			getAction(Close.NAME).setEnabled(false);
+			getAction(Reload.NAME).setEnabled(false);
+			getAction(Edit.NAME).setEnabled(false);
+			getAction(Top.NAME).setEnabled(false);
+			getAction(Bottom.NAME).setEnabled(false);
+			getAction(Clear.NAME).setEnabled(false);
+			getAction(ClearAll.NAME).setEnabled(false);
+			getAction(Delete.NAME).setEnabled(false);
+			getAction(DeleteAll.NAME).setEnabled(false);
+			getAction(Pause.NAME).setEnabled(false);
+		}
+	}
+
+	/**
+	 * Loads the actions used in the application
+	 * 
+	 * @throws IOException
+	 */
+	private void loadActions() throws IOException {
 		// initialize actions
 		putAction(Open.NAME, new Open(this));
 		putAction(Close.NAME, new Close(this));
@@ -162,107 +266,6 @@ public class FollowApp {
 		putAction(ClearHighlights.NAME, new ClearHighlights(this));
 		putAction(ClearAllHighlights.NAME, new ClearAllHighlights(this));
 		putAction(Reset.NAME, new Reset(this));
-
-		// initialize SystemInterface
-		systemInterface_ = new DefaultSystemInterface(this);
-
-		// initialize menubar
-		JMenuBar jMenuBar = buildMenuBar();
-
-		// initialize popupMenu
-		buildPopupMenu();
-
-		// initialize toolbar
-		buildToolBar();
-
-		// initialize tabbedPane, but wait to open files until after frame
-		// initialization
-		tabbedPane_ = new TabbedPane(getAttributes());
-		enableDragAndDrop(tabbedPane_);
-
-		// initialize frame
-		initFrame(jMenuBar);
-
-		// This is an ugly hack. It seems like JFrame.setLocation() is buggy
-		// on Solaris jdk versions before 1.4
-		if (HAS_SOLARIS_BUG) {
-			frame_.setLocation(50, 50);
-		} else {
-			frame_.setLocation(getAttributes().getX(), getAttributes().getY());
-		}
-		frame_.addWindowListener(new WindowTracker(getAttributes()));
-		frame_.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				if (tabbedPane_.getTabCount() > 0) {
-					getAttributes().setSelectedTabIndex(tabbedPane_.getSelectedIndex());
-				}
-				((Window) e.getSource()).dispose();
-			}
-
-			public void windowClosed(WindowEvent e) {
-				try {
-					getAttributes().store();
-				} catch (IOException ioe) {
-					getLog().error("Error encountered while storing properties...", ioe);
-				} finally {
-					systemInterface_.exit(0);
-				}
-			}
-		});
-		enableDragAndDrop(frame_);
-
-		// Open files from attributes; this is done after the frame is complete
-		// and all components have been added to it to make sure that the frame
-		// can be shown absolutely as soon as possible. If we put this code
-		// before frame creation (as in v1.0), frame creation may take longer
-		// because there are more threads (spawned in the course of open())
-		// contending for processor time.
-		List<File> files = getAttributes().getFollowedFiles();
-		StringBuffer nonexistentFilesBuffer = null;
-		int nonexistentFileCount = 0;
-		for (File file : files) {
-			try {
-				open(file, false);
-			} catch (FileNotFoundException e) {
-				// This file has been deleted since the previous execution.
-				// Remove it from the list of followed files
-				getAttributes().removeFollowedFile(file);
-				nonexistentFileCount++;
-				if (nonexistentFilesBuffer == null) {
-					nonexistentFilesBuffer = new StringBuffer(file.getAbsolutePath());
-				} else {
-					nonexistentFilesBuffer.append(file.getAbsolutePath());
-				}
-				nonexistentFilesBuffer.append(MESSAGE_LINE_SEPARATOR);
-			}
-		}
-		if (nonexistentFileCount > 0) {
-			// Alert the user of the fact that one or more files have been
-			// deleted since the previous execution
-			String message = MessageFormat.format(getResourceBundle().getString(
-					"message.filesDeletedSinceLastExecution.text"), new Object[] {
-					new Long(nonexistentFileCount), nonexistentFilesBuffer.toString() });
-			JOptionPane.showMessageDialog(frame_, message, getResourceBundle().getString(
-					"message.filesDeletedSinceLastExecution.title"), JOptionPane.WARNING_MESSAGE);
-		}
-		if (tabbedPane_.getTabCount() > 0) {
-			if (tabbedPane_.getTabCount() > getAttributes().getSelectedTabIndex()) {
-				tabbedPane_.setSelectedIndex(getAttributes().getSelectedTabIndex());
-			} else {
-				tabbedPane_.setSelectedIndex(0);
-			}
-		} else {
-			getAction(Close.NAME).setEnabled(false);
-			getAction(Reload.NAME).setEnabled(false);
-			getAction(Edit.NAME).setEnabled(false);
-			getAction(Top.NAME).setEnabled(false);
-			getAction(Bottom.NAME).setEnabled(false);
-			getAction(Clear.NAME).setEnabled(false);
-			getAction(ClearAll.NAME).setEnabled(false);
-			getAction(Delete.NAME).setEnabled(false);
-			getAction(DeleteAll.NAME).setEnabled(false);
-			getAction(Pause.NAME).setEnabled(false);
-		}
 	}
 
 	/**
@@ -273,72 +276,6 @@ public class FollowApp {
 		frame_.getContentPane().add(toolBar_, BorderLayout.NORTH);
 		frame_.getContentPane().add(tabbedPane_, BorderLayout.CENTER);
 		frame_.setSize(getAttributes().getWidth(), getAttributes().getHeight());
-	}
-
-	/**
-	 * Builds the menu bar for the application
-	 * 
-	 * @return reference the constructed menu bar
-	 */
-	private JMenuBar buildMenuBar() {
-		// file menu
-		Menu fileMenu = new Menu(getResourceBundle().getString("menu.File.name"),
-				getResourceBundle().getString("menu.File.mnemonic"));
-		fileMenu.addFollowAppAction(getAction(Open.NAME));
-		fileMenu.addFollowAppAction(getAction(Close.NAME));
-		fileMenu.addFollowAppAction(getAction(Reload.NAME));
-		fileMenu.addSeparator();
-		fileMenu.addFollowAppAction(getAction(Reset.NAME));
-		fileMenu.addFollowAppAction(getAction(Pause.NAME));
-		fileMenu.addSeparator();
-		recentFilesMenu_ = new Menu(getResourceBundle().getString("menu.RecentFiles.name"),
-				getResourceBundle().getString("menu.RecentFiles.mnemonic"));
-		refreshRecentFilesMenu();
-		fileMenu.add(recentFilesMenu_);
-		fileMenu.addSeparator();
-		fileMenu.addFollowAppAction(getAction(Exit.NAME));
-		// edit menu
-		Menu editMenu = new Menu(getResourceBundle().getString("menu.Edit.name"),
-				getResourceBundle().getString("menu.Edit.mnemonic"));
-		editMenu.addFollowAppAction(getAction(Find.NAME));
-		editMenu.addSeparator();
-		editMenu.addFollowAppAction(getAction(ClearHighlights.NAME));
-		editMenu.addFollowAppAction(getAction(ClearAllHighlights.NAME));
-		// tool menu
-		Menu toolsMenu = new Menu(getResourceBundle().getString("menu.Tools.name"),
-				getResourceBundle().getString("menu.Tools.mnemonic"));
-		toolsMenu.addFollowAppAction(getAction(Top.NAME));
-		toolsMenu.addFollowAppAction(getAction(Bottom.NAME));
-		toolsMenu.addSeparator();
-		toolsMenu.addFollowAppAction(getAction(Clear.NAME));
-		toolsMenu.addFollowAppAction(getAction(ClearAll.NAME));
-		toolsMenu.addFollowAppAction(getAction(Delete.NAME));
-		toolsMenu.addFollowAppAction(getAction(DeleteAll.NAME));
-		toolsMenu.addSeparator();
-		toolsMenu.addFollowAppAction(getAction(Configure.NAME));
-		toolsMenu.addFollowAppAction(getAction(Edit.NAME));
-		// window menu
-		Menu windowMenu = new Menu(getResourceBundle().getString("menu.Window.name"),
-				getResourceBundle().getString("menu.Window.mnemonic"));
-		windowMenu.addFollowAppAction(getAction(NextTab.NAME));
-		windowMenu.addFollowAppAction(getAction(PreviousTab.NAME));
-		// help menu
-		Menu helpMenu = new Menu(getResourceBundle().getString("menu.Help.name"),
-				getResourceBundle().getString("menu.Help.mnemonic"));
-		helpMenu.addFollowAppAction(getAction(About.NAME));
-		if (DEBUG) {
-			helpMenu.addSeparator();
-			helpMenu.addFollowAppAction(getAction(Debug.NAME));
-		}
-
-		// create menu bar and add menus
-		JMenuBar jMenuBar = new JMenuBar();
-		jMenuBar.add(fileMenu);
-		jMenuBar.add(editMenu);
-		jMenuBar.add(toolsMenu);
-		jMenuBar.add(windowMenu);
-		jMenuBar.add(helpMenu);
-		return jMenuBar;
 	}
 
 	public void refreshRecentFilesMenu() {
@@ -352,56 +289,21 @@ public class FollowApp {
 		}
 	}
 
-	/**
-	 * Builds the popup menu shown when right clicking in a text area.
-	 */
-	private void buildPopupMenu() {
-		popupMenu_ = new PopupMenu();
-		popupMenu_.addFollowAppAction(getAction(Open.NAME));
-		popupMenu_.addFollowAppAction(getAction(Close.NAME));
-		popupMenu_.addFollowAppAction(getAction(Reload.NAME));
-		popupMenu_.addSeparator();
-		popupMenu_.addFollowAppAction(getAction(Top.NAME));
-		popupMenu_.addFollowAppAction(getAction(Bottom.NAME));
-		popupMenu_.addSeparator();
-		popupMenu_.addFollowAppAction(getAction(Clear.NAME));
-		popupMenu_.addFollowAppAction(getAction(ClearAll.NAME));
-		popupMenu_.addFollowAppAction(getAction(Delete.NAME));
-		popupMenu_.addFollowAppAction(getAction(DeleteAll.NAME));
-		popupMenu_.addSeparator();
-		popupMenu_.addFollowAppAction(getAction(Configure.NAME));
-		popupMenu_.addFollowAppAction(getAction(Edit.NAME));
-	}
-
-	/**
-	 * Builds the toolbar shown at the top of the application
-	 */
-	private void buildToolBar() {
-		toolBar_ = new ToolBar();
-		toolBar_.addFollowAppAction(getAction(Open.NAME));
-		toolBar_.addSeparator();
-		toolBar_.addFollowAppAction(getAction(Top.NAME));
-		toolBar_.addFollowAppAction(getAction(Bottom.NAME));
-		toolBar_.addSeparator();
-		toolBar_.addFollowAppAction(getAction(Clear.NAME));
-		toolBar_.addFollowAppAction(getAction(ClearAll.NAME));
-		toolBar_.addFollowAppAction(getAction(Delete.NAME));
-		toolBar_.addFollowAppAction(getAction(DeleteAll.NAME));
-		toolBar_.addSeparator();
-		toolBar_.addFollowAppAction(getAction(Reset.NAME));
-		toolBar_.addFollowAppAction(getAction(Pause.NAME));
-		toolBar_.addSeparator();
-		toolBar_.addFollowAppAction(getAction(Configure.NAME));
-	}
-
-	private StartupStatus startupStatus_;
-
 	public void show() {
 		frame_.setVisible(true);
 	}
 
 	public FollowAppAction getAction(String name) {
 		return actions_.get(name);
+	}
+
+	/**
+	 * Get all actions associated to the application
+	 * 
+	 * @return
+	 */
+	public HashMap<String, FollowAppAction> getActions() {
+		return actions_;
 	}
 
 	public void putAction(String name, FollowAppAction action) {
@@ -425,7 +327,8 @@ public class FollowApp {
 		if (fileFollowingPane != null) {
 			// File is already open; merely select its tab
 			tabbedPane_.setSelectedComponent(fileFollowingPane);
-		} else {
+		}
+		else {
 			fileFollowingPane = new FileFollowingPane(file, getAttributes().getBufferSize(),
 					getAttributes().getLatency(), getAttributes().autoScroll(), getAttributes()
 							.getFont(), getAttributes().getTabSize());
@@ -491,23 +394,23 @@ public class FollowApp {
 			return;
 		}
 		switch (cursorType) {
-		case Cursor.DEFAULT_CURSOR:
-			if (defaultCursor_ == null) {
-				defaultCursor_ = Cursor.getDefaultCursor();
-			}
-			frame_.setCursor(defaultCursor_);
-			break;
+			case Cursor.DEFAULT_CURSOR:
+				if (defaultCursor_ == null) {
+					defaultCursor_ = Cursor.getDefaultCursor();
+				}
+				frame_.setCursor(defaultCursor_);
+				break;
 
-		case Cursor.WAIT_CURSOR:
-			if (waitCursor_ == null) {
-				waitCursor_ = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
-			}
-			frame_.setCursor(waitCursor_);
-			break;
+			case Cursor.WAIT_CURSOR:
+				if (waitCursor_ == null) {
+					waitCursor_ = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+				}
+				frame_.setCursor(waitCursor_);
+				break;
 
-		default:
-			throw new IllegalArgumentException(
-					"Supported cursors are Cursor.DEFAULT_CURSOR and Cursor.WAIT_CURSOR");
+			default:
+				throw new IllegalArgumentException(
+						"Supported cursors are Cursor.DEFAULT_CURSOR and Cursor.WAIT_CURSOR");
 		}
 		currentCursor_ = cursorType;
 	}
@@ -566,7 +469,7 @@ public class FollowApp {
 		return instance_;
 	}
 
-	public ResourceBundle getResourceBundle() {
+	public static ResourceBundle getResourceBundle() {
 		return resBundle_;
 	}
 
@@ -595,7 +498,8 @@ public class FollowApp {
 					if (minor < 4) {
 						HAS_SOLARIS_BUG = true;
 					}
-				} catch (NumberFormatException nfe) {
+				}
+				catch (NumberFormatException nfe) {
 					// Nothing else to do.
 				}
 			}
@@ -608,8 +512,6 @@ public class FollowApp {
 		window.setLocation((int) (screenSize.getWidth() / 2 - windowSize.getWidth() / 2),
 				(int) (screenSize.getHeight() / 2 - windowSize.getHeight() / 2));
 	}
-
-	private transient static Logger log;
 
 	private static Logger getLog() {
 		if (log == null) {
@@ -654,7 +556,8 @@ public class FollowApp {
 			// for (int i=0; i < instance_.tabbedPane_.getTabCount(); i++) {
 			// ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
 			// }
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			getLog().error("Unhandled exception", t);
 			System.exit(-1);
 		}

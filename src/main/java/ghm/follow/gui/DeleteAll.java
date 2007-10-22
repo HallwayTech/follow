@@ -35,20 +35,20 @@ public class DeleteAll extends FollowAppAction {
 	public static final String NAME = "deleteAll";
 
 	public DeleteAll(FollowApp app) throws IOException {
-		super(app, app.getResourceBundle().getString("action.DeleteAll.name"), app
-				.getResourceBundle().getString("action.DeleteAll.mnemonic"), app
-				.getResourceBundle().getString("action.DeleteAll.accelerator"), app
+		super(app, FollowApp.getResourceBundle().getString("action.DeleteAll.name"), FollowApp
+				.getResourceBundle().getString("action.DeleteAll.mnemonic"), FollowApp
+				.getResourceBundle().getString("action.DeleteAll.accelerator"), FollowApp
 				.getResourceBundle().getString("action.DeleteAll.icon"));
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (getApp().getAttributes().confirmDeleteAll()) {
-			DisableableConfirm confirm = new DisableableConfirm(getApp().getFrame(), getApp()
-					.getResourceBundle().getString("dialog.confirmDeleteAll.title"), getApp()
-					.getResourceBundle().getString("dialog.confirmDeleteAll.message"), getApp()
+			DisableableConfirm confirm = new DisableableConfirm(getApp().getFrame(), FollowApp
+					.getResourceBundle().getString("dialog.confirmDeleteAll.title"), FollowApp
+					.getResourceBundle().getString("dialog.confirmDeleteAll.message"), FollowApp
 					.getResourceBundle().getString("dialog.confirmDeleteAll.confirmButtonText"),
-					getApp().getResourceBundle().getString(
-							"dialog.confirmDeleteAll.doNotConfirmButtonText"), getApp()
+					FollowApp.getResourceBundle().getString(
+							"dialog.confirmDeleteAll.doNotConfirmButtonText"), FollowApp
 							.getResourceBundle().getString("dialog.confirmDeleteAll.disableText"));
 			confirm.pack();
 			confirm.setVisible(true);
@@ -76,8 +76,8 @@ public class DeleteAll extends FollowAppAction {
 		catch (IOException ioe) {
 			getLog().error("IOException error in DeleteAll", ioe);
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
-			JOptionPane.showMessageDialog(getApp().getFrame(), getApp().getResourceBundle().getString(
-					"message.unableToDeleteAll.text"), getApp().getResourceBundle().getString(
+			JOptionPane.showMessageDialog(getApp().getFrame(), FollowApp.getResourceBundle().getString(
+					"message.unableToDeleteAll.text"), FollowApp.getResourceBundle().getString(
 					"message.unableToDeleteAll.title"), JOptionPane.WARNING_MESSAGE);
 		}
 	}

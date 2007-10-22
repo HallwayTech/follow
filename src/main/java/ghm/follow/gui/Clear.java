@@ -30,9 +30,9 @@ public class Clear extends FollowAppAction {
 	public static final String NAME = "clear";
 
 	public Clear(FollowApp app) throws IOException {
-		super(app, app.getResourceBundle().getString("action.Clear.name"), app.getResourceBundle()
-				.getString("action.Clear.mnemonic"), app.getResourceBundle().getString(
-				"action.Clear.accelerator"), app.getResourceBundle().getString("action.Clear.icon"));
+		super(app, FollowApp.getResourceBundle().getString("action.Clear.name"), FollowApp.getResourceBundle()
+				.getString("action.Clear.mnemonic"), FollowApp.getResourceBundle().getString(
+				"action.Clear.accelerator"), FollowApp.getResourceBundle().getString("action.Clear.icon"));
 	}
 
 	public void actionPerformed(ActionEvent e) {

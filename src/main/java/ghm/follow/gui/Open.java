@@ -37,14 +37,14 @@ public class Open extends FollowAppAction {
 	private File recentFile;
 
 	public Open(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.Open.name"), app.getResourceBundle()
-				.getString("action.Open.mnemonic"), app.getResourceBundle().getString(
-				"action.Open.accelerator"), app.getResourceBundle().getString("action.Open.icon"));
+		super(app, FollowApp.getResourceBundle().getString("action.Open.name"), FollowApp.getResourceBundle()
+				.getString("action.Open.mnemonic"), FollowApp.getResourceBundle().getString(
+				"action.Open.accelerator"), FollowApp.getResourceBundle().getString("action.Open.icon"));
 	}
 
 	public Open(FollowApp app, File recentFile) {
-		super(app, recentFile.getAbsolutePath(), app.getResourceBundle().getString(
-				"action.Open.mnemonic"), app.getResourceBundle().getString(
+		super(app, recentFile.getAbsolutePath(), FollowApp.getResourceBundle().getString(
+				"action.Open.mnemonic"), FollowApp.getResourceBundle().getString(
 				"action.Open.accelerator"));
 		this.recentFile = recentFile;
 	}
@@ -62,9 +62,9 @@ public class Open extends FollowAppAction {
 				}
 			}
 		} catch (FileNotFoundException ex) {
-			String msg = MessageFormat.format(getApp().getResourceBundle().getString(
+			String msg = MessageFormat.format(FollowApp.getResourceBundle().getString(
 					"message.cmdLineFileNotFound.text"), new Object[] { f });
-			JOptionPane.showMessageDialog(getApp().getFrame(), msg, getApp().getResourceBundle()
+			JOptionPane.showMessageDialog(getApp().getFrame(), msg, FollowApp.getResourceBundle()
 					.getString("message.filesDeletedSinceLastExecution.title"),
 					JOptionPane.WARNING_MESSAGE);
 		}

@@ -29,8 +29,8 @@ public class Edit extends FollowAppAction {
 	public static final String NAME = "edit";
 
 	public Edit(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.Edit.name"), app.getResourceBundle()
-				.getString("action.Edit.mnemonic"), app.getResourceBundle().getString(
+		super(app, FollowApp.getResourceBundle().getString("action.Edit.name"), FollowApp.getResourceBundle()
+				.getString("action.Edit.mnemonic"), FollowApp.getResourceBundle().getString(
 				"action.Edit.accelerator"));
 	}
 

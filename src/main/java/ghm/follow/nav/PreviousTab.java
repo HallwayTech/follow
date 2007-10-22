@@ -29,9 +29,9 @@ public class PreviousTab extends FollowAppAction {
 	public static final String NAME = "previousTab";
 
 	public PreviousTab(FollowApp app) {
-		super(app, app.getResourceBundle().getString("action.PreviousFile.name"), app
-				.getResourceBundle().getString("action.PreviousFile.mnemonic"), app
-				.getResourceBundle().getString("action.PreviousFile.accelerator"), app
+		super(app, FollowApp.getResourceBundle().getString("action.PreviousFile.name"), FollowApp
+				.getResourceBundle().getString("action.PreviousFile.mnemonic"), FollowApp
+				.getResourceBundle().getString("action.PreviousFile.accelerator"), FollowApp
 				.getResourceBundle().getString("action.PreviousFile.icon"));
 	}
 

@@ -18,9 +18,9 @@ public class Reset extends FollowAppAction {
 	public static final String NAME = "reset";
 
 	public Reset(FollowApp app) throws IOException {
-		super(app, app.getResourceBundle().getString("action.Reset.name"), app.getResourceBundle()
-				.getString("action.Reset.mnemonic"), app.getResourceBundle().getString(
-				"action.Reset.accelerator"), app.getResourceBundle().getString("action.Reset.icon"));
+		super(app, FollowApp.getResourceBundle().getString("action.Reset.name"), FollowApp.getResourceBundle()
+				.getString("action.Reset.mnemonic"), FollowApp.getResourceBundle().getString(
+				"action.Reset.accelerator"), FollowApp.getResourceBundle().getString("action.Reset.icon"));
 	}
 
 	public void actionPerformed(ActionEvent e) {

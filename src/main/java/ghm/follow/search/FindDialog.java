@@ -1,6 +1,7 @@
 package ghm.follow.search;
 
 import ghm.follow.gui.FileFollowingPane;
+import ghm.follow.gui.FollowApp;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -45,8 +46,8 @@ public class FindDialog extends JDialog {
 	private Find _findAction;
 
 	public FindDialog(Find find) {
-		super(find.getApp().getFrame(), find.getApp().getResourceBundle().getString(
-				"dialog.Find.title"), false);
+		super(find.getApp().getFrame(), FollowApp.getResourceBundle()
+				.getString("dialog.Find.title"), false);
 		// keep a reference for use later
 		_findAction = find;
 		addKeyListener(new KeyAdapter() {
@@ -66,7 +67,7 @@ public class FindDialog extends JDialog {
 		// add the find field & label
 		//
 		gbc.ipadx = 4;
-		findPanel.add(new JLabel(find.getApp().getResourceBundle().getString(
+		findPanel.add(new JLabel(FollowApp.getResourceBundle().getString(
 				"dialog.Find.findText.label")), gbc);
 		_find = new JTextField(15);
 		_find.setHorizontalAlignment(JTextField.LEFT);
@@ -79,7 +80,7 @@ public class FindDialog extends JDialog {
 		//
 		// add the case sensitive check box
 		//
-		_caseSensitive = new JCheckBox(find.getApp().getResourceBundle().getString(
+		_caseSensitive = new JCheckBox(FollowApp.getResourceBundle().getString(
 				"dialog.Find.caseSensitive.label"));
 		gbc.gridx = 1;
 		gbc.gridy = 1;
@@ -90,7 +91,7 @@ public class FindDialog extends JDialog {
 		//
 		// add the regular expression check box
 		//
-		_regEx = new JCheckBox(find.getApp().getResourceBundle().getString(
+		_regEx = new JCheckBox(FollowApp.getResourceBundle().getString(
 				"dialog.Find.regularExpression.label"));
 		gbc.gridx = 1;
 		gbc.gridy = 2;
@@ -101,9 +102,9 @@ public class FindDialog extends JDialog {
 		//
 		// add the find button
 		//
-		_findButton = new JButton(find.getApp().getResourceBundle().getString(
+		_findButton = new JButton(FollowApp.getResourceBundle().getString(
 				"dialog.Find.findButton.label"));
-		_findButton.setMnemonic(find.getApp().getResourceBundle().getString(
+		_findButton.setMnemonic(FollowApp.getResourceBundle().getString(
 				"dialog.Find.findButton.mnemonic").charAt(0));
 		_findButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -114,9 +115,9 @@ public class FindDialog extends JDialog {
 		});
 
 		// add the clear button
-		_clearButton = new JButton(find.getApp().getResourceBundle().getString(
+		_clearButton = new JButton(FollowApp.getResourceBundle().getString(
 				"dialog.Find.clearButton.label"));
-		_clearButton.setMnemonic(find.getApp().getResourceBundle().getString(
+		_clearButton.setMnemonic(FollowApp.getResourceBundle().getString(
 				"dialog.Find.clearButton.mnemonic").charAt(0));
 		_clearButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -127,9 +128,9 @@ public class FindDialog extends JDialog {
 		});
 
 		// add the close button
-		_closeButton = new JButton(find.getApp().getResourceBundle().getString(
+		_closeButton = new JButton(FollowApp.getResourceBundle().getString(
 				"dialog.Find.closeButton.label"));
-		_closeButton.setMnemonic(find.getApp().getResourceBundle().getString(
+		_closeButton.setMnemonic(FollowApp.getResourceBundle().getString(
 				"dialog.Find.closeButton.mnemonic").charAt(0));
 		_closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -159,7 +160,7 @@ public class FindDialog extends JDialog {
 		contentPane.add(buttonPanel, BorderLayout.CENTER);
 		contentPane.add(statusPanel, BorderLayout.SOUTH);
 	}
-	
+
 	public void initFocus() {
 		_find.grabFocus();
 		_find.selectAll();
@@ -199,8 +200,8 @@ public class FindDialog extends JDialog {
 				JList resultList = showResults(results);
 				resultList.addListSelectionListener(new ListSelectionListener() {
 					/**
-					 * Catches selection events and sets the caret within
-					 * the view so that the screen scrolls
+					 * Catches selection events and sets the caret within the
+					 * view so that the screen scrolls
 					 * 
 					 * @author chall
 					 */
@@ -226,8 +227,7 @@ public class FindDialog extends JDialog {
 	}
 
 	/**
-	 * Show results some results by creating a list and updating the status
-	 * bar
+	 * Show results some results by creating a list and updating the status bar
 	 * 
 	 * @author chall
 	 * @param results
@@ -294,14 +294,14 @@ public class FindDialog extends JDialog {
 		// resize the dialog
 		pack();
 	}
-	
+
 	private List<LineResult> doFind() {
 		// get the current selected tab
 		FileFollowingPane pane = _findAction.getApp().getSelectedFileFollowingPane();
 		// search the tab with the given text
 		SearchableTextPane textArea = pane.getTextPane();
 		int flags = 0;
-		
+
 		if (_caseSensitive.isSelected()) {
 			flags |= SearchEngine.CASE_SENSITIVE;
 		}

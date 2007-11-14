@@ -5,7 +5,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.JTextArea;
 import javax.swing.plaf.ComponentUI;
@@ -217,7 +218,7 @@ public class SearchableTextPane extends JTextArea {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(SearchableTextPane.class.getName());
+			log = LoggerFactory.getLogger(SearchableTextPane.class.getName());
 		}
 		return log;
 	}

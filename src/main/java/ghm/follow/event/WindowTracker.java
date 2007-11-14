@@ -28,7 +28,8 @@ import java.io.IOException;
 
 import javax.swing.JTabbedPane;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Will write window position/size to the supplied FollowAppAttributes object.
@@ -93,7 +94,7 @@ public class WindowTracker extends WindowAdapter {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(WindowTracker.this.getClass());
+			log = LoggerFactory.getLogger(WindowTracker.this.getClass());
 		}
 		return log;
 	}

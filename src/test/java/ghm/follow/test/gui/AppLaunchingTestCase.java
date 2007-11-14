@@ -60,7 +60,7 @@ public abstract class AppLaunchingTestCase extends BaseTestCase {
 
 	protected String[] appendPropFileArg(String[] argv) {
 		_propertyFileName = System.getProperty("java.io.tmpdir")
-				+ FollowAppAttributes.PROPERTY_FILE_NAME;
+				+ System.getProperty("file.separator") + FollowAppAttributes.PROPERTY_FILE_NAME;
 		int length = ((argv != null) ? argv.length : 0) + 2;
 		String[] args = new String[length];
 		for (int i = 0; i < args.length - 2; i++) {

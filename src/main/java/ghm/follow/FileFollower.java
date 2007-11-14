@@ -27,7 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Instances of this class 'follow' a particular text file, assmebling that
@@ -299,7 +300,7 @@ public class FileFollower {
 
 		private Logger getLog() {
 			if (log == null) {
-				log = Logger.getLogger(Runner.class.getName());
+				log = LoggerFactory.getLogger(Runner.class.getName());
 			}
 			return log;
 		}
@@ -337,9 +338,8 @@ public class FileFollower {
 				// reset the restart flag
 				needsRestart_ = false;
 
-				if (getLog().isDebugEnabled())
-					getLog().debug("Starting point: " + startingPoint_ + "; Last activity: "
-									+ lastActivityTime);
+				getLog().debug("Starting point: {}; Last activity: {}", startingPoint_,
+						lastActivityTime);
 
 				bis.skip(startingPoint_);
 
@@ -349,21 +349,21 @@ public class FileFollower {
 
 						boolean dataWasFound = (numBytesRead > 0);
 
-						if (getLog().isDebugEnabled())
-							getLog().debug("Bytes read: " + numBytesRead + "; dataWasFound: "
-											+ dataWasFound);
+						getLog().debug("Bytes read: {}; dataWasFound: {}", numBytesRead,
+								dataWasFound);
 
 						// if data was found, print it and log activity time
 						if (dataWasFound) {
 							String output = new String(byteArray, 0, numBytesRead);
 
+							// print the output to the listeners
 							print(output);
 
-							int length = (output.length() - 15 < 0) ? output.length() : output
+							if (getLog().isDebugEnabled()) {
+								int length = (output.length() - 15 < 0) ? output.length() : output
 									.length() - 15;
-
-							if (getLog().isDebugEnabled())
-								getLog().debug("Printed data: " + output.substring(length));
+								getLog().debug("Printed data: {}", output.substring(length));
+							}
 
 							lastActivityTime = System.currentTimeMillis();
 						}
@@ -377,9 +377,8 @@ public class FileFollower {
 							boolean fileHasChanged = file_.lastModified() > lastActivityTime;
 
 							if (fileExists && fileHasChanged) {
-								if (getLog().isDebugEnabled())
-									getLog().debug("Needs restart [fileExists=" + fileExists
-													+ "; fileHasChanged=" + fileHasChanged + "]");
+								getLog().debug("Needs restart [fileExists={}; fileHasChanged={}]",
+										fileExists, fileHasChanged);
 								needsRestart_ = true;
 							}
 						}
@@ -387,21 +386,17 @@ public class FileFollower {
 						boolean allDataRead = (numBytesRead < byteArray.length);
 
 						if (allDataRead && !needsRestart_) {
-							if (getLog().isDebugEnabled())
-								getLog().debug("Sleeping for " + latency_ + "ms [allDataRead:"
-												+ allDataRead + ";needsRestart:" + needsRestart_
-												+ "]");
+							getLog().debug("Sleeping for {}ms [allDataRead:{}; needsRestart:{}]",
+									new Object[]{latency_, allDataRead, needsRestart_});
 							sleep();
 						}
 					} else {
-						if (getLog().isDebugEnabled())
-							getLog().debug("Runner paused.");
+						getLog().debug("Runner paused.");
 						sleep();
 					}
 				}
-				if (getLog().isDebugEnabled())
-					getLog().debug("exiting Runner.runAction [continueRunning_=" + continueRunning_
-									+ "; needsRestart_=" + needsRestart_ + "]");
+				getLog().debug("exiting Runner.runAction [continueRunning_={}; needsRestart_={}]",
+						continueRunning_, needsRestart_);
 				bis.close();
 				fis.close();
 			} catch (IOException e) {
@@ -414,8 +409,7 @@ public class FileFollower {
 				Thread.sleep(latency_);
 			} catch (InterruptedException e) {
 				// Interrupt may be thrown manually by stop()
-				if (getLog().isDebugEnabled())
-					getLog().debug("DIED IN MY SLEEP");
+				getLog().debug("DIED IN MY SLEEP");
 			}
 		}
 	}

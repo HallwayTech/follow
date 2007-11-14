@@ -31,9 +31,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
 
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
@@ -547,7 +549,7 @@ public class FollowAppAttributes {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(FollowAppAttributes.class.getName());
+			log = LoggerFactory.getLogger(FollowAppAttributes.class.getName());
 		}
 		return log;
 	}

@@ -19,10 +19,11 @@
 
 package ghm.follow.io;
 
-import org.apache.log4j.Logger;
-
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of {@link OutputDestination} which appends Strings to a
@@ -118,7 +119,7 @@ public class JTextComponentDestination extends FilterableOutputDestination {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(JTextComponentDestination.class.getName());
+			log = LoggerFactory.getLogger(JTextComponentDestination.class.getName());
 		}
 		return log;
 	}

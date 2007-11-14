@@ -21,7 +21,9 @@ package ghm.follow.gui;
 import ghm.follow.FollowApp;
 
 import java.awt.event.ActionEvent;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Perform an action for debugging.
@@ -35,7 +37,7 @@ public class Debug extends FollowAppAction {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(Debug.class.getName());
+			log = LoggerFactory.getLogger(Debug.class.getName());
 		}
 		return log;
 	}

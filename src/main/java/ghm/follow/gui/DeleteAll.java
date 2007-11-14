@@ -24,7 +24,8 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.JOptionPane;
 
@@ -88,7 +89,7 @@ public class DeleteAll extends FollowAppAction {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(DeleteAll.class.getName());
+			log = LoggerFactory.getLogger(DeleteAll.class.getName());
 		}
 		return log;
 	}

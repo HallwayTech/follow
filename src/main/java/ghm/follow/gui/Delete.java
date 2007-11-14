@@ -23,7 +23,8 @@ import ghm.follow.FollowApp;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.JOptionPane;
 
@@ -84,7 +85,7 @@ public class Delete extends FollowAppAction {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(Delete.class.getName());
+			log = LoggerFactory.getLogger(Delete.class.getName());
 		}
 		return log;
 	}

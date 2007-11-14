@@ -1,7 +1,8 @@
 package ghm.follow.gui;
 
 import java.awt.Rectangle;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.JComponent;
 import javax.swing.event.CaretEvent;
@@ -72,7 +73,7 @@ public class LineTextUI extends BasicTextAreaUI {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(LineTextUI.class.getName());
+			log = LoggerFactory.getLogger(LineTextUI.class.getName());
 		}
 		return log;
 	}

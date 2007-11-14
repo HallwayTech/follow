@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action which closes the currently followed file.
@@ -138,7 +139,7 @@ public class ExternalEditor extends Object {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(ExternalEditor.class.getName());
+			log = LoggerFactory.getLogger(ExternalEditor.class.getName());
 		}
 		return log;
 	}

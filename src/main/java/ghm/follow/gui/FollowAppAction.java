@@ -23,7 +23,8 @@ import ghm.follow.InvalidVkException;
 
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -115,7 +116,7 @@ public abstract class FollowAppAction extends AbstractAction {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(FollowAppAction.class.getName());
+			log = LoggerFactory.getLogger(FollowAppAction.class.getName());
 		}
 		return log;
 	}

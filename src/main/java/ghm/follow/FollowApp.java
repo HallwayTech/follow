@@ -76,13 +76,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import org.apache.log4j.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class' main() method is the entry point into the Follow application.
@@ -537,7 +539,7 @@ public class FollowApp {
 
 	private static Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(FollowApp.class.getName());
+			log = LoggerFactory.getLogger(FollowApp.class.getName());
 		}
 		return log;
 	}

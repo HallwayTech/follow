@@ -18,7 +18,7 @@
 
 package ghm.follow.config;
 
-import ghm.follow.gui.FollowApp;
+import ghm.follow.FollowApp;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;

@@ -18,6 +18,7 @@
 
 package ghm.follow.gui;
 
+import ghm.follow.FollowApp;
 import ghm.follow.InvalidVkException;
 
 import java.awt.event.KeyEvent;

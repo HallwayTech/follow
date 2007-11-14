@@ -16,11 +16,33 @@
  * Suite 330, Boston, MA 02111-1307 USA
  */
 
-package ghm.follow.gui;
+package ghm.follow;
 
 import ghm.follow.config.Configure;
 import ghm.follow.config.FollowAppAttributes;
 import ghm.follow.event.WindowTracker;
+import ghm.follow.gui.About;
+import ghm.follow.gui.Clear;
+import ghm.follow.gui.ClearAll;
+import ghm.follow.gui.Close;
+import ghm.follow.gui.Debug;
+import ghm.follow.gui.Delete;
+import ghm.follow.gui.DeleteAll;
+import ghm.follow.gui.DndFileOpener;
+import ghm.follow.gui.Edit;
+import ghm.follow.gui.Exit;
+import ghm.follow.gui.FileFollowingPane;
+import ghm.follow.gui.FollowAppAction;
+import ghm.follow.gui.Menu;
+import ghm.follow.gui.MenuBuilder;
+import ghm.follow.gui.Open;
+import ghm.follow.gui.Pause;
+import ghm.follow.gui.PopupMenu;
+import ghm.follow.gui.Reload;
+import ghm.follow.gui.Reset;
+import ghm.follow.gui.StartupStatus;
+import ghm.follow.gui.TabbedPane;
+import ghm.follow.gui.ToolBar;
 import ghm.follow.nav.Bottom;
 import ghm.follow.nav.NextTab;
 import ghm.follow.nav.PreviousTab;
@@ -378,7 +400,7 @@ public class FollowApp {
 		}
 	}
 
-	void open(File file, boolean addFileToAttributes) throws FileNotFoundException {
+	public void open(File file, boolean addFileToAttributes) throws FileNotFoundException {
 		open(file, addFileToAttributes, getAttributes().autoScroll());
 	}
 
@@ -506,7 +528,7 @@ public class FollowApp {
 		}
 	}
 
-	static void centerWindowInScreen(Window window) {
+	public static void centerWindowInScreen(Window window) {
 		Dimension screenSize = window.getToolkit().getScreenSize();
 		Dimension windowSize = window.getPreferredSize();
 		window.setLocation((int) (screenSize.getWidth() / 2 - windowSize.getWidth() / 2),

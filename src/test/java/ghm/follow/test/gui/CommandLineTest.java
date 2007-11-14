@@ -1,7 +1,7 @@
 package ghm.follow.test.gui;
 
 import ghm.follow.gui.Exit;
-import ghm.follow.gui.FollowApp;
+import ghm.follow.FollowApp;
 
 import java.io.File;
 import java.util.List;

@@ -21,7 +21,7 @@ package ghm.follow.config;
 import ghm.follow.font.FontSelectionPanel;
 import ghm.follow.font.InvalidFontException;
 import ghm.follow.gui.FileFollowingPane;
-import ghm.follow.gui.FollowApp;
+import ghm.follow.FollowApp;
 import ghm.follow.gui.FollowAppAction;
 import ghm.follow.gui.WhatIsThis;
 

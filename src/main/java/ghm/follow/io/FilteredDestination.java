@@ -1,4 +1,4 @@
-package ghm.follow;
+package ghm.follow.io;
 
 import ghm.follow.search.SearchEngine;
 import javax.swing.text.JTextComponent;

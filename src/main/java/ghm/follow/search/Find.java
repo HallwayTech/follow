@@ -1,6 +1,6 @@
 package ghm.follow.search;
 
-import ghm.follow.gui.FollowApp;
+import ghm.follow.FollowApp;
 import ghm.follow.gui.FollowAppAction;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;

@@ -1,8 +1,8 @@
 package ghm.follow.test;
 
 import ghm.follow.FileFollower;
-import ghm.follow.JTextComponentDestination;
-import ghm.follow.OutputDestination;
+import ghm.follow.io.JTextComponentDestination;
+import ghm.follow.io.OutputDestination;
 
 import javax.swing.JTextArea;
 

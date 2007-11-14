@@ -1,7 +1,7 @@
 package ghm.follow.test;
 
 import ghm.follow.FileFollower;
-import ghm.follow.OutputDestination;
+import ghm.follow.io.OutputDestination;
 
 import java.io.BufferedWriter;
 import java.io.File;

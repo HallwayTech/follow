@@ -19,7 +19,7 @@
 package ghm.follow.nav;
 
 import ghm.follow.gui.FileFollowingPane;
-import ghm.follow.gui.FollowApp;
+import ghm.follow.FollowApp;
 import ghm.follow.gui.FollowAppAction;
 
 import java.awt.Point;

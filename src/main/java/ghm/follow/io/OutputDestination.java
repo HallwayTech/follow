@@ -17,7 +17,7 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package ghm.follow;
+package ghm.follow.io;
 
 /**
  * Interface used by a {@link FileFollower} to print the contents of a followed

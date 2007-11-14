@@ -33,9 +33,9 @@ import javax.swing.JWindow;
 Window which displays a progress bar during startup.
 @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
 */
-class StartupStatus extends JWindow {
+public class StartupStatus extends JWindow {
   
-  StartupStatus (ResourceBundle resourceBundle) {
+  public StartupStatus (ResourceBundle resourceBundle) {
     LOAD_SYSTEM_FONTS = new Task(
       2, resourceBundle.getString("startupStatus.loadSystemFonts")
     );
@@ -66,7 +66,7 @@ class StartupStatus extends JWindow {
   }
   private int currentTask_;
   
-  void markDone (final Task task) {
+  public void markDone (final Task task) {
     if (allTasks_.indexOf(task) != currentTask_) { throw new RuntimeException(
       "Programmatic error: tasks should be marked done sequentially"
     );}
@@ -84,8 +84,8 @@ class StartupStatus extends JWindow {
   private final List<Task> allTasks_ = new ArrayList<Task>();
   
   // Complete set of Tasks which need to be completed to start the Follow app
-  final Task LOAD_SYSTEM_FONTS;
-  final Task CREATE_WIDGETS;
+  public final Task LOAD_SYSTEM_FONTS;
+  public final Task CREATE_WIDGETS;
 
   /** Instances of this class represent significant tasks which must be 
     accomplished in order to start the Follow application. */

@@ -1,6 +1,6 @@
 package ghm.follow.systemInterface;
 
-import ghm.follow.gui.FollowApp;
+import ghm.follow.FollowApp;
 
 import java.awt.Cursor;
 import java.io.File;

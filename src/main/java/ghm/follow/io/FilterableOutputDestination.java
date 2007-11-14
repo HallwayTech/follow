@@ -1,4 +1,4 @@
-package ghm.follow;
+package ghm.follow.io;
 
 import java.util.ArrayList;
 

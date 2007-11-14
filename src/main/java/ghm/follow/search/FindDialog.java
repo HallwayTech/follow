@@ -1,7 +1,7 @@
 package ghm.follow.search;
 
 import ghm.follow.gui.FileFollowingPane;
-import ghm.follow.gui.FollowApp;
+import ghm.follow.FollowApp;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;

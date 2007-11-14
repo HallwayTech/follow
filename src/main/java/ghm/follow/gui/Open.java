@@ -18,6 +18,8 @@
 
 package ghm.follow.gui;
 
+import ghm.follow.FollowApp;
+
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -17,27 +17,25 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package ghm.follow;
+package ghm.follow.io;
 
 import org.apache.log4j.Logger;
 
+import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.JTextComponent;
 
 /**
  * Implementation of {@link OutputDestination} which appends Strings to a
- * {@link JTextComponent}.
+ * {@link JTextPane}.
  * 
  * @see OutputDestination
- * @see JTextCompnent
+ * @see JTextPane
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class JTextComponentDestination extends FilterableOutputDestination {
-	protected JTextComponent _comp;
-	protected boolean autoPositionCaret_;
+public class JTextPaneDestination implements OutputDestination {
 
 	/**
-	 * Construct a new JTextCompnentDestination.
+	 * Construct a new JTextPaneDestination.
 	 * 
 	 * @param jTextPane
 	 *            text will be appended to this text area
@@ -45,17 +43,17 @@ public class JTextComponentDestination extends FilterableOutputDestination {
 	 *            if true, caret will be automatically moved to the bottom of
 	 *            the text area when text is appended
 	 */
-	public JTextComponentDestination(JTextComponent jTextComponent, boolean autoPositionCaret) {
-		_comp = jTextComponent;
+	public JTextPaneDestination(JTextPane jTextPane, boolean autoPositionCaret) {
+		jTextPane_ = jTextPane;
 		autoPositionCaret_ = autoPositionCaret;
 	}
 
-	public JTextComponent getJTextComponent() {
-		return _comp;
+	public JTextPane getJTextPane() {
+		return jTextPane_;
 	}
 
-	public void setJTextComponent(JTextComponent comp) {
-		_comp = comp;
+	public void setJTextArea(JTextPane jTextPane) {
+		jTextPane_ = jTextPane;
 	}
 
 	/**
@@ -94,23 +92,23 @@ public class JTextComponentDestination extends FilterableOutputDestination {
 		autoPositionCaret_ = autoPositionCaret;
 	}
 
-	public void handlePrint(String s) {
+	public void print(String s) {
 		try {
-			_comp.getDocument().insertString(_comp.getDocument().getLength(), s, null);
+			jTextPane_.getDocument().insertString(jTextPane_.getDocument().getLength(), s, null);
 			if (autoPositionCaret_) {
-				_comp.setCaretPosition(_comp.getDocument().getLength());
+				jTextPane_.setCaretPosition(jTextPane_.getDocument().getLength());
 			}
 		}
 		catch (BadLocationException e) {
 			// just ignore, nothing we can do
-			getLog().error("BadLocationException in JTextComponentDestination", e);
+			getLog().error("BadLocationException in JTextPaneDestination", e);
 		}
 	}
 
 	public void clear() {
-		_comp.setText("");
+		jTextPane_.setText("");
 		if (autoPositionCaret_) {
-			_comp.setCaretPosition(0);
+			jTextPane_.setCaretPosition(0);
 		}
 	}
 
@@ -118,8 +116,13 @@ public class JTextComponentDestination extends FilterableOutputDestination {
 
 	private Logger getLog() {
 		if (log == null) {
-			log = Logger.getLogger(JTextComponentDestination.class.getName());
+			log = Logger.getLogger(JTextPaneDestination.class.getName());
 		}
 		return log;
 	}
+
+	protected JTextPane jTextPane_;
+
+	protected boolean autoPositionCaret_;
+
 }

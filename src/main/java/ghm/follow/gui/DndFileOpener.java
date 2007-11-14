@@ -18,6 +18,8 @@
 
 package ghm.follow.gui;
 
+import ghm.follow.FollowApp;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;

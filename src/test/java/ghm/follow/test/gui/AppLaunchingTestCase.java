@@ -4,7 +4,7 @@ import java.io.File;
 
 import ghm.follow.config.FollowAppAttributes;
 import ghm.follow.gui.Exit;
-import ghm.follow.gui.FollowApp;
+import ghm.follow.FollowApp;
 import ghm.follow.test.BaseTestCase;
 
 import javax.swing.Action;

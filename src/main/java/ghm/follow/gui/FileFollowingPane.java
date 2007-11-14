@@ -20,8 +20,8 @@
 package ghm.follow.gui;
 
 import ghm.follow.FileFollower;
-import ghm.follow.JTextComponentDestination;
-import ghm.follow.OutputDestination;
+import ghm.follow.io.JTextComponentDestination;
+import ghm.follow.io.OutputDestination;
 import ghm.follow.search.SearchableTextPane;
 
 import java.awt.Font;

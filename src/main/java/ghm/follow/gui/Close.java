@@ -18,6 +18,7 @@
 
 package ghm.follow.gui;
 
+import ghm.follow.FollowApp;
 import ghm.follow.nav.Bottom;
 import ghm.follow.nav.Top;
 

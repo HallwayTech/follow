@@ -28,7 +28,7 @@ import javax.swing.JMenuItem;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-class PopupMenu extends JPopupMenu {
+public class PopupMenu extends JPopupMenu {
 	void addFollowAppAction(FollowAppAction a) {
 		JMenuItem menuItem = this.add(a);
 		menuItem.setIcon(null);

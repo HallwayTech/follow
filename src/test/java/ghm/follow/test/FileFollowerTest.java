@@ -8,8 +8,8 @@ import javax.swing.JTextPane;
 import org.junit.Before;
 import org.junit.Test;
 
-import ghm.follow.JTextComponentDestination;
-import ghm.follow.OutputDestination;
+import ghm.follow.io.JTextComponentDestination;
+import ghm.follow.io.OutputDestination;
 
 import static org.junit.Assert.*;
 

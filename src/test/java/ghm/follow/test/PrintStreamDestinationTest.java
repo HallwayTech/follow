@@ -1,8 +1,8 @@
 package ghm.follow.test;
 
 import ghm.follow.FileFollower;
-import ghm.follow.OutputDestination;
-import ghm.follow.PrintStreamDestination;
+import ghm.follow.io.OutputDestination;
+import ghm.follow.io.PrintStreamDestination;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

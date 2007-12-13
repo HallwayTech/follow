@@ -82,6 +82,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+//import javax.swing.UIManager;
+//import javax.swing.UnsupportedLookAndFeelException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,8 +111,7 @@ public class FollowApp {
 
 	private FollowAppAttributes attributes_;
 	private static FollowApp instance_;
-	private static ResourceBundle resBundle_ = ResourceBundle
-			.getBundle("ghm.follow.gui.FollowAppResourceBundle");
+	private static ResourceBundle resBundle_ = ResourceBundle.getBundle("ghm.follow.FollowAppResourceBundle");
 	private JFrame frame_;
 
 	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -150,6 +151,25 @@ public class FollowApp {
 
 		// create frame first
 		frame_ = new JFrame(getResourceBundle().getString("frame.title"));
+
+		// set the look and feel to be more native
+		/*
+		try {
+	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (ClassNotFoundException cnfe) {
+		  getLog().info("Unable to load native look and feel");
+		}
+		catch (InstantiationException ie) {
+		  getLog().info("Unable to load native look and feel");
+		}
+		catch (IllegalAccessException iae) {
+		  getLog().info("Unable to load native look and feel");
+		}
+		catch (UnsupportedLookAndFeelException ulfe) {
+		  getLog().info("Unable to load native look and feel");
+		}
+		*/
 
 		// initialize attributes
 		attributes_ = new FollowAppAttributes(this, propertyFile);

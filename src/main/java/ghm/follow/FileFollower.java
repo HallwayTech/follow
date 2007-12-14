@@ -345,6 +345,8 @@ public class FileFollower {
 
 				while (continueRunning_ && !needsRestart_) {
 					if (!paused_) {
+						lastActivityTime = System.currentTimeMillis();
+
 						numBytesRead = bis.read(byteArray, 0, byteArray.length);
 
 						boolean dataWasFound = (numBytesRead > 0);
@@ -364,16 +366,15 @@ public class FileFollower {
 									.length() - 15;
 								getLog().debug("Printed data: {}", output.substring(length));
 							}
-
-							lastActivityTime = System.currentTimeMillis();
 						}
 						// no data found so check the file and restart if needed
 						else {
 							// check if the file handle has become stale (file
 							// was modified, but no data was read).
-							boolean fileExists = file_.exists(); // &&
-																	// (file_.length()
-																	// > 0);
+							boolean fileExists = file_.exists();
+							// removed check for 0 length because a file could change by
+							// being cleared out
+							// && (file_.length() > 0);
 							boolean fileHasChanged = file_.lastModified() > lastActivityTime;
 
 							if (fileExists && fileHasChanged) {

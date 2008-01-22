@@ -44,7 +44,8 @@ public class DeleteAll extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.DeleteAll.name"),
 				FollowApp.getResourceString("action.DeleteAll.mnemonic"),
 				FollowApp.getResourceString("action.DeleteAll.accelerator"),
-				FollowApp.getIcon(DeleteAll.class, "action.DeleteAll.icon"));
+				FollowApp.getIcon(DeleteAll.class, "action.DeleteAll.icon"),
+				ActionContext.MULTI_FILE);
 	}
 
 	public void actionPerformed(ActionEvent e)

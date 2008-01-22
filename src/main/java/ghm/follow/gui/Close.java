@@ -19,8 +19,6 @@
 package ghm.follow.gui;
 
 import ghm.follow.FollowApp;
-import ghm.follow.nav.Bottom;
-import ghm.follow.nav.Top;
 
 import java.awt.event.ActionEvent;
 
@@ -37,31 +35,12 @@ public class Close extends FollowAppAction
 	{
 		super(app, FollowApp.getResourceString("action.Close.name"),
 				FollowApp.getResourceString("action.Close.mnemonic"),
-				FollowApp.getResourceString("action.Close.accelerator"));
+				FollowApp.getResourceString("action.Close.accelerator"),
+				ActionContext.SINGLE_FILE);
 	}
 
 	public void actionPerformed(ActionEvent e)
 	{
-		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
-		int tab = getApp().getTabbedPane().getSelectedIndex();
-		if (tab >= 0)
-		{
-			getApp().getTabbedPane().removeTabAt(tab);
-			getApp().disableDragAndDrop(fileFollowingPane.getTextPane());
-			getApp().getAttributes().removeFollowedFile(fileFollowingPane.getFollowedFile());
-			fileFollowingPane.stopFollowing();
-			getApp().getFileToFollowingPaneMap().remove(fileFollowingPane.getFollowedFile());
-			if (getApp().getFileToFollowingPaneMap().size() == 0)
-			{
-				getApp().getAction(Close.NAME).setEnabled(false);
-				getApp().getAction(Top.NAME).setEnabled(false);
-				getApp().getAction(Bottom.NAME).setEnabled(false);
-				getApp().getAction(Clear.NAME).setEnabled(false);
-				getApp().getAction(ClearAll.NAME).setEnabled(false);
-				getApp().getAction(Delete.NAME).setEnabled(false);
-				getApp().getAction(DeleteAll.NAME).setEnabled(false);
-				getApp().getAction(Pause.NAME).setEnabled(false);
-			}
-		}
+		getApp().closeFile();
 	}
 }

@@ -38,7 +38,7 @@ public class Debug extends FollowAppAction
 
 	public Debug(FollowApp app)
 	{
-		super(app, "Debug", "U", "U");
+		super(app, "Debug", "U", "U", ActionContext.APP);
 	}
 
 	public void actionPerformed(ActionEvent e)

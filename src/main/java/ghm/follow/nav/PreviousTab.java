@@ -25,14 +25,17 @@ import java.awt.event.ActionEvent;
  * 
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class PreviousTab extends FollowAppAction {
+public class PreviousTab extends FollowAppAction
+{
 	public static final String NAME = "previousTab";
 
-	public PreviousTab(FollowApp app) {
+	public PreviousTab(FollowApp app)
+	{
 		super(app, FollowApp.getResourceString("action.PreviousFile.name"),
 				FollowApp.getResourceString("action.PreviousFile.mnemonic"),
 				FollowApp.getResourceString("action.PreviousFile.accelerator"),
-				FollowApp.getIcon(PreviousTab.class, "action.PreviousFile.icon"));
+				FollowApp.getIcon(PreviousTab.class, "action.PreviousFile.icon"),
+				ActionContext.MULTI_FILE);
 	}
 
 	/**
@@ -40,9 +43,11 @@ public class PreviousTab extends FollowAppAction {
 	 * 
 	 * @param e
 	 */
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		int currentIndex = getApp().getTabbedPane().getSelectedIndex();
-		if (currentIndex > 0) {
+		if (currentIndex > 0)
+		{
 			getApp().getTabbedPane().setSelectedIndex(currentIndex - 1);
 		}
 	}

@@ -35,7 +35,8 @@ public class Reload extends FollowAppAction
 	{
 		super(app, FollowApp.getResourceString("action.Reload.name"),
 				FollowApp.getResourceString("action.Reload.mnemonic"),
-				FollowApp.getResourceString("action.Reload.accelerator"));
+				FollowApp.getResourceString("action.Reload.accelerator"),
+				ActionContext.SINGLE_FILE);
 	}
 
 	public void actionPerformed(ActionEvent e)

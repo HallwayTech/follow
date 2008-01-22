@@ -37,7 +37,8 @@ public class ClearHighlights extends FollowAppAction
 	{
 		super(app, FollowApp.getResourceString("action.ClearHighlights.name"),
 				FollowApp.getResourceString("action.ClearHighlights.mnemonic"),
-				FollowApp.getResourceString("action.ClearHighlights.accelerator"));
+				FollowApp.getResourceString("action.ClearHighlights.accelerator"),
+				ActionContext.SINGLE_FILE);
 	}
 
 	public void actionPerformed(ActionEvent e)

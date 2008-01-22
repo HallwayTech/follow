@@ -19,8 +19,8 @@
 package ghm.follow.nav;
 
 import ghm.follow.gui.FileFollowingPane;
-import ghm.follow.FollowApp;
 import ghm.follow.gui.FollowAppAction;
+import ghm.follow.FollowApp;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -40,7 +40,8 @@ public class Top extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.Top.name"),
 				FollowApp.getResourceString("action.Top.mnemonic"),
 				FollowApp.getResourceString("action.Top.accelerator"),
-				FollowApp.getIcon(Top.class, "action.Top.icon"));
+				FollowApp.getIcon(Top.class, "action.Top.icon"),
+				ActionContext.SINGLE_FILE);
 	}
 
 	public void actionPerformed(ActionEvent e)

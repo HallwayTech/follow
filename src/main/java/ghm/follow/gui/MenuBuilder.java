@@ -16,6 +16,15 @@ import javax.swing.JMenuBar;
 
 public class MenuBuilder
 {
+	public static Menu fileMenu;
+	public static Menu editMenu;
+	public static Menu toolsMenu;
+	public static Menu windowMenu;
+	public static Menu helpMenu;
+
+	// file menu items
+	public static Menu recentFilesMenu;
+
 	private MenuBuilder()
 	{
 	}
@@ -32,19 +41,19 @@ public class MenuBuilder
 		JMenuBar jMenuBar = new JMenuBar();
 
 		// file menu
-		Menu fileMenu = MenuBuilder.buildFileMenu(resources, actions);
+		fileMenu = MenuBuilder.buildFileMenu(resources, actions);
 		jMenuBar.add(fileMenu);
 		// edit menu
-		Menu editMenu = MenuBuilder.buildEditMenu(resources, actions);
+		editMenu = MenuBuilder.buildEditMenu(resources, actions);
 		jMenuBar.add(editMenu);
 		// tool menu
-		Menu toolsMenu = MenuBuilder.buildToolsMenu(resources, actions);
+		toolsMenu = MenuBuilder.buildToolsMenu(resources, actions);
 		jMenuBar.add(toolsMenu);
 		// window menu
-		Menu windowMenu = MenuBuilder.buildWindowMenu(resources, actions);
+		windowMenu = MenuBuilder.buildWindowMenu(resources, actions);
 		jMenuBar.add(windowMenu);
 		// help menu
-		Menu helpMenu = MenuBuilder.buildHelpMenu(resources, actions);
+		helpMenu = MenuBuilder.buildHelpMenu(resources, actions);
 		jMenuBar.add(helpMenu);
 
 		return jMenuBar;
@@ -62,9 +71,9 @@ public class MenuBuilder
 		fileMenu.addFollowAppAction(actions.get(Reset.NAME));
 		fileMenu.addFollowAppAction(actions.get(Pause.NAME));
 		fileMenu.addSeparator();
-		Menu recentFilesMenu_ = new Menu(resources.getString("menu.RecentFiles.name"), resources
+		recentFilesMenu = new Menu(resources.getString("menu.RecentFiles.name"), resources
 				.getString("menu.RecentFiles.mnemonic"));
-		fileMenu.add(recentFilesMenu_);
+		fileMenu.add(recentFilesMenu);
 		fileMenu.addSeparator();
 		fileMenu.addFollowAppAction(actions.get(Exit.NAME));
 		return fileMenu;

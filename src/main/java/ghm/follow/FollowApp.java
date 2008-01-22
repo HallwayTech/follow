@@ -43,6 +43,7 @@ import ghm.follow.gui.Reset;
 import ghm.follow.gui.StartupStatus;
 import ghm.follow.gui.TabbedPane;
 import ghm.follow.gui.ToolBar;
+import ghm.follow.gui.FollowAppAction.ActionContext;
 import ghm.follow.nav.Bottom;
 import ghm.follow.nav.NextTab;
 import ghm.follow.nav.PreviousTab;
@@ -188,6 +189,9 @@ public class FollowApp
 		// initialize menubar
 		JMenuBar jMenuBar = MenuBuilder.buildMenuBar(resBundle_, getActions());
 
+		// set the recent files menu to local variable so it can be updated easily
+		recentFilesMenu_ = MenuBuilder.recentFilesMenu;
+
 		// initialize popupMenu
 		popupMenu_ = MenuBuilder.buildPopupMenu(getActions());
 
@@ -229,7 +233,7 @@ public class FollowApp
 		{
 			try
 			{
-				open(file, false);
+				openFile(file, false);
 			}
 			catch (FileNotFoundException e)
 			{
@@ -258,9 +262,10 @@ public class FollowApp
 			String title = getResourceString("message.filesDeletedSinceLastExecution.title");
 			JOptionPane.showMessageDialog(frame_, message, title, JOptionPane.WARNING_MESSAGE);
 		}
-		if (tabbedPane_.getTabCount() > 0)
+		int tabCount = tabbedPane_.getTabCount();
+		if (tabCount > 0)
 		{
-			if (tabbedPane_.getTabCount() > getAttributes().getSelectedTabIndex())
+			if (tabCount > getAttributes().getSelectedTabIndex())
 			{
 				tabbedPane_.setSelectedIndex(getAttributes().getSelectedTabIndex());
 			}
@@ -269,18 +274,62 @@ public class FollowApp
 				tabbedPane_.setSelectedIndex(0);
 			}
 		}
-		else
+
+		updateActions();
+	}
+
+	/**
+	 * Close the current tab
+	 */
+	public void closeFile() {
+		FileFollowingPane fileFollowingPane = getSelectedFileFollowingPane();
+		int tab = getTabbedPane().getSelectedIndex();
+		if (tab >= 0)
 		{
-			getAction(Close.NAME).setEnabled(false);
-			getAction(Reload.NAME).setEnabled(false);
-			getAction(Edit.NAME).setEnabled(false);
-			getAction(Top.NAME).setEnabled(false);
-			getAction(Bottom.NAME).setEnabled(false);
-			getAction(Clear.NAME).setEnabled(false);
-			getAction(ClearAll.NAME).setEnabled(false);
-			getAction(Delete.NAME).setEnabled(false);
-			getAction(DeleteAll.NAME).setEnabled(false);
-			getAction(Pause.NAME).setEnabled(false);
+			getTabbedPane().removeTabAt(tab);
+			disableDragAndDrop(fileFollowingPane.getTextPane());
+			getAttributes().removeFollowedFile(fileFollowingPane.getFollowedFile());
+			fileFollowingPane.stopFollowing();
+			getFileToFollowingPaneMap().remove(fileFollowingPane.getFollowedFile());
+			updateActions();
+		}
+	}
+
+	private void updateActions()
+	{
+//		getAction(Close.NAME).setEnabled(false);
+//		getAction(Reload.NAME).setEnabled(false);
+//		getAction(Edit.NAME).setEnabled(false);
+//		getAction(Top.NAME).setEnabled(false);
+//		getAction(Bottom.NAME).setEnabled(false);
+//		getAction(Clear.NAME).setEnabled(false);
+//		getAction(ClearAll.NAME).setEnabled(false);
+//		getAction(Delete.NAME).setEnabled(false);
+//		getAction(DeleteAll.NAME).setEnabled(false);
+//		getAction(Pause.NAME).setEnabled(false);
+
+//		if (!getAction(Close.NAME).isEnabled())
+//		{
+//			getAction(Close.NAME).setEnabled(true);
+//			getAction(Reload.NAME).setEnabled(true);
+//			getAction(Edit.NAME).setEnabled(true);
+//			getAction(Top.NAME).setEnabled(true);
+//			getAction(Bottom.NAME).setEnabled(true);
+//			getAction(Clear.NAME).setEnabled(true);
+//			getAction(ClearAll.NAME).setEnabled(true);
+//			getAction(Delete.NAME).setEnabled(true);
+//			getAction(DeleteAll.NAME).setEnabled(true);
+//			getAction(Pause.NAME).setEnabled(true);
+//		}
+		int tabCount = tabbedPane_.getTabCount();
+		for (FollowAppAction a : actions_.values())
+		{
+			if (a.getContext() == ActionContext.MULTI_FILE && tabCount <= 1)
+				a.setEnabled(false);
+			else if (a.getContext() == ActionContext.SINGLE_FILE && tabCount == 0)
+				a.setEnabled(false);
+			else
+				a.setEnabled(true);
 		}
 	}
 
@@ -429,7 +478,7 @@ public class FollowApp
 	 * Warning: This method should be called only from (1) the FollowApp initializer (before any
 	 * components are realized) or (2) from the event dispatching thread.
 	 */
-	void open(File file, boolean addFileToAttributes, boolean startFollowing)
+	void openFile(File file, boolean addFileToAttributes, boolean startFollowing)
 			throws FileNotFoundException
 	{
 		if (file == null)
@@ -481,19 +530,11 @@ public class FollowApp
 					pause.setIconByState(ffp.isFollowingPaused());
 				}
 			});
-			if (!getAction(Close.NAME).isEnabled())
-			{
-				getAction(Close.NAME).setEnabled(true);
-				getAction(Reload.NAME).setEnabled(true);
-				getAction(Edit.NAME).setEnabled(true);
-				getAction(Top.NAME).setEnabled(true);
-				getAction(Bottom.NAME).setEnabled(true);
-				getAction(Clear.NAME).setEnabled(true);
-				getAction(ClearAll.NAME).setEnabled(true);
-				getAction(Delete.NAME).setEnabled(true);
-				getAction(DeleteAll.NAME).setEnabled(true);
-				getAction(Pause.NAME).setEnabled(true);
-			}
+
+			// show the correct actions
+			updateActions();
+
+			// add the file to history
 			if (addFileToAttributes)
 			{
 				getAttributes().addFollowedFile(file);
@@ -503,9 +544,9 @@ public class FollowApp
 		}
 	}
 
-	public void open(File file, boolean addFileToAttributes) throws FileNotFoundException
+	public void openFile(File file, boolean addFileToAttributes) throws FileNotFoundException
 	{
-		open(file, addFileToAttributes, getAttributes().autoScroll());
+		openFile(file, addFileToAttributes, getAttributes().autoScroll());
 	}
 
 	/**

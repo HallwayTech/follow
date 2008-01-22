@@ -25,7 +25,8 @@ public class Reset extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.Reset.name"),
 				FollowApp.getResourceString("action.Reset.mnemonic"),
 				FollowApp.getResourceString("action.Reset.accelerator"),
-				FollowApp.getIcon(Reset.class, "action.Reset.icon"));
+				FollowApp.getIcon(Reset.class, "action.Reset.icon"),
+				ActionContext.SINGLE_FILE);
 	}
 
 	public void actionPerformed(ActionEvent e)

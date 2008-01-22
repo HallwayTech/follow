@@ -34,7 +34,8 @@ public class NextTab extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.NextFile.name"),
 				FollowApp.getResourceString("action.NextFile.mnemonic"),
 				FollowApp.getResourceString("action.NextFile.accelerator"),
-				FollowApp.getIcon(NextTab.class, "action.NextFile.icon"));
+				FollowApp.getIcon(NextTab.class, "action.NextFile.icon"),
+				ActionContext.MULTI_FILE);
 	}
 
 	/**

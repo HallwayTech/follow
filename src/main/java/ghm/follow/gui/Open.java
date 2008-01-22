@@ -44,14 +44,16 @@ public class Open extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.Open.name"),
 				FollowApp.getResourceString("action.Open.mnemonic"),
 				FollowApp.getResourceString("action.Open.accelerator"),
-				FollowApp.getIcon(Open.class, "action.Open.icon"));
+				FollowApp.getIcon(Open.class, "action.Open.icon"),
+				ActionContext.APP);
 	}
 
 	public Open(FollowApp app, File recentFile)
 	{
 		super(app, recentFile.getAbsolutePath(),
 				FollowApp.getResourceString("action.Open.mnemonic"),
-				FollowApp.getResourceString("action.Open.accelerator"));
+				FollowApp.getResourceString("action.Open.accelerator"),
+				ActionContext.APP);
 		this.recentFile = recentFile;
 	}
 
@@ -63,14 +65,14 @@ public class Open extends FollowAppAction
 			if (recentFile != null)
 			{
 				f = recentFile;
-				getApp().open(recentFile, getApp().getAttributes().autoScroll());
+				getApp().openFile(recentFile, true);
 			}
 			else
 			{
 				f = getApp().getSystemInterface().getFileFromUser();
 				if (f != null)
 				{
-					getApp().open(f, getApp().getAttributes().autoScroll());
+					getApp().openFile(f, true);
 				}
 			}
 		}

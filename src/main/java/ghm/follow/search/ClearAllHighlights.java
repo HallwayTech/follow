@@ -25,7 +25,7 @@ import ghm.follow.gui.FollowAppAction;
 import java.awt.event.ActionEvent;
 
 /**
- * Action which clears the highlighted search in the current pane
+ * Action which clears the highlighted search in all panes
  * 
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
@@ -37,7 +37,8 @@ public class ClearAllHighlights extends FollowAppAction
 	{
 		super(app, FollowApp.getResourceString("action.ClearAllHighlights.name"),
 				FollowApp.getResourceString("action.ClearAllHighlights.mnemonic"),
-				FollowApp.getResourceString("action.ClearAllHighlights.accelerator"));
+				FollowApp.getResourceString("action.ClearAllHighlights.accelerator"),
+				ActionContext.MULTI_FILE);
 	}
 
 	public void actionPerformed(ActionEvent e)

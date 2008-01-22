@@ -62,7 +62,8 @@ public class Configure extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.Configure.name"),
 				FollowApp.getResourceString("action.Configure.mnemonic"),
 				FollowApp.getResourceString("action.Configure.accelerator"),
-				FollowApp.getIcon(Configure.class, "action.Configure.icon"));
+				FollowApp.getIcon(Configure.class, "action.Configure.icon"),
+				ActionContext.APP);
 	}
 
 	public void actionPerformed(ActionEvent e)

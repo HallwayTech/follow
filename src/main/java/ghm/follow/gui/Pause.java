@@ -37,7 +37,8 @@ public class Pause extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.Pause.name"),
 				FollowApp.getResourceString("action.Pause.mnemonic"),
 				FollowApp.getResourceString("action.Pause.accelerator"),
-				FollowApp.getIcon(Pause.class, getIconName(false)));
+				FollowApp.getIcon(Pause.class, getIconName(false)),
+				ActionContext.SINGLE_FILE);
 	}
 
 	/**

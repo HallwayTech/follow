@@ -36,7 +36,8 @@ public class Exit extends FollowAppAction
 	{
 		super(app, FollowApp.getResourceString("action.Exit.name"),
 				FollowApp.getResourceString("action.Exit.mnemonic"),
-				FollowApp.getResourceString("action.Exit.accelerator"));
+				FollowApp.getResourceString("action.Exit.accelerator"),
+				ActionContext.APP);
 	}
 
 	public void actionPerformed(ActionEvent e)

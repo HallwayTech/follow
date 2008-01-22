@@ -36,7 +36,8 @@ public class About extends FollowAppAction
 	{
 		super(app, FollowApp.getResourceString("action.About.name"),
 				FollowApp.getResourceString("action.About.mnemonic"),
-				FollowApp.getResourceString("action.About.accelerator"));
+				FollowApp.getResourceString("action.About.accelerator"),
+				ActionContext.APP);
 	}
 
 	public void actionPerformed(ActionEvent e)

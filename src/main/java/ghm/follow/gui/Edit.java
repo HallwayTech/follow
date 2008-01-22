@@ -35,7 +35,8 @@ public class Edit extends FollowAppAction
 	{
 		super(app, FollowApp.getResourceString("action.Edit.name"),
 				FollowApp.getResourceString("action.Edit.mnemonic"),
-				FollowApp.getResourceString("action.Edit.accelerator"));
+				FollowApp.getResourceString("action.Edit.accelerator"),
+				ActionContext.SINGLE_FILE);
 	}
 
 	public void actionPerformed(ActionEvent e)

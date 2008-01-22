@@ -38,23 +38,28 @@ import javax.swing.KeyStroke;
  */
 public abstract class FollowAppAction extends AbstractAction
 {
+	public enum ActionContext
+	{
+		MULTI_FILE, SINGLE_FILE, APP;
+	}
 	private static Logger log = LoggerFactory.getLogger(FollowAppAction.class);
 
 	private FollowApp app_;
 	private int mnemonic_;
 	private KeyStroke accelerator_;
+	private ActionContext context_;
 
-	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator)
+	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator, ActionContext type)
 	{
 		super(name);
-		init(app, mnemonic, accelerator);
+		init(app, mnemonic, accelerator, type);
 	}
 
 	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator,
-			ImageIcon icon)
+			ImageIcon icon, ActionContext type)
 	{
 		super(name, icon);
-		init(app, mnemonic, accelerator);
+		init(app, mnemonic, accelerator, type);
 	}
 
 	public FollowApp getApp()
@@ -62,9 +67,10 @@ public abstract class FollowAppAction extends AbstractAction
 		return app_;
 	}
 
-	private void init(FollowApp app, String mnemonic, String accelerator)
+	private void init(FollowApp app, String mnemonic, String accelerator, ActionContext type)
 	{
 		app_ = app;
+		context_ = type;
 		try
 		{
 			setMnemonic(mnemonic);
@@ -109,6 +115,11 @@ public abstract class FollowAppAction extends AbstractAction
 		{
 			setMnemonic(mnemonic.charAt(0));
 		}
+	}
+
+	public ActionContext getContext()
+	{
+		return context_;
 	}
 
 	KeyStroke getAccelerator()

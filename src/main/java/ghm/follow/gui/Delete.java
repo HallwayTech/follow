@@ -43,7 +43,8 @@ public class Delete extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.Delete.name"),
 				FollowApp.getResourceString("action.Delete.mnemonic"),
 				FollowApp.getResourceString("action.Delete.accelerator"),
-				FollowApp.getIcon(Delete.class, "action.Delete.icon"));
+				FollowApp.getIcon(Delete.class, "action.Delete.icon"),
+				ActionContext.SINGLE_FILE);
 	}
 
 	public void actionPerformed(ActionEvent e)

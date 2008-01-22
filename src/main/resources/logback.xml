@@ -6,7 +6,7 @@
 	</appender>
 
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>myApp.log</file>
+		<file>follow.log</file>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<FileNamePattern>follow-%d{yyyy-MM-dd}.log</FileNamePattern>
@@ -18,7 +18,8 @@
 	</appender>
 
 	<root>
-		<level value="info" />
+		<level value="debug" />
 		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
 	</root>
 </configuration>

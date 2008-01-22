@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
@@ -58,8 +59,9 @@ public abstract class FollowAppAction extends AbstractAction
 	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator,
 			ImageIcon icon, ActionContext type)
 	{
-		super(name, icon);
+		super(name);
 		init(app, mnemonic, accelerator, type);
+		setIcon(icon);
 	}
 
 	public FollowApp getApp()
@@ -94,9 +96,14 @@ public abstract class FollowAppAction extends AbstractAction
 	 * 
 	 * @param icon
 	 */
-	protected void setIcon(ImageIcon icon)
+	protected void setIcon(Icon icon)
 	{
 		putValue(SMALL_ICON, icon);
+	}
+
+	protected Icon getIcon()
+	{
+		return (Icon) getValue(SMALL_ICON);
 	}
 
 	int getMnemonic()

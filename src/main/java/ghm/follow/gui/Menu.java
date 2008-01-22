@@ -41,7 +41,6 @@ public class Menu extends JMenu
 	{
 		this.add(a);
 		JMenuItem menuItem = this.getItem(this.getItemCount() - 1);
-		menuItem.setIcon(null);
 		menuItem.setMnemonic(a.getMnemonic());
 		menuItem.setAccelerator(a.getAccelerator());
 	}

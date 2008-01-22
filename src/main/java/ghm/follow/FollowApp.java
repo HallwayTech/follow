@@ -262,6 +262,7 @@ public class FollowApp
 			String title = getResourceString("message.filesDeletedSinceLastExecution.title");
 			JOptionPane.showMessageDialog(frame_, message, title, JOptionPane.WARNING_MESSAGE);
 		}
+
 		int tabCount = tabbedPane_.getTabCount();
 		if (tabCount > 0)
 		{
@@ -297,30 +298,6 @@ public class FollowApp
 
 	private void updateActions()
 	{
-//		getAction(Close.NAME).setEnabled(false);
-//		getAction(Reload.NAME).setEnabled(false);
-//		getAction(Edit.NAME).setEnabled(false);
-//		getAction(Top.NAME).setEnabled(false);
-//		getAction(Bottom.NAME).setEnabled(false);
-//		getAction(Clear.NAME).setEnabled(false);
-//		getAction(ClearAll.NAME).setEnabled(false);
-//		getAction(Delete.NAME).setEnabled(false);
-//		getAction(DeleteAll.NAME).setEnabled(false);
-//		getAction(Pause.NAME).setEnabled(false);
-
-//		if (!getAction(Close.NAME).isEnabled())
-//		{
-//			getAction(Close.NAME).setEnabled(true);
-//			getAction(Reload.NAME).setEnabled(true);
-//			getAction(Edit.NAME).setEnabled(true);
-//			getAction(Top.NAME).setEnabled(true);
-//			getAction(Bottom.NAME).setEnabled(true);
-//			getAction(Clear.NAME).setEnabled(true);
-//			getAction(ClearAll.NAME).setEnabled(true);
-//			getAction(Delete.NAME).setEnabled(true);
-//			getAction(DeleteAll.NAME).setEnabled(true);
-//			getAction(Pause.NAME).setEnabled(true);
-//		}
 		int tabCount = tabbedPane_.getTabCount();
 		for (FollowAppAction a : actions_.values())
 		{

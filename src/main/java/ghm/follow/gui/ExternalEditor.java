@@ -32,12 +32,14 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  * @author <a href="mailto:murali_ca_us@hotmail.com">Murali Krishnan</a>
  */
-public class ExternalEditor extends Object {
-
+public class ExternalEditor extends Object
+{
+	private Logger log = LoggerFactory.getLogger(ExternalEditor.class);
 	// ------------------------------------------------------------
 	// - Constructor
 
-	public ExternalEditor(String string) {
+	public ExternalEditor(String string)
+	{
 		_cmdString = string;
 	}
 
@@ -49,18 +51,21 @@ public class ExternalEditor extends Object {
 	// ------------------------------------------------------------
 	// - Accessors
 
-	protected String getCmdString() {
+	protected String getCmdString()
+	{
 		return (_cmdString);
 	}
 
 	// ------------------------------------------------------------
 	// - Internal Utilities.
 
-	public String[] toCmdArray(String file) {
+	public String[] toCmdArray(String file)
+	{
 		String string = (getCmdString() == null) ? "" : getCmdString().trim();
 		String[] result = new String[0]; // Pessimistic.
 
-		if (!string.equals("")) {
+		if (!string.equals(""))
+		{
 			string = string + " "; // space terminate the last part.
 			List<String> list = new ArrayList<String>();
 			boolean inQuoteSingle = false;
@@ -68,43 +73,57 @@ public class ExternalEditor extends Object {
 			boolean inWhitespace = false;
 			StringBuffer buffer = new StringBuffer();
 			char[] chArray = string.toCharArray();
-			for (int i = 0; i < chArray.length; i++) {
+			for (int i = 0; i < chArray.length; i++)
+			{
 				char ch = chArray[i];
-				if (inQuoteSingle) {
-					if (ch == '\'') {
+				if (inQuoteSingle)
+				{
+					if (ch == '\'')
+					{
 						inQuoteSingle = false;
 					}
-					else {
+					else
+					{
 						buffer.append(ch);
 					}
 				}
-				else if (inQuoteDouble) {
-					if (ch == '"') {
+				else if (inQuoteDouble)
+				{
+					if (ch == '"')
+					{
 						inQuoteDouble = false;
 					}
-					else {
+					else
+					{
 						buffer.append(ch);
 					}
 				}
-				else if (inWhitespace) {
-					if (!Character.isWhitespace(ch)) {
+				else if (inWhitespace)
+				{
+					if (!Character.isWhitespace(ch))
+					{
 						inWhitespace = false;
 						--i; // Re-process this character.
 					}
 				}
-				else {
-					if (ch == '\'') {
+				else
+				{
+					if (ch == '\'')
+					{
 						inQuoteSingle = true;
 					}
-					else if (ch == '"') {
+					else if (ch == '"')
+					{
 						inQuoteDouble = true;
 					}
-					else if (Character.isWhitespace(ch)) {
+					else if (Character.isWhitespace(ch))
+					{
 						inWhitespace = true;
 						list.add(buffer.toString());
 						buffer = new StringBuffer();
 					}
-					else {
+					else
+					{
 						buffer.append(ch);
 					}
 				}
@@ -121,27 +140,20 @@ public class ExternalEditor extends Object {
 	// ------------------------------------------------------------
 	// - Public API
 
-	public void exec(File file) {
+	public void exec(File file)
+	{
 		String fullPath = file.getAbsolutePath();
 		String[] cmd = toCmdArray(fullPath);
-		getLog().info("Exec'ing " + Arrays.asList(cmd) + ".");
+		log.info("Exec'ing " + Arrays.asList(cmd) + ".");
 
-		try {
+		try
+		{
 			Runtime.getRuntime().exec(cmd);
 		}
-		catch (IOException ioe) {
+		catch (IOException ioe)
+		{
 			String errmsg = "Could not exec [" + getCmdString() + "] with [" + fullPath + "].";
-			getLog().error(errmsg, ioe);
+			log.error(errmsg, ioe);
 		}
 	}
-	
-	private transient Logger log;
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(ExternalEditor.class.getName());
-		}
-		return log;
-	}
-
 }

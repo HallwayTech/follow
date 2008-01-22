@@ -31,21 +31,18 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  * @author Murali Krishnan
  */
-public class Debug extends FollowAppAction {
+public class Debug extends FollowAppAction
+{
 	public static final String NAME = "debug";
-	private transient Logger log;
+	private Logger log = LoggerFactory.getLogger(Debug.class);
 
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(Debug.class.getName());
-		}
-		return log;
-	}
-	public Debug(FollowApp app) {
+	public Debug(FollowApp app)
+	{
 		super(app, "Debug", "U", "U");
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		getLog().debug("Debug action.");
+	public void actionPerformed(ActionEvent e)
+	{
+		log.debug("Debug action.");
 	}
 }

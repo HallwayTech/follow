@@ -26,14 +26,17 @@ import junit.framework.JUnit4TestAdapter;
 
 import static org.junit.Assert.*;
 
-public class ExternalEditorTest {
+public class ExternalEditorTest
+{
 
-	public static junit.framework.Test suite() {
+	public static junit.framework.Test suite()
+	{
 		return new JUnit4TestAdapter(ExternalEditorTest.class);
 	}
 
 	@Test
-	public void testSimple() {
+	public void testSimple()
+	{
 		String config = "C:\\WINNT\\notepad.exe";
 		String filename = "C:\\tmp\\test.txt";
 
@@ -46,7 +49,8 @@ public class ExternalEditorTest {
 	}
 
 	@Test
-	public void testExePlusArgs() {
+	public void testExePlusArgs()
+	{
 		String exe = "C:\\app\\TextPad4\\TextPad.exe";
 		String arg1 = "-somearg";
 		String arg2 = "/OtherArg";
@@ -66,7 +70,8 @@ public class ExternalEditorTest {
 	}
 
 	@Test
-	public void testExeWithSpaces() {
+	public void testExeWithSpaces()
+	{
 		String exe = "C:\\Program Files\\Internet Explorer\\IEXPLORE.EXE";
 		String config = "'" + exe + "'";
 		String filename = "C:\\tmp\\test.txt";
@@ -80,7 +85,8 @@ public class ExternalEditorTest {
 	}
 
 	@Test
-	public void testArgsWithSpaces() {
+	public void testArgsWithSpaces()
+	{
 		String exe = "/usr/openwin/bin/textedit";
 		String arg1 = "Some Arg";
 		String arg2 = "another";
@@ -98,7 +104,8 @@ public class ExternalEditorTest {
 	}
 
 	@Test
-	public void testExeAndArgsWithSpaces() {
+	public void testExeAndArgsWithSpaces()
+	{
 		String exe = "C:\\Program Files\\something.exe";
 		String arg = "Some Arg";
 		String config = "'" + exe + "' '" + arg + "' ";
@@ -113,7 +120,8 @@ public class ExternalEditorTest {
 		assertEquals(filename, cmd[2]);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		String[] testCaseName = { ExternalEditorTest.class.getName() };
 		junit.textui.TestRunner.main(testCaseName);
 	}

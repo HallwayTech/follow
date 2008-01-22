@@ -33,50 +33,58 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Implementation of <code>java.awt.dnd.DropTargetListener</code> which opens
- * files dropped on the Follow application's tabbed pane.
+ * Implementation of <code>java.awt.dnd.DropTargetListener</code> which opens files dropped on the
+ * Follow application's tabbed pane.
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class DndFileOpener implements DropTargetListener {
+public class DndFileOpener implements DropTargetListener
+{
 
-	public DndFileOpener(FollowApp app) {
+	public DndFileOpener(FollowApp app)
+	{
 		app_ = app;
 	}
 
 	/**
-	 * If the DropTargetDropEvent's DataFlavor is javaFileListFlavor, it opens
-	 * the List of dropped files in the Follow application. No other DataFlavors
-	 * are supported.
+	 * If the DropTargetDropEvent's DataFlavor is javaFileListFlavor, it opens the List of dropped
+	 * files in the Follow application. No other DataFlavors are supported.
 	 * 
 	 * @param e
 	 *            "drop" event
 	 * @see java.awt.dnd.DropTargetListener#drop(DropTargetDropEvent)
 	 */
-	public void drop(DropTargetDropEvent e) {
+	public void drop(DropTargetDropEvent e)
+	{
 		DataFlavor[] flavors = e.getCurrentDataFlavors();
 		int numFlavors = (flavors != null) ? flavors.length : 0;
-		for (int i = 0; i < numFlavors; i++) {
+		for (int i = 0; i < numFlavors; i++)
+		{
 			// Ignore all flavors except javaFileListType
-			if (flavors[i].isFlavorJavaFileListType()) {
+			if (flavors[i].isFlavorJavaFileListType())
+			{
 				e.acceptDrop(DnDConstants.ACTION_COPY);
 				boolean dropCompleted = false;
 				Transferable transferable = e.getTransferable();
-				try {
+				try
+				{
 					List<File> fileList = (List<File>) transferable.getTransferData(flavors[i]);
-					for (File file : fileList) {
+					for (File file : fileList)
+					{
 						app_.open(file, true);
 					}
 					dropCompleted = true;
 				}
-				catch (UnsupportedFlavorException ufException) { /*
-																	 * do
-																	 * nothing
-																	 */
+				catch (UnsupportedFlavorException ufException)
+				{
+					// do nothing
 				}
-				catch (IOException ioException) { /* do nothing */
+				catch (IOException ioException)
+				{
+					// do nothing
 				}
-				finally {
+				finally
+				{
 					e.dropComplete(dropCompleted);
 				}
 			}
@@ -84,23 +92,28 @@ public class DndFileOpener implements DropTargetListener {
 	}
 
 	/** Does nothing. */
-	public void dragEnter(DropTargetDragEvent e) {
+	public void dragEnter(DropTargetDragEvent e)
+	{
 	}
 
 	/** Does nothing. */
-	public void dragOver(DropTargetDragEvent e) {
+	public void dragOver(DropTargetDragEvent e)
+	{
 	}
 
 	/** Does nothing. */
-	public void dragExit(DropTargetEvent e) {
+	public void dragExit(DropTargetEvent e)
+	{
 	}
 
 	/** Does nothing. */
-	public void dragScroll(DropTargetDragEvent e) {
+	public void dragScroll(DropTargetDragEvent e)
+	{
 	}
 
 	/** Does nothing. */
-	public void dropActionChanged(DropTargetDragEvent e) {
+	public void dropActionChanged(DropTargetDragEvent e)
+	{
 	}
 
 	FollowApp app_;

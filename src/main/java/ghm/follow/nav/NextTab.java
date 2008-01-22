@@ -23,16 +23,18 @@ import java.awt.event.ActionEvent;
 /**
  * Switches to the next tab in the frame.
  * 
- * @author <a href="mailto:chall@cfhdev.com">Carl Hall</a>
+ * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class NextTab extends FollowAppAction {
+public class NextTab extends FollowAppAction
+{
 	public static final String NAME = "nextTab";
 
-	public NextTab(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.NextFile.name"), FollowApp
-				.getResourceBundle().getString("action.NextFile.mnemonic"), FollowApp.getResourceBundle()
-				.getString("action.NextFile.accelerator"), FollowApp.getResourceBundle().getString(
-				"action.NextFile.icon"));
+	public NextTab(FollowApp app)
+	{
+		super(app, FollowApp.getResourceString("action.NextFile.name"),
+				FollowApp.getResourceString("action.NextFile.mnemonic"),
+				FollowApp.getResourceString("action.NextFile.accelerator"),
+				FollowApp.getIcon(NextTab.class, "action.NextFile.icon"));
 	}
 
 	/**
@@ -40,9 +42,12 @@ public class NextTab extends FollowAppAction {
 	 * 
 	 * @param e
 	 */
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		int currentIndex = getApp().getTabbedPane().getSelectedIndex();
-		if (currentIndex < getApp().getTabbedPane().getTabCount() - 1) {
+
+		if (currentIndex < getApp().getTabbedPane().getTabCount() - 1)
+		{
 			getApp().getTabbedPane().setSelectedIndex(currentIndex + 1);
 		}
 	}

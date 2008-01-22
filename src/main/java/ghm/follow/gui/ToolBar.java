@@ -29,7 +29,7 @@ import javax.swing.JToolBar;
  * liking.
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
- * @author <a href="mailto:chall@cfhdev.com">Carl Hall</a>
+ * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public class ToolBar extends JToolBar {
 	void addFollowAppAction(FollowAppAction a) {

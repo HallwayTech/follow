@@ -28,37 +28,46 @@ import javax.swing.JTabbedPane;
 
 /**
  * Derived from a workaround proposed by sqrrrl for bug <a
- * href="http://developer.java.sun.com/developer/bugParade/bugs/4193463.html"
- * >4193463</a>. This bug was causing drag-and-drop to behave incorrectly for
- * all but the first tab.
+ * href="http://developer.java.sun.com/developer/bugParade/bugs/4193463.html" >4193463</a>. This
+ * bug was causing drag-and-drop to behave incorrectly for all but the first tab.
  */
-public class TabbedPane extends JTabbedPane {
+public class TabbedPane extends JTabbedPane
+{
 
 	private FollowAppAttributes attributes_ = null;
 
-	public TabbedPane(FollowAppAttributes attributes) {
+	public TabbedPane(FollowAppAttributes attributes)
+	{
 		super(attributes.getTabPlacement());
 		attributes_ = attributes;
 	}
 
 	/** sqrrrl's fix */
-	public Component findComponentAt(int x, int y) {
-		if (!contains(x, y)) {
+	public Component findComponentAt(int x, int y)
+	{
+		if (!contains(x, y))
+		{
 			return null;
 		}
 		int ncomponents = getComponentCount();
-		for (int i = 0; i < ncomponents; i++) {
+		for (int i = 0; i < ncomponents; i++)
+		{
 			Component comp = getComponentAt(i);
-			if (comp != null) {
-				if (comp instanceof Container) {
-					if (comp.isVisible()) {
+			if (comp != null)
+			{
+				if (comp instanceof Container)
+				{
+					if (comp.isVisible())
+					{
 						comp = ((Container) comp).findComponentAt(x - comp.getX(), y - comp.getY());
 					}
 				}
-				else {
+				else
+				{
 					comp = comp.getComponentAt(x - comp.getX(), y - comp.getY());
 				}
-				if (comp != null && comp.isVisible()) {
+				if (comp != null && comp.isVisible())
+				{
 					return comp;
 				}
 			}
@@ -66,24 +75,29 @@ public class TabbedPane extends JTabbedPane {
 		return this;
 	}
 
-	public void setSelectedIndex(int index) {
+	public void setSelectedIndex(int index)
+	{
 		super.setSelectedIndex(index);
 		handleSelectedFile();
 	}
 
-	public void setSelectedComponent(FileFollowingPane pane) {
+	public void setSelectedComponent(FileFollowingPane pane)
+	{
 		super.setSelectedComponent(pane);
 		handleSelectedFile();
 	}
 
-	public void removeTabAt(int index) {
+	public void removeTabAt(int index)
+	{
 		super.removeTabAt(index);
 		handleSelectedFile();
 	}
 
-	private void handleSelectedFile() {
+	private void handleSelectedFile()
+	{
 		FileFollowingPane pane = (FileFollowingPane) getSelectedComponent();
-		if (pane != null) {
+		if (pane != null)
+		{
 			File parent = pane.getFollowedFile().getParentFile();
 			attributes_.setLastFileChooserDirectory(parent);
 		}

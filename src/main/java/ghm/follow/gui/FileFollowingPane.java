@@ -37,12 +37,14 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 /**
- * A component which allows one to view a text file to which information is
- * being asynchronously appended.
+ * A component which allows one to view a text file to which information is being asynchronously
+ * appended.
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class FileFollowingPane extends JScrollPane {
+public class FileFollowingPane extends JScrollPane
+{
+	private Logger log = LoggerFactory.getLogger(FileFollowingPane.class);
 	/** FileFollower used to print to this component */
 	protected FileFollower _fileFollower;
 
@@ -56,13 +58,14 @@ public class FileFollowingPane extends JScrollPane {
 	 * @param file
 	 *            text file to be followed
 	 * @param bufferSize
-	 *            size of the character buffer inside the FileFollower used to
-	 *            follow the supplied file
+	 *            size of the character buffer inside the FileFollower used to follow the supplied
+	 *            file
 	 * @param latency
 	 *            latency of the FileFollower used to follow the supplied file
 	 */
 	public FileFollowingPane(File file, int bufferSize, int latency, boolean autoPositionCaret,
-			Font font, int tabSize) {
+			Font font, int tabSize)
+	{
 		_textArea = new SearchableTextPane(font, tabSize);
 		_textArea.setEditable(false);
 		_textArea.setUI(new LineTextUI());
@@ -74,86 +77,93 @@ public class FileFollowingPane extends JScrollPane {
 	}
 
 	/**
-	 * Returns the text area to which the followed file's contents are being
-	 * printed.
+	 * Returns the text area to which the followed file's contents are being printed.
 	 * 
 	 * @return text area containing followed file's contents
 	 */
-	public SearchableTextPane getTextPane() {
+	public SearchableTextPane getTextPane()
+	{
 		return _textArea;
 	}
 
 	/**
-	 * Returns whether caret is automatically repositioned to the end of the
-	 * text area when text is appended to the followed file
+	 * Returns whether caret is automatically repositioned to the end of the text area when text is
+	 * appended to the followed file
 	 * 
 	 * @return whether caret is automatically repositioned on append
 	 */
-	public boolean autoPositionCaret() {
+	public boolean autoPositionCaret()
+	{
 		return _destination.autoPositionCaret();
 	}
 
 	/**
-	 * Sets whether caret is automatically repositioned to the end of the text
-	 * area when text is appended to the followed file
+	 * Sets whether caret is automatically repositioned to the end of the text area when text is
+	 * appended to the followed file
 	 * 
 	 * @param value
 	 *            whether caret is automatically repositioned on append
 	 */
-	public void setAutoPositionCaret(boolean value) {
+	public void setAutoPositionCaret(boolean value)
+	{
 		_destination.setAutoPositionCaret(value);
 	}
 
 	/**
-	 * Returns the FileFollower which is being used to print information in this
-	 * component.
+	 * Returns the FileFollower which is being used to print information in this component.
 	 * 
 	 * @return FileFollower used by this component
 	 */
-	public FileFollower getFileFollower() {
+	public FileFollower getFileFollower()
+	{
 		return _fileFollower;
 	}
 
 	/**
-	 * Convenience method; equivalent to calling
-	 * getFileFollower().getFollowedFile()
+	 * Convenience method; equivalent to calling getFileFollower().getFollowedFile()
 	 */
-	public File getFollowedFile() {
+	public File getFollowedFile()
+	{
 		return _fileFollower.getFollowedFile();
 	}
 
 	/**
 	 * Convenience method; equivalent to calling getFileFollower().start()
 	 */
-	public void startFollowing() {
+	public void startFollowing()
+	{
 		_fileFollower.start();
 	}
 
 	/**
 	 * Convenience method; equivalent to calling getFileFollower().stop()
 	 */
-	public void stopFollowing() {
+	public void stopFollowing()
+	{
 		_fileFollower.stop();
 	}
 
 	/**
 	 * Convenience method; equivalent to calling getFileFollower().restart()
 	 */
-	public void restartFollowing() {
+	public void restartFollowing()
+	{
 		_fileFollower.restart();
 	}
 
 	/**
 	 * Convenience method; equivalent to calling getFileFollower().pause()
 	 */
-	public void pauseFollowing() {
+	public void pauseFollowing()
+	{
 		_fileFollower.pause();
 	}
 
 	/**
 	 * Convenience method; equivalent to calling getFileFollower().unpause()
 	 */
-	public void unpauseFollowing() {
+	public void unpauseFollowing()
+	{
 		_fileFollower.unpause();
 	}
 
@@ -162,42 +172,48 @@ public class FileFollowingPane extends JScrollPane {
 	 * 
 	 * @return
 	 */
-	public boolean isFollowingPaused() {
+	public boolean isFollowingPaused()
+	{
 		return _fileFollower.isPaused();
 	}
 
 	/**
 	 * Convenience method; equivalent to calling getFileFollower().stopAndWait()
 	 */
-	public void stopFollowingAndWait() throws InterruptedException {
+	public void stopFollowingAndWait() throws InterruptedException
+	{
 		_fileFollower.stopAndWait();
 	}
 
 	/**
-	 * Convenience method; equivalent to called
-	 * getFileFollower().isBeingFollowed()
+	 * Convenience method; equivalent to called getFileFollower().isBeingFollowed()
 	 * 
 	 * @return
 	 */
-	public boolean isFollowing() {
+	public boolean isFollowing()
+	{
 		return _fileFollower.isBeingFollowed();
 	}
 
 	/**
 	 * Clears the contents of this FileFollowingPane synchronously.
 	 */
-	public void clear() throws IOException {
-		if (_fileFollower.getFollowedFile().length() == 0L) {
+	public void clear() throws IOException
+	{
+		if (_fileFollower.getFollowedFile().length() == 0L)
+		{
 			return;
 		}
-		synchronized (_fileFollower) {
-			try {
+		synchronized (_fileFollower)
+		{
+			try
+			{
 				_fileFollower.stopAndWait();
 			}
-			catch (InterruptedException interruptedException) {
+			catch (InterruptedException interruptedException)
+			{
 				// Handle this better later
-				getLog().error("InterrupedException in FileFollowingPane",
-						interruptedException);
+				log.error("InterrupedException in FileFollowingPane", interruptedException);
 			}
 
 			// This has the effect of clearing the contents of the followed file
@@ -207,24 +223,17 @@ public class FileFollowingPane extends JScrollPane {
 
 			// Update textarea contents to reflect freshly cleared file
 			Document doc = _textArea.getDocument();
-			try {
+			try
+			{
 				doc.remove(0, doc.getLength());
 			}
-			catch (BadLocationException e) {
+			catch (BadLocationException e)
+			{
 				// Handle this better later
-				getLog().error("BadLocationException in FileFolloingPane", e);
+				log.warn("BadLocationException in FileFolloingPane", e);
 			}
 
 			_fileFollower.start();
 		}
-	}
-
-	private transient Logger log;
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(FileFollowingPane.class.getName());
-		}
-		return log;
 	}
 }

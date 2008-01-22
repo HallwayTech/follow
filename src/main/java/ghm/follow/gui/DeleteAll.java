@@ -34,63 +34,66 @@ import javax.swing.JOptionPane;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class DeleteAll extends FollowAppAction {
+public class DeleteAll extends FollowAppAction
+{
 	public static final String NAME = "deleteAll";
+	private Logger log = LoggerFactory.getLogger(DeleteAll.class);
 
-	public DeleteAll(FollowApp app) throws IOException {
-		super(app, FollowApp.getResourceBundle().getString("action.DeleteAll.name"), FollowApp
-				.getResourceBundle().getString("action.DeleteAll.mnemonic"), FollowApp
-				.getResourceBundle().getString("action.DeleteAll.accelerator"), FollowApp
-				.getResourceBundle().getString("action.DeleteAll.icon"));
+	public DeleteAll(FollowApp app) throws IOException
+	{
+		super(app, FollowApp.getResourceString("action.DeleteAll.name"),
+				FollowApp.getResourceString("action.DeleteAll.mnemonic"),
+				FollowApp.getResourceString("action.DeleteAll.accelerator"),
+				FollowApp.getIcon(DeleteAll.class, "action.DeleteAll.icon"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		if (getApp().getAttributes().confirmDeleteAll()) {
-			DisableableConfirm confirm = new DisableableConfirm(getApp().getFrame(), FollowApp
-					.getResourceBundle().getString("dialog.confirmDeleteAll.title"), FollowApp
-					.getResourceBundle().getString("dialog.confirmDeleteAll.message"), FollowApp
-					.getResourceBundle().getString("dialog.confirmDeleteAll.confirmButtonText"),
-					FollowApp.getResourceBundle().getString(
-							"dialog.confirmDeleteAll.doNotConfirmButtonText"), FollowApp
-							.getResourceBundle().getString("dialog.confirmDeleteAll.disableText"));
+	public void actionPerformed(ActionEvent e)
+	{
+		if (getApp().getAttributes().confirmDeleteAll())
+		{
+			DisableableConfirm confirm = new DisableableConfirm(getApp().getFrame(),
+					FollowApp.getResourceString("dialog.confirmDeleteAll.title"),
+					FollowApp.getResourceString("dialog.confirmDeleteAll.message"),
+					FollowApp.getResourceString("dialog.confirmDeleteAll.confirmButtonText"),
+					FollowApp.getResourceString("dialog.confirmDeleteAll.doNotConfirmButtonText"),
+					FollowApp.getResourceString("dialog.confirmDeleteAll.disableText"));
 			confirm.pack();
 			confirm.setVisible(true);
-			if (confirm.markedDisabled()) {
+			if (confirm.markedDisabled())
+			{
 				getApp().getAttributes().setConfirmDeleteAll(false);
 			}
-			if (confirm.markedConfirmed()) {
+			if (confirm.markedConfirmed())
+			{
 				performDelete();
 			}
 		}
-		else {
+		else
+		{
 			performDelete();
 		}
 	}
 
-	private void performDelete() {
+	private void performDelete()
+	{
 		getApp().setCursor(Cursor.WAIT_CURSOR);
 		List<FileFollowingPane> allFileFollowingPanes = getApp().getAllFileFollowingPanes();
-		try {
-			for (FileFollowingPane fileFollowingPane : allFileFollowingPanes) {
+		try
+		{
+			for (FileFollowingPane fileFollowingPane : allFileFollowingPanes)
+			{
 				fileFollowingPane.clear();
 			}
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
 		}
-		catch (IOException ioe) {
-			getLog().error("IOException error in DeleteAll", ioe);
+		catch (IOException ioe)
+		{
+			log.error("IOException error in DeleteAll", ioe);
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
-			JOptionPane.showMessageDialog(getApp().getFrame(), FollowApp.getResourceBundle().getString(
-					"message.unableToDeleteAll.text"), FollowApp.getResourceBundle().getString(
-					"message.unableToDeleteAll.title"), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(getApp().getFrame(),
+					FollowApp.getResourceString("message.unableToDeleteAll.text"),
+					FollowApp.getResourceString("message.unableToDeleteAll.title"),
+					JOptionPane.WARNING_MESSAGE);
 		}
-	}
-
-	private transient Logger log;
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(DeleteAll.class.getName());
-		}
-		return log;
 	}
 }

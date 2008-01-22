@@ -35,7 +35,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -50,24 +49,27 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 /**
- * Action which brings up a dialog allowing one to configure the Follow
- * application.
+ * Action which brings up a dialog allowing one to configure the Follow application.
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class Configure extends FollowAppAction {
+public class Configure extends FollowAppAction
+{
 	public static final String NAME = "configure";
 
-	public Configure(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.Configure.name"), FollowApp
-				.getResourceBundle().getString("action.Configure.mnemonic"), FollowApp
-				.getResourceBundle().getString("action.Configure.accelerator"), FollowApp
-				.getResourceBundle().getString("action.Configure.icon"));
+	public Configure(FollowApp app)
+	{
+		super(app, FollowApp.getResourceString("action.Configure.name"),
+				FollowApp.getResourceString("action.Configure.mnemonic"),
+				FollowApp.getResourceString("action.Configure.accelerator"),
+				FollowApp.getIcon(Configure.class, "action.Configure.icon"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		getApp().setCursor(Cursor.WAIT_CURSOR);
-		if (dialog_ == null) {
+		if (dialog_ == null)
+		{
 			dialog_ = new CfgDialog();
 		}
 		dialog_.bufferSize_.setText(String.valueOf(getApp().getAttributes().getBufferSize()));
@@ -94,21 +96,26 @@ public class Configure extends FollowAppAction {
 
 	private CfgDialog dialog_;
 
-	class CfgDialog extends JDialog {
-		protected JRootPane createRootPane() {
+	class CfgDialog extends JDialog
+	{
+		protected JRootPane createRootPane()
+		{
 			KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 			JRootPane rootPane = new JRootPane();
-			rootPane.registerKeyboardAction(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
+			rootPane.registerKeyboardAction(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent actionEvent)
+				{
 					dialog_.close_.doClick();
 				}
 			}, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 			return rootPane;
 		}
 
-		CfgDialog() {
-			super(Configure.this.getApp().getFrame(), FollowApp.getResourceBundle().getString(
-					"dialog.Configure.title"), true);
+		CfgDialog()
+		{
+			super(Configure.this.getApp().getFrame(), FollowApp.getResourceString("dialog.Configure.title"),
+					true);
 			JComponent contentPane = (JComponent) getContentPane();
 			contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
@@ -119,8 +126,8 @@ public class Configure extends FollowAppAction {
 
 			// buffer size
 			gbc.gridy = 0;
-			configPanel.add(new JLabel(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.bufferSize.label")), gbc);
+			configPanel
+					.add(new JLabel(FollowApp.getResourceString("dialog.Configure.bufferSize.label")), gbc);
 			bufferSize_ = new JTextField();
 			bufferSize_.setHorizontalAlignment(JTextField.RIGHT);
 			gbc.gridx = 1;
@@ -128,9 +135,9 @@ public class Configure extends FollowAppAction {
 			gbc.ipadx = 0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			configPanel.add(bufferSize_, gbc);
-			JButton bufferSizeInfo = new WhatIsThis(getApp(), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.bufferSize.title"), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.bufferSize.text"));
+			JButton bufferSizeInfo = new WhatIsThis(getApp(),
+					FollowApp.getResourceString("WhatIsThis.bufferSize.title"),
+					FollowApp.getResourceString("WhatIsThis.bufferSize.text"));
 			gbc.gridx = 2;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
@@ -140,8 +147,7 @@ public class Configure extends FollowAppAction {
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.ipadx = 4;
-			configPanel.add(new JLabel(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.latency.label")), gbc);
+			configPanel.add(new JLabel(FollowApp.getResourceString("dialog.Configure.latency.label")), gbc);
 			latency_ = new JTextField();
 			latency_.setHorizontalAlignment(JTextField.RIGHT);
 			gbc.gridx = 1;
@@ -149,9 +155,9 @@ public class Configure extends FollowAppAction {
 			gbc.ipadx = 0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			configPanel.add(latency_, gbc);
-			JButton latencyInfo = new WhatIsThis(getApp(), FollowApp.getResourceBundle().getString(
-					"WhatIsThis.latency.title"), FollowApp.getResourceBundle().getString(
-					"WhatIsThis.latency.text"));
+			JButton latencyInfo = new WhatIsThis(getApp(),
+					FollowApp.getResourceString("WhatIsThis.latency.title"),
+					FollowApp.getResourceString("WhatIsThis.latency.text"));
 			gbc.gridx = 2;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
@@ -161,17 +167,17 @@ public class Configure extends FollowAppAction {
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.ipadx = 4;
-			configPanel.add(new JLabel(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.tabPlacement.label")), gbc);
+			configPanel.add(new JLabel(FollowApp.getResourceString("dialog.Configure.tabPlacement.label")),
+					gbc);
 			tabPlacement_ = new JComboBox(ALL_TAB_PLACEMENT_VALUES);
 			gbc.gridx = 1;
 			gbc.weightx = 1;
 			gbc.ipadx = 0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			configPanel.add(tabPlacement_, gbc);
-			JButton tabPlacementInfo = new WhatIsThis(getApp(), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.tabPlacement.title"), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.tabPlacement.text"));
+			JButton tabPlacementInfo = new WhatIsThis(getApp(),
+					FollowApp.getResourceString("WhatIsThis.tabPlacement.title"),
+					FollowApp.getResourceString("WhatIsThis.tabPlacement.text"));
 			gbc.gridx = 2;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
@@ -181,20 +187,19 @@ public class Configure extends FollowAppAction {
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.ipadx = 4;
-			configPanel.add(new JLabel(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.confirmDelete.label")), gbc);
-			confirmDelete_ = new BooleanComboBox(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.confirmDelete.yes.displayValue"), FollowApp
-					.getResourceBundle()
-					.getString("dialog.Configure.confirmDelete.no.displayValue"));
+			configPanel.add(new JLabel(FollowApp.getResourceString("dialog.Configure.confirmDelete.label")),
+					gbc);
+			confirmDelete_ = new BooleanComboBox(
+					FollowApp.getResourceString("dialog.Configure.confirmDelete.yes.displayValue"),
+					FollowApp.getResourceString("dialog.Configure.confirmDelete.no.displayValue"));
 			gbc.gridx = 1;
 			gbc.weightx = 1;
 			gbc.ipadx = 0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			configPanel.add(confirmDelete_, gbc);
-			JButton confirmDeleteInfo = new WhatIsThis(getApp(), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.confirmDelete.title"), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.confirmDelete.text"));
+			JButton confirmDeleteInfo = new WhatIsThis(getApp(),
+					FollowApp.getResourceString("WhatIsThis.confirmDelete.title"),
+					FollowApp.getResourceString("WhatIsThis.confirmDelete.text"));
 			gbc.gridx = 2;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
@@ -204,20 +209,19 @@ public class Configure extends FollowAppAction {
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.ipadx = 4;
-			configPanel.add(new JLabel(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.confirmDeleteAll.label")), gbc);
-			confirmDeleteAll_ = new BooleanComboBox(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.confirmDeleteAll.yes.displayValue"), FollowApp
-					.getResourceBundle().getString(
-							"dialog.Configure.confirmDeleteAll.no.displayValue"));
+			configPanel.add(
+					new JLabel(FollowApp.getResourceString("dialog.Configure.confirmDeleteAll.label")), gbc);
+			confirmDeleteAll_ = new BooleanComboBox(
+					FollowApp.getResourceString("dialog.Configure.confirmDeleteAll.yes.displayValue"),
+					FollowApp.getResourceString("dialog.Configure.confirmDeleteAll.no.displayValue"));
 			gbc.gridx = 1;
 			gbc.weightx = 1;
 			gbc.ipadx = 0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			configPanel.add(confirmDeleteAll_, gbc);
-			JButton confirmDeleteAllInfo = new WhatIsThis(getApp(), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.confirmDeleteAll.title"), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.confirmDeleteAll.text"));
+			JButton confirmDeleteAllInfo = new WhatIsThis(getApp(),
+					FollowApp.getResourceString("WhatIsThis.confirmDeleteAll.title"),
+					FollowApp.getResourceString("WhatIsThis.confirmDeleteAll.text"));
 			gbc.gridx = 2;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
@@ -227,19 +231,19 @@ public class Configure extends FollowAppAction {
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.ipadx = 4;
-			configPanel.add(new JLabel(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.autoScroll.label")), gbc);
-			autoScroll_ = new BooleanComboBox(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.autoScroll.yes.displayValue"), FollowApp.getResourceBundle()
-					.getString("dialog.Configure.autoScroll.no.displayValue"));
+			configPanel
+					.add(new JLabel(FollowApp.getResourceString("dialog.Configure.autoScroll.label")), gbc);
+			autoScroll_ = new BooleanComboBox(
+					FollowApp.getResourceString("dialog.Configure.autoScroll.yes.displayValue"),
+					FollowApp.getResourceString("dialog.Configure.autoScroll.no.displayValue"));
 			gbc.gridx = 1;
 			gbc.weightx = 1;
 			gbc.ipadx = 0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			configPanel.add(autoScroll_, gbc);
-			JButton autoScrollInfo = new WhatIsThis(getApp(), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.autoScroll.title"), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.autoScroll.text"));
+			JButton autoScrollInfo = new WhatIsThis(getApp(),
+					FollowApp.getResourceString("WhatIsThis.autoScroll.title"),
+					FollowApp.getResourceString("WhatIsThis.autoScroll.text"));
 			gbc.gridx = 2;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
@@ -249,8 +253,7 @@ public class Configure extends FollowAppAction {
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.ipadx = 4;
-			configPanel.add(new JLabel(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.editor.label")), gbc);
+			configPanel.add(new JLabel(FollowApp.getResourceString("dialog.Configure.editor.label")), gbc);
 			editor_ = new JTextField();
 			editor_.setHorizontalAlignment(JTextField.LEFT);
 			gbc.gridx = 1;
@@ -258,9 +261,9 @@ public class Configure extends FollowAppAction {
 			gbc.ipadx = 0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			configPanel.add(editor_, gbc);
-			JButton editorInfo = new WhatIsThis(getApp(), FollowApp.getResourceBundle().getString(
-					"WhatIsThis.editor.title"), FollowApp.getResourceBundle().getString(
-					"WhatIsThis.editor.text"));
+			JButton editorInfo = new WhatIsThis(getApp(),
+					FollowApp.getResourceString("WhatIsThis.editor.title"),
+					FollowApp.getResourceString("WhatIsThis.editor.text"));
 			gbc.gridx = 2;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
@@ -270,8 +273,7 @@ public class Configure extends FollowAppAction {
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.ipadx = 4;
-			configPanel.add(new JLabel(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.tabSize.label")), gbc);
+			configPanel.add(new JLabel(FollowApp.getResourceString("dialog.Configure.tabSize.label")), gbc);
 			tabSize_ = new JTextField();
 			tabSize_.setHorizontalAlignment(JTextField.RIGHT);
 			gbc.gridx = 1;
@@ -279,9 +281,9 @@ public class Configure extends FollowAppAction {
 			gbc.ipadx = 0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			configPanel.add(tabSize_, gbc);
-			JButton tabSizeInfo = new WhatIsThis(getApp(), FollowApp.getResourceBundle().getString(
-					"WhatIsThis.tabSize.title"), FollowApp.getResourceBundle().getString(
-					"WhatIsThis.tabSize.text"));
+			JButton tabSizeInfo = new WhatIsThis(getApp(),
+					FollowApp.getResourceString("WhatIsThis.tabSize.title"),
+					FollowApp.getResourceString("WhatIsThis.tabSize.text"));
 			gbc.gridx = 2;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
@@ -291,8 +293,8 @@ public class Configure extends FollowAppAction {
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.ipadx = 4;
-			configPanel.add(new JLabel(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.recentFilesMax.label")), gbc);
+			configPanel.add(new JLabel(FollowApp.getResourceString("dialog.Configure.recentFilesMax.label")),
+					gbc);
 			recentFilesMax_ = new JTextField();
 			recentFilesMax_.setHorizontalAlignment(JTextField.RIGHT);
 			gbc.gridx = 1;
@@ -300,9 +302,9 @@ public class Configure extends FollowAppAction {
 			gbc.ipadx = 0;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			configPanel.add(recentFilesMax_, gbc);
-			JButton recentFilesMaxInfo = new WhatIsThis(getApp(), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.recentFilesMax.title"), FollowApp.getResourceBundle()
-					.getString("WhatIsThis.recentFilesMax.text"));
+			JButton recentFilesMaxInfo = new WhatIsThis(getApp(),
+					FollowApp.getResourceString("WhatIsThis.recentFilesMax.title"),
+					FollowApp.getResourceString("WhatIsThis.recentFilesMax.text"));
 			gbc.gridx = 2;
 			gbc.weightx = 0;
 			gbc.fill = GridBagConstraints.NONE;
@@ -315,8 +317,8 @@ public class Configure extends FollowAppAction {
 			fontSelectionPanel_.setBorder(BorderFactory.createEmptyBorder(0, 12, 11, 11));
 			JPanel fontPanelHolder = new JPanel(new BorderLayout());
 			fontPanelHolder.add(fontSelectionPanel_, BorderLayout.CENTER);
-			fontPanelHolder.setBorder(BorderFactory.createTitledBorder(FollowApp
-					.getResourceBundle().getString("dialog.Configure.font.label")));
+			fontPanelHolder.setBorder(BorderFactory
+					.createTitledBorder(FollowApp.getResourceString("dialog.Configure.font.label")));
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.gridwidth = 3;
@@ -326,49 +328,56 @@ public class Configure extends FollowAppAction {
 			contentPane.add(configPanel, BorderLayout.CENTER);
 
 			// Save button
-			save_ = new JButton(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.save.label"));
-			save_.setMnemonic(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.save.mnemonic").charAt(0));
-			save_.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+			save_ = new JButton(FollowApp.getResourceString("dialog.Configure.save.label"));
+			save_.setMnemonic(FollowApp.getResourceString("dialog.Configure.save.mnemonic").charAt(0));
+			save_.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
 					// Validate fields
 					StringBuffer invalidFieldsMessage = new StringBuffer();
-					if (!isPositiveInteger(bufferSize_.getText())) {
-						invalidFieldsMessage.append(FollowApp.getResourceBundle().getString(
-								"dialog.Configure.bufferSizeInvalid.text"));
+					if (!isPositiveInteger(bufferSize_.getText()))
+					{
+						invalidFieldsMessage
+								.append(FollowApp.getResourceString("dialog.Configure.bufferSizeInvalid.text"));
 						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
 						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
 					}
-					if (!isPositiveInteger(latency_.getText())) {
-						invalidFieldsMessage.append(FollowApp.getResourceBundle().getString(
-								"dialog.Configure.latencyInvalid.text"));
+					if (!isPositiveInteger(latency_.getText()))
+					{
+						invalidFieldsMessage
+								.append(FollowApp.getResourceString("dialog.Configure.latencyInvalid.text"));
 						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
 						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
 					}
-					if (!isPositiveInteger(recentFilesMax_.getText())) {
-						invalidFieldsMessage.append(FollowApp.getResourceBundle().getString(
-								"dialog.Configure.recentFilesMaxInvalid.text"));
+					if (!isPositiveInteger(recentFilesMax_.getText()))
+					{
+						invalidFieldsMessage
+								.append(FollowApp.getResourceString("dialog.Configure.recentFilesMaxInvalid.text"));
 						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
 						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
 					}
-					try {
+					try
+					{
 						fontSelectionPanel_.getSelectedFont();
 					}
-					catch (InvalidFontException ife) {
-						invalidFieldsMessage.append(FollowApp.getResourceBundle().getString(
-								"dialog.Configure.fontInvalid.text"));
+					catch (InvalidFontException ife)
+					{
+						invalidFieldsMessage
+								.append(FollowApp.getResourceString("dialog.Configure.fontInvalid.text"));
 						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
 						invalidFieldsMessage.append(FollowApp.MESSAGE_LINE_SEPARATOR);
 					}
 
-					if (invalidFieldsMessage.length() > 0) {
+					if (invalidFieldsMessage.length() > 0)
+					{
 						JOptionPane.showMessageDialog(getApp().getFrame(), invalidFieldsMessage
-								.toString(), FollowApp.getResourceBundle().getString(
-								"dialog.Configure.invalidFieldsDialog.title"),
+								.toString(),
+								FollowApp.getResourceString("dialog.Configure.invalidFieldsDialog.title"),
 								JOptionPane.ERROR_MESSAGE);
 					}
-					else {
+					else
+					{
 						getApp().getAttributes().setBufferSize(bufferSize_.getText());
 						getApp().getAttributes().setLatency(latency_.getText());
 						getApp().getAttributes().setTabPlacement(
@@ -381,10 +390,12 @@ public class Configure extends FollowAppAction {
 						getApp().getAttributes().setRecentFilesMax(recentFilesMax_.getText());
 						getApp().refreshRecentFilesMenu();
 						Font selectedFont;
-						try {
+						try
+						{
 							selectedFont = fontSelectionPanel_.getSelectedFont();
 						}
-						catch (InvalidFontException ife) {
+						catch (InvalidFontException ife)
+						{
 							// This shouldn't happen if the error catching at
 							// the beginning
 							// of actionPerformed() worked correctly
@@ -392,7 +403,8 @@ public class Configure extends FollowAppAction {
 									"Programmatic error; supposedly impossible scenario has occurred.");
 						}
 						getApp().getAttributes().setFont(selectedFont);
-						for (FileFollowingPane pane : getApp().getFileToFollowingPaneMap().values()) {
+						for (FileFollowingPane pane : getApp().getFileToFollowingPaneMap().values())
+						{
 							pane.getFileFollower().setBufferSize(
 									getApp().getAttributes().getBufferSize());
 							pane.getFileFollower()
@@ -411,13 +423,16 @@ public class Configure extends FollowAppAction {
 			});
 
 			// Restore Defaults button
-			restoreDefaults_ = new JButton(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.restoreDefaults.label"));
-			restoreDefaults_.setMnemonic(FollowApp.getResourceBundle().getString(
+			restoreDefaults_ = new JButton(
+					FollowApp.getResourceString("dialog.Configure.restoreDefaults.label"));
+			restoreDefaults_.setMnemonic(FollowApp.getResourceString(
 					"dialog.Configure.restoreDefaults.mnemonic").charAt(0));
-			restoreDefaults_.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					try {
+			restoreDefaults_.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					try
+					{
 						bufferSize_.setText(String.valueOf(getApp().getAttributes()
 								.getDefaultAttributes().getBufferSize()));
 						latency_.setText(String.valueOf(getApp().getAttributes()
@@ -437,24 +452,23 @@ public class Configure extends FollowAppAction {
 						recentFilesMax_.setText(String.valueOf(getApp().getAttributes()
 								.getDefaultAttributes().getRecentFilesMax()));
 					}
-					catch (IOException ioe) {
-						JOptionPane.showMessageDialog(getApp().getFrame(), FollowApp
-								.getResourceBundle().getString(
-										"dialog.Configure.cantRestoreDefaults.text"), FollowApp
-								.getResourceBundle().getString(
-										"dialog.Configure.cantRestoreDefaults.title"),
+					catch (IOException ioe)
+					{
+						JOptionPane.showMessageDialog(getApp().getFrame(),
+								FollowApp.getResourceString("dialog.Configure.cantRestoreDefaults.text"),
+								FollowApp.getResourceString("dialog.Configure.cantRestoreDefaults.title"),
 								JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			});
 
 			// Close button
-			close_ = new JButton(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.close.label"));
-			close_.setMnemonic(FollowApp.getResourceBundle().getString(
-					"dialog.Configure.close.mnemonic").charAt(0));
-			close_.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+			close_ = new JButton(FollowApp.getResourceString("dialog.Configure.close.label"));
+			close_.setMnemonic(FollowApp.getResourceString("dialog.Configure.close.mnemonic").charAt(0));
+			close_.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
 					dispose();
 				}
 			});
@@ -466,15 +480,19 @@ public class Configure extends FollowAppAction {
 			contentPane.add(buttonPanel, BorderLayout.SOUTH);
 		}
 
-		private boolean isPositiveInteger(String value) {
-			try {
+		private boolean isPositiveInteger(String value)
+		{
+			try
+			{
 				int intValue = Integer.parseInt(value);
-				if (intValue < 1) {
+				if (intValue < 1)
+				{
 					return false;
 				}
 				return true;
 			}
-			catch (NumberFormatException nfe) {
+			catch (NumberFormatException nfe)
+			{
 				return false;
 			}
 		}
@@ -494,25 +512,24 @@ public class Configure extends FollowAppAction {
 		JButton close_;
 	}
 
-	private class TabPlacementValue {
-		public TabPlacementValue(int value) {
+	private class TabPlacementValue
+	{
+		public TabPlacementValue(int value)
+		{
 			value_ = value;
-			switch (value) {
+			switch (value)
+			{
 				case JTabbedPane.TOP:
-					displayValue_ = FollowApp.getResourceBundle().getString(
-							"dialog.Configure.tabPlacement.Top.displayValue");
+					displayValue_ = FollowApp.getResourceString("dialog.Configure.tabPlacement.Top.displayValue");
 					break;
 				case JTabbedPane.BOTTOM:
-					displayValue_ = FollowApp.getResourceBundle().getString(
-							"dialog.Configure.tabPlacement.Bottom.displayValue");
+					displayValue_ = FollowApp.getResourceString("dialog.Configure.tabPlacement.Bottom.displayValue");
 					break;
 				case JTabbedPane.LEFT:
-					displayValue_ = FollowApp.getResourceBundle().getString(
-							"dialog.Configure.tabPlacement.Left.displayValue");
+					displayValue_ = FollowApp.getResourceString("dialog.Configure.tabPlacement.Left.displayValue");
 					break;
 				case JTabbedPane.RIGHT:
-					displayValue_ = FollowApp.getResourceBundle().getString(
-							"dialog.Configure.tabPlacement.Right.displayValue");
+					displayValue_ = FollowApp.getResourceString("dialog.Configure.tabPlacement.Right.displayValue");
 					break;
 				default:
 					throw new IllegalArgumentException(
@@ -524,31 +541,38 @@ public class Configure extends FollowAppAction {
 
 		public String displayValue_;
 
-		public String toString() {
+		public String toString()
+		{
 			return displayValue_;
 		}
 
-		public boolean equals(Object o) {
-			if (o != null && o.getClass() == getClass()) {
+		public boolean equals(Object o)
+		{
+			if (o != null && o.getClass() == getClass())
+			{
 				return value_ == ((TabPlacementValue) o).value_;
 			}
 			return false;
 		}
 	}
 
-	private class CfgFontSelectionPanel extends FontSelectionPanel {
-		CfgFontSelectionPanel() {
-			super(Configure.this.getApp().getAttributes().getFont(), getStyleDisplayValues(FollowApp
-					.getResourceBundle()), new int[] { 8, 9, 10, 12, 14 });
+	private class CfgFontSelectionPanel extends FontSelectionPanel
+	{
+		CfgFontSelectionPanel()
+		{
+			super(Configure.this.getApp().getAttributes().getFont(),
+					getStyleDisplayValues(), new int[] { 8, 9, 10, 12,
+							14 });
 			this.fontFamilyList_.setVisibleRowCount(5);
 		}
 	}
 
-	private static String[] getStyleDisplayValues(ResourceBundle bundle) {
-		return new String[] { bundle.getString("dialog.Configure.font.plain.displayValue"),
-				bundle.getString("dialog.Configure.font.bold.displayValue"),
-				bundle.getString("dialog.Configure.font.italic.displayValue"),
-				bundle.getString("dialog.Configure.font.boldItalic.displayValue") };
+	private static String[] getStyleDisplayValues()
+	{
+		return new String[] { FollowApp.getResourceString("dialog.Configure.font.plain.displayValue"),
+				FollowApp.getResourceString("dialog.Configure.font.bold.displayValue"),
+				FollowApp.getResourceString("dialog.Configure.font.italic.displayValue"),
+				FollowApp.getResourceString("dialog.Configure.font.boldItalic.displayValue") };
 	}
 
 	private TabPlacementValue TOP = new TabPlacementValue(JTabbedPane.TOP);
@@ -562,21 +586,27 @@ public class Configure extends FollowAppAction {
 	private TabPlacementValue[] ALL_TAB_PLACEMENT_VALUES = new TabPlacementValue[] { TOP, BOTTOM,
 			LEFT, RIGHT };
 
-	static class BooleanComboBox extends JComboBox {
-		BooleanComboBox(String trueDisplayValue, String falseDisplayValue) {
+	static class BooleanComboBox extends JComboBox
+	{
+		BooleanComboBox(String trueDisplayValue, String falseDisplayValue)
+		{
 			super(new String[] { trueDisplayValue, falseDisplayValue });
 		}
 
-		public void setValue(boolean value) {
-			if (value == true) {
+		public void setValue(boolean value)
+		{
+			if (value == true)
+			{
 				this.setSelectedIndex(0);
 			}
-			else {
+			else
+			{
 				this.setSelectedIndex(1);
 			}
 		}
 
-		public boolean getValue() {
+		public boolean getValue()
+		{
 			return (this.getSelectedIndex() == 0);
 		}
 	}

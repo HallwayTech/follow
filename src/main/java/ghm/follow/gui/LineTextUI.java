@@ -19,45 +19,58 @@ import javax.swing.text.View;
  * 
  * @author Carl Hall
  */
-public class LineTextUI extends BasicTextAreaUI {
+public class LineTextUI extends BasicTextAreaUI
+{
+	private transient Logger log = LoggerFactory.getLogger(LineTextUI.class);
 	int selectedIndex = -1;
 	private JTextComponent comp;
 
-	public View create(Element elem) {
+	public View create(Element elem)
+	{
 		return new LineView(elem);
 	}
 
-	public void installUI(JComponent c) {
+	public void installUI(JComponent c)
+	{
 		comp = (JTextComponent) c;
 		// install listener if we should highlight the current line
 
 		// if (SyntaxSupport.getInstance().getShouldHighlightCurrentLine()) {
-		comp.addCaretListener(new CaretListener() {
-			public void caretUpdate(CaretEvent e) {
+		comp.addCaretListener(new CaretListener()
+		{
+			public void caretUpdate(CaretEvent e)
+			{
 				Document doc = comp.getDocument();
 				Element map = doc.getDefaultRootElement();
 				int index = map.getElementIndex(e.getDot());
 
-				if (selectedIndex > -1) {
-					try {
+				if (selectedIndex > -1)
+				{
+					try
+					{
 						// unhighlight previous Selected line
 						Element previous = map.getElement(selectedIndex);
-						if (previous != null) {
+						if (previous != null)
+						{
 							Rectangle rec = comp.modelToView(previous.getStartOffset());
-							if (rec != null) {
+							if (rec != null)
+							{
 								rec.width = comp.getWidth();
 								comp.repaint(rec);
 							}
 						}
 					}
-					catch (BadLocationException e1) {
-						getLog().error("BadLocationException in LineTextUI", e1);
+					catch (BadLocationException e1)
+					{
+						log.error("BadLocationException in LineTextUI", e1);
 					}
 				}
-				if (comp.getSelectionStart() == comp.getSelectionEnd()) {
+				if (comp.getSelectionStart() == comp.getSelectionEnd())
+				{
 					selectedIndex = index;
 				}
-				else {
+				else
+				{
 					selectedIndex = -1;
 				}
 
@@ -69,16 +82,8 @@ public class LineTextUI extends BasicTextAreaUI {
 		super.installUI(c);
 	}
 
-	private transient Logger log;
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(LineTextUI.class.getName());
-		}
-		return log;
-	}
-
-	public int getSelectedIndex() {
+	public int getSelectedIndex()
+	{
 		return selectedIndex;
 	}
 }

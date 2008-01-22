@@ -16,18 +16,23 @@ import java.io.IOException;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class Reset extends FollowAppAction {
+public class Reset extends FollowAppAction
+{
 	public static final String NAME = "reset";
 
-	public Reset(FollowApp app) throws IOException {
-		super(app, FollowApp.getResourceBundle().getString("action.Reset.name"), FollowApp.getResourceBundle()
-				.getString("action.Reset.mnemonic"), FollowApp.getResourceBundle().getString(
-				"action.Reset.accelerator"), FollowApp.getResourceBundle().getString("action.Reset.icon"));
+	public Reset(FollowApp app) throws IOException
+	{
+		super(app, FollowApp.getResourceString("action.Reset.name"),
+				FollowApp.getResourceString("action.Reset.mnemonic"),
+				FollowApp.getResourceString("action.Reset.accelerator"),
+				FollowApp.getIcon(Reset.class, "action.Reset.icon"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
-		if (fileFollowingPane != null) {
+		if (fileFollowingPane != null)
+		{
 			fileFollowingPane.restartFollowing();
 		}
 	}

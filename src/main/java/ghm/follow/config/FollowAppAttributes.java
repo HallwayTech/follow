@@ -40,8 +40,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class FollowAppAttributes {
-	private transient Logger log;
+public class FollowAppAttributes
+{
+	private static Logger log = LoggerFactory.getLogger(FollowAppAttributes.class);
 	EnumeratedProperties properties_;
 	private EnumeratedProperties defaultProperties_;
 	private FollowAppAttributes defaultAttributes_;
@@ -85,45 +86,52 @@ public class FollowAppAttributes {
 	public static final int v1_5_0 = 6;
 	public static final int v1_6_0 = 7;
 
-	public FollowAppAttributes(FollowApp app) throws IOException {
+	public FollowAppAttributes(FollowApp app) throws IOException
+	{
 		this(app, null);
 	}
 
-	public FollowAppAttributes(FollowApp app, File propertyFile) throws IOException {
-		if (propertyFile != null) {
+	public FollowAppAttributes(FollowApp app, File propertyFile) throws IOException
+	{
+		if (propertyFile != null)
+		{
 			_propertyFile = propertyFile;
 		}
-		else {
+		else
+		{
 			_propertyFile = new File(defaultPropertyFileName);
 		}
 
-		if (!(_propertyFile.exists())) {
+		if (!(_propertyFile.exists()))
+		{
 			// If the property file doesn't exist, we create a default property
 			// file using a prototype property file stored somewhere on the
 			// classpath
-			getLog().info("No property file for the Follow application is present; creating "
+			log.info("No property file for the Follow application is present; creating "
 					+ _propertyFile.getAbsolutePath() + " (with default values) ...");
 			properties_ = (EnumeratedProperties) getDefaultProperties().clone();
-			getLog().info("... property file created successfully.");
+			log.info("... property file created successfully.");
 		}
-		else {
+		else
+		{
 			properties_ = new EnumeratedProperties();
 			FileInputStream fis = new FileInputStream(_propertyFile);
 			properties_.load(fis);
-			switch (getAttributesVersion()) {
+			switch (getAttributesVersion())
+			{
 				case UNVERSIONED:
 					// Migrate unversioned attributes to 1.1 attributes
-					getLog().info("Migrating pre-v1.1 properties to v1.1.");
+					log.info("Migrating pre-v1.1 properties to v1.1.");
 					setAttributesVersion(v1_1);
 					setTabPlacement(getDefaultAttributes().getTabPlacement());
 				case v1_1:
 					// Migrate 1.1 attributes to 1.2 attributes
-					getLog().info("Migrating v1.1 properties to v1.2.");
+					log.info("Migrating v1.1 properties to v1.2.");
 					setAttributesVersion(v1_2);
 					setFont(getDefaultAttributes().getFont());
 				case v1_2:
 					// Migrate 1.2 attributes to 1.3 attributes
-					getLog().info("Migrating v1.2 properties to v1.3.");
+					log.info("Migrating v1.2 properties to v1.3.");
 					setAttributesVersion(v1_3);
 					setConfirmDelete(true);
 					setConfirmDeleteAll(true);
@@ -131,28 +139,27 @@ public class FollowAppAttributes {
 					// changes to
 					// Clear and ClearAll and the introduction of Delete and
 					// DeleteAll
-					JOptionPane.showMessageDialog(null, FollowApp.getResourceBundle().getString(
-							"v1.3.warning.text"), FollowApp.getResourceBundle().getString(
-							"v1.3.warning.title"), JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, FollowApp
+							.getResourceString("v1.3.warning.text"), FollowApp
+							.getResourceString("v1.3.warning.title"), JOptionPane.WARNING_MESSAGE);
 				case v1_3:
 				case v1_3_2:
 					// Migrate 1.3 attributes to 1.4 attributes
-					getLog().info("Migrating v1.3 properties to v1.4.");
+					log.info("Migrating v1.3 properties to v1.4.");
 					setAttributesVersion(v1_4);
 					setAutoScroll(true);
 					// Inform the user of the new AutoScroll feature
-					JOptionPane.showMessageDialog(null, FollowApp.getResourceBundle().getString(
-							"v1.4.info.text"),
-							FollowApp.getResourceBundle().getString("v1.4.info.title"),
-							JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, FollowApp
+							.getResourceString("v1.4.info.text"), FollowApp
+							.getResourceString("v1.4.info.title"), JOptionPane.INFORMATION_MESSAGE);
 				case v1_4:
 					// Migrate 1.4 attributes to 1.5 attributes
-					getLog().info("Migrating v1.4 properties to v.1.5.");
+					log.info("Migrating v1.4 properties to v.1.5.");
 					setAttributesVersion(v1_5_0);
 					setTabSize(4);
 				case v1_5_0:
 					// Migrate 1.5.0 attributes to 1.6.0 attributes
-					getLog().info("Migrating v1.5 properties to 1.6.0.");
+					log.info("Migrating v1.5 properties to 1.6.0.");
 					setAttributesVersion(v1_6_0);
 					setRecentFilesMax(5);
 			}
@@ -160,39 +167,48 @@ public class FollowAppAttributes {
 		}
 	}
 
-	private FollowAppAttributes(EnumeratedProperties props) throws IOException {
+	private FollowAppAttributes(EnumeratedProperties props) throws IOException
+	{
 		properties_ = props;
 	}
 
-	public int getHeight() {
+	public int getHeight()
+	{
 		return getInt(HEIGHT_KEY);
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(int height)
+	{
 		setInt(HEIGHT_KEY, height);
 	}
 
-	public int getWidth() {
+	public int getWidth()
+	{
 		return getInt(WIDTH_KEY);
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(int width)
+	{
 		setInt(WIDTH_KEY, width);
 	}
 
-	public int getX() {
+	public int getX()
+	{
 		return getInt(X_KEY);
 	}
 
-	public void setX(int x) {
+	public void setX(int x)
+	{
 		setInt(X_KEY, x);
 	}
 
-	public int getY() {
+	public int getY()
+	{
 		return getInt(Y_KEY);
 	}
 
-	public void setY(int y) {
+	public void setY(int y)
+	{
 		setInt(Y_KEY, y);
 	}
 
@@ -201,7 +217,8 @@ public class FollowAppAttributes {
 	 * 
 	 * @return File[] File array of followed files
 	 */
-	public List<File> getFollowedFiles() {
+	public List<File> getFollowedFiles()
+	{
 		return getFiles(getFollowedFilesList());
 	}
 
@@ -210,13 +227,16 @@ public class FollowAppAttributes {
 	 * 
 	 * @return List file names as Strings
 	 */
-	private List<String> getFollowedFilesList() {
+	private List<String> getFollowedFilesList()
+	{
 		return properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
 	}
 
-	protected List<File> getFiles(List<String> fileList) {
+	protected List<File> getFiles(List<String> fileList)
+	{
 		ArrayList<File> files = new ArrayList<File>(fileList.size());
-		for (String s : fileList) {
+		for (String s : fileList)
+		{
 			files.add(new File(s));
 		}
 		return files;
@@ -225,37 +245,41 @@ public class FollowAppAttributes {
 	/**
 	 * Checks the existence of a file in the list of followed files
 	 * 
-	 * @return true iff any File in the List of followed Files
-	 *         (getFollowedFiles()) has the same Canonical Path as the supplied
-	 *         File
+	 * @return true iff any File in the List of followed Files (getFollowedFiles()) has the same
+	 *         Canonical Path as the supplied File
 	 */
-	public boolean followedFileListContains(File file) {
+	public boolean followedFileListContains(File file)
+	{
 		return fileListContains(getFollowedFilesList(), file);
 	}
 
 	/**
 	 * Checks the existence of a file in the list of recent files
 	 * 
-	 * @return true iff any File in the List of recent Files
-	 *         (getFollowedFiles()) has the same Canonical Path as the supplied
-	 *         File
+	 * @return true iff any File in the List of recent Files (getFollowedFiles()) has the same
+	 *         Canonical Path as the supplied File
 	 */
-	public boolean recentFileListContains(File file) {
+	public boolean recentFileListContains(File file)
+	{
 		return fileListContains(getRecentFilesList(), file);
 	}
 
 	/**
-	 * @return true iff any File in the List of Files (getFollowedFiles()) has
-	 *         the same Canonical Path as the supplied File
+	 * @return true iff any File in the List of Files (getFollowedFiles()) has the same Canonical
+	 *         Path as the supplied File
 	 */
-	protected boolean fileListContains(List<String> fileList, File file) {
+	protected boolean fileListContains(List<String> fileList, File file)
+	{
 		boolean retval = false;
-		if (fileList != null && file != null) {
-			for (int i = 0; i < fileList.size(); i++) {
+		if (fileList != null && file != null)
+		{
+			for (int i = 0; i < fileList.size(); i++)
+			{
 				String nextFile = (String) fileList.get(i);
 				// be sure to check the same thing that is added in
 				// addFollowedFile(File)
-				if (nextFile.equals(file.getAbsolutePath())) {
+				if (nextFile.equals(file.getAbsolutePath()))
+				{
 					retval = true;
 					break;
 				}
@@ -269,7 +293,8 @@ public class FollowAppAttributes {
 	 * 
 	 * @param file
 	 */
-	public void addFollowedFile(File file) {
+	public void addFollowedFile(File file)
+	{
 		List<String> fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
 		fileNames.add(file.getAbsolutePath());
 		properties_.setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
@@ -280,139 +305,172 @@ public class FollowAppAttributes {
 	 * 
 	 * @param file
 	 */
-	public void removeFollowedFile(File file) {
+	public void removeFollowedFile(File file)
+	{
 		List<String> fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
 		fileNames.remove(file.getAbsolutePath());
 		properties_.setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
 	}
 
-	public int getTabPlacement() {
+	public int getTabPlacement()
+	{
 		return getInt(TAB_PLACEMENT_KEY);
 	}
 
-	public void setTabPlacement(int tabPlacement) {
+	public void setTabPlacement(int tabPlacement)
+	{
 		setInt(TAB_PLACEMENT_KEY, tabPlacement);
 	}
 
-	public int getTabSize() {
+	public int getTabSize()
+	{
 		return getInt(TAB_SIZE_KEY);
 	}
 
-	public void setTabSize(int tabSize) {
+	public void setTabSize(int tabSize)
+	{
 		setInt(TAB_SIZE_KEY, tabSize);
 	}
 
-	public void setTabSize(String tabSize) {
+	public void setTabSize(String tabSize)
+	{
 		setTabSize(Integer.parseInt(tabSize));
 	}
 
-	public int getSelectedTabIndex() {
-		try {
+	public int getSelectedTabIndex()
+	{
+		try
+		{
 			return getInt(SELECTED_TAB_INDEX_KEY);
 		}
-		catch (NumberFormatException e) {
+		catch (NumberFormatException e)
+		{
 			setSelectedTabIndex(0);
 			return 0;
 		}
 	}
 
-	public void setSelectedTabIndex(int selectedTabIndex) {
+	public void setSelectedTabIndex(int selectedTabIndex)
+	{
 		setInt(SELECTED_TAB_INDEX_KEY, selectedTabIndex);
 	}
 
-	public File getLastFileChooserDirectory() {
+	public File getLastFileChooserDirectory()
+	{
 		return new File(properties_.getProperty(LAST_FILE_CHOOSER_DIR_KEY, userHome));
 	}
 
-	public void setLastFileChooserDirectory(File file) {
+	public void setLastFileChooserDirectory(File file)
+	{
 		properties_.setProperty(LAST_FILE_CHOOSER_DIR_KEY, file.getAbsolutePath());
 	}
 
-	public int getBufferSize() {
+	public int getBufferSize()
+	{
 		return getInt(BUFFER_SIZE_KEY);
 	}
 
-	public void setBufferSize(int bufferSize) {
+	public void setBufferSize(int bufferSize)
+	{
 		setInt(BUFFER_SIZE_KEY, bufferSize);
 	}
 
-	public void setBufferSize(String bufferSize) {
+	public void setBufferSize(String bufferSize)
+	{
 		setBufferSize(Integer.parseInt(bufferSize));
 	}
 
-	public int getLatency() {
+	public int getLatency()
+	{
 		return getInt(LATENCY_KEY);
 	}
 
-	public void setLatency(int latency) {
+	public void setLatency(int latency)
+	{
 		setInt(LATENCY_KEY, latency);
 	}
 
-	public void setLatency(String latency) {
+	public void setLatency(String latency)
+	{
 		setLatency(Integer.parseInt(latency));
 	}
 
-	public int getAttributesVersion() {
-		if (properties_.get(ATTRIBUTES_VERSION_KEY) == null) {
+	public int getAttributesVersion()
+	{
+		if (properties_.get(ATTRIBUTES_VERSION_KEY) == null)
+		{
 			// Supporting v1.0 & v1.0.1, which had no notion of attributes
 			// version
 			return UNVERSIONED;
 		}
-		else {
+		else
+		{
 			return getInt(ATTRIBUTES_VERSION_KEY);
 		}
 	}
 
-	public void setAttributesVersion(int attributesVersion) {
+	public void setAttributesVersion(int attributesVersion)
+	{
 		setInt(ATTRIBUTES_VERSION_KEY, attributesVersion);
 	}
 
-	public Font getFont() {
+	public Font getFont()
+	{
 		Font font = new Font(properties_.getProperty(FONT_FAMILY_KEY), getInt(FONT_STYLE_KEY),
 				getInt(FONT_SIZE_KEY));
 		return font;
 	}
 
-	public void setFont(Font font) {
+	public void setFont(Font font)
+	{
 		properties_.setProperty(FONT_FAMILY_KEY, font.getFontName());
 		setInt(FONT_STYLE_KEY, font.getStyle());
 		setInt(FONT_SIZE_KEY, font.getSize());
 	}
 
-	public boolean confirmDelete() {
+	public boolean confirmDelete()
+	{
 		return getBoolean(CONFIRM_DELETE_KEY);
 	}
 
-	public void setConfirmDelete(boolean value) {
+	public void setConfirmDelete(boolean value)
+	{
 		setBoolean(CONFIRM_DELETE_KEY, value);
 	}
 
-	public boolean confirmDeleteAll() {
+	public boolean confirmDeleteAll()
+	{
 		return getBoolean(CONFIRM_DELETE_ALL_KEY);
 	}
 
-	public void setConfirmDeleteAll(boolean value) {
+	public void setConfirmDeleteAll(boolean value)
+	{
 		setBoolean(CONFIRM_DELETE_ALL_KEY, value);
 	}
 
-	public boolean autoScroll() {
+	public boolean autoScroll()
+	{
 		return getBoolean(AUTO_SCROLL_KEY);
 	}
 
-	public void setAutoScroll(boolean value) {
+	public void setAutoScroll(boolean value)
+	{
 		setBoolean(AUTO_SCROLL_KEY, value);
 	}
 
-	public String getEditor() {
+	public String getEditor()
+	{
 		String result = properties_.getProperty(EDITOR_KEY);
-		if (result == null) {
+		if (result == null)
+		{
 			result = "";
 		}
 
 		return (result);
 	}
 
-	public void setEditor(String value) {
+	public void setEditor(String value)
+	{
 		properties_.setProperty(EDITOR_KEY, value);
 	}
 
@@ -421,17 +479,22 @@ public class FollowAppAttributes {
 	 * 
 	 * @param file
 	 */
-	public void addRecentFile(File file) {
-		if (!recentFileListContains(file)) {
+	public void addRecentFile(File file)
+	{
+		if (!recentFileListContains(file))
+		{
 			List<String> fileList = getRecentFilesList();
 			// check size constraint and add accordingly
-			if (fileList.size() == getRecentFilesMax()) {
-				for (int i = 0; i < fileList.size() - 1; i++) {
+			if (fileList.size() == getRecentFilesMax())
+			{
+				for (int i = 0; i < fileList.size() - 1; i++)
+				{
 					fileList.set(i, fileList.get(i + 1));
 				}
 				fileList.set(fileList.size() - 1, file.getAbsolutePath());
 			}
-			else {
+			else
+			{
 				fileList.add(file.getAbsolutePath());
 			}
 			properties_.setEnumeratedProperty(RECENT_FILES_KEY, fileList);
@@ -443,7 +506,8 @@ public class FollowAppAttributes {
 	 * 
 	 * @return List recently opened files as Strings
 	 */
-	private List<String> getRecentFilesList() {
+	private List<String> getRecentFilesList()
+	{
 		return properties_.getEnumeratedProperty(RECENT_FILES_KEY);
 	}
 
@@ -452,22 +516,28 @@ public class FollowAppAttributes {
 	 * 
 	 * @return File[] File array of followed files
 	 */
-	public List<File> getRecentFiles() {
+	public List<File> getRecentFiles()
+	{
 		return getFiles(getRecentFilesList());
 	}
 
-	public int getRecentFilesMax() {
+	public int getRecentFilesMax()
+	{
 		return getInt(RECENT_FILES_MAX_KEY);
 	}
 
-	public void setRecentFilesMax(String max) {
+	public void setRecentFilesMax(String max)
+	{
 		setRecentFilesMax(Integer.parseInt(max));
 	}
 
-	public void setRecentFilesMax(int max) {
+	public void setRecentFilesMax(int max)
+	{
 		List<String> files = getRecentFilesList();
-		if (files.size() > max) {
-			for (int i = files.size() - max; i > 0; i--) {
+		if (files.size() > max)
+		{
+			for (int i = files.size() - max; i > 0; i--)
+			{
 				files.remove(0);
 			}
 			properties_.setEnumeratedProperty(RECENT_FILES_KEY, files);
@@ -475,35 +545,43 @@ public class FollowAppAttributes {
 		setInt(RECENT_FILES_MAX_KEY, max);
 	}
 
-	public File getPropertyFile() {
+	public File getPropertyFile()
+	{
 		return _propertyFile;
 	}
 
-	public void store() throws IOException {
-		BufferedOutputStream bos =
-			new BufferedOutputStream(new FileOutputStream(defaultPropertyFileName));
+	public void store() throws IOException
+	{
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(
+				defaultPropertyFileName));
 		properties_.store(bos, null);
 		bos.close();
 	}
 
-	private int getInt(String key) {
+	private int getInt(String key)
+	{
 		return Integer.parseInt(properties_.getProperty(key));
 	}
 
-	private void setInt(String key, int value) {
+	private void setInt(String key, int value)
+	{
 		properties_.setProperty(key, String.valueOf(value));
 	}
 
-	private boolean getBoolean(String key) {
+	private boolean getBoolean(String key)
+	{
 		return "true".equals(properties_.getProperty(key));
 	}
 
-	private void setBoolean(String key, boolean value) {
+	private void setBoolean(String key, boolean value)
+	{
 		properties_.setProperty(key, String.valueOf(value));
 	}
 
-	public FollowAppAttributes getDefaultAttributes() throws IOException {
-		if (defaultAttributes_ == null) {
+	public FollowAppAttributes getDefaultAttributes() throws IOException
+	{
+		if (defaultAttributes_ == null)
+		{
 			defaultAttributes_ = new FollowAppAttributes(getDefaultProperties());
 			// Check for the unlikely possibility that the default font is
 			// unavailable
@@ -511,15 +589,18 @@ public class FollowAppAttributes {
 			String[] availableFontFamilyNames = GraphicsEnvironment.getLocalGraphicsEnvironment()
 					.getAvailableFontFamilyNames();
 			boolean defaultFontIsAvailable = false;
-			for (int i = 0; i < availableFontFamilyNames.length; i++) {
-				if (defaultFont.getFamily().equals(availableFontFamilyNames[i])) {
+			for (int i = 0; i < availableFontFamilyNames.length; i++)
+			{
+				if (defaultFont.getFamily().equals(availableFontFamilyNames[i]))
+				{
 					defaultFontIsAvailable = true;
 					break;
 				}
 			}
-			if (!defaultFontIsAvailable) {
-				getLog().info("Font family " + defaultFont.getFamily()
-						+ " is unavailable; using " + availableFontFamilyNames[0] + " instead.");
+			if (!defaultFontIsAvailable)
+			{
+				log.info("Font family " + defaultFont.getFamily() + " is unavailable; using "
+						+ availableFontFamilyNames[0] + " instead.");
 				defaultAttributes_.setFont(new Font(availableFontFamilyNames[0], defaultFont
 						.getStyle(), defaultFont.getSize()));
 			}
@@ -527,15 +608,18 @@ public class FollowAppAttributes {
 		return defaultAttributes_;
 	}
 
-	private EnumeratedProperties getDefaultProperties() throws IOException {
-		if (defaultProperties_ == null) {
+	private EnumeratedProperties getDefaultProperties() throws IOException
+	{
+		if (defaultProperties_ == null)
+		{
 			InputStream in = this.getClass().getResourceAsStream(PROPERTY_PROTOTYPE_FILE_NAME);
 			BufferedInputStream bis = new BufferedInputStream(in);
 			FileOutputStream fos = new FileOutputStream(_propertyFile);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			byte[] byteArray = new byte[BUFFER_SIZE];
 			int len;
-			while ((len = bis.read(byteArray, 0, BUFFER_SIZE)) > 0) {
+			while ((len = bis.read(byteArray, 0, BUFFER_SIZE)) > 0)
+			{
 				bos.write(byteArray, 0, len);
 			}
 			bos.flush();
@@ -545,12 +629,5 @@ public class FollowAppAttributes {
 			defaultProperties_.load(new BufferedInputStream(new FileInputStream(_propertyFile)));
 		}
 		return defaultProperties_;
-	}
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(FollowAppAttributes.class.getName());
-		}
-		return log;
 	}
 }

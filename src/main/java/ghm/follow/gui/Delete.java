@@ -33,60 +33,63 @@ import javax.swing.JOptionPane;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class Delete extends FollowAppAction {
+public class Delete extends FollowAppAction
+{
 	public static final String NAME = "delete";
+	private Logger log = LoggerFactory.getLogger(Delete.class);
 
-	public Delete(FollowApp app) throws IOException {
-		super(app, FollowApp.getResourceBundle().getString("action.Delete.name"), FollowApp.getResourceBundle()
-				.getString("action.Delete.mnemonic"), FollowApp.getResourceBundle().getString(
-				"action.Delete.accelerator"), FollowApp.getResourceBundle().getString(
-				"action.Delete.icon"));
+	public Delete(FollowApp app) throws IOException
+	{
+		super(app, FollowApp.getResourceString("action.Delete.name"),
+				FollowApp.getResourceString("action.Delete.mnemonic"),
+				FollowApp.getResourceString("action.Delete.accelerator"),
+				FollowApp.getIcon(Delete.class, "action.Delete.icon"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		if (getApp().getAttributes().confirmDelete()) {
-			DisableableConfirm confirm = new DisableableConfirm(getApp().getFrame(), FollowApp
-					.getResourceBundle().getString("dialog.confirmDelete.title"), FollowApp
-					.getResourceBundle().getString("dialog.confirmDelete.message"), FollowApp
-					.getResourceBundle().getString("dialog.confirmDelete.confirmButtonText"), FollowApp
-					.getResourceBundle().getString("dialog.confirmDelete.doNotConfirmButtonText"),
-					FollowApp.getResourceBundle().getString("dialog.confirmDelete.disableText"));
+	public void actionPerformed(ActionEvent e)
+	{
+		if (getApp().getAttributes().confirmDelete())
+		{
+			DisableableConfirm confirm = new DisableableConfirm(getApp().getFrame(),
+					FollowApp.getResourceString("dialog.confirmDelete.title"),
+					FollowApp.getResourceString("dialog.confirmDelete.message"),
+					FollowApp.getResourceString("dialog.confirmDelete.confirmButtonText"),
+					FollowApp.getResourceString("dialog.confirmDelete.doNotConfirmButtonText"),
+					FollowApp.getResourceString("dialog.confirmDelete.disableText"));
 			confirm.pack();
 			confirm.setVisible(true);
-			if (confirm.markedDisabled()) {
+			if (confirm.markedDisabled())
+			{
 				getApp().getAttributes().setConfirmDelete(false);
 			}
-			if (confirm.markedConfirmed()) {
+			if (confirm.markedConfirmed())
+			{
 				performDelete();
 			}
 		}
-		else {
+		else
+		{
 			performDelete();
 		}
 	}
 
-	private void performDelete() {
+	private void performDelete()
+	{
 		getApp().setCursor(Cursor.WAIT_CURSOR);
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
-		try {
+		try
+		{
 			fileFollowingPane.clear();
 		}
-		catch (IOException ioe) {
-			getLog().error("IOException in Delete", ioe);
+		catch (IOException ioe)
+		{
+			log.error("IOException in Delete", ioe);
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
-			JOptionPane.showMessageDialog(getApp().getFrame(), FollowApp.getResourceBundle().getString(
-					"message.unableToDelete.text"), FollowApp.getResourceBundle().getString(
-					"message.unableToDelete.title"), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(getApp().getFrame(),
+					FollowApp.getResourceString("message.unableToDelete.text"),
+					FollowApp.getResourceString("message.unableToDelete.title"),
+					JOptionPane.WARNING_MESSAGE);
 		}
 		getApp().setCursor(Cursor.DEFAULT_CURSOR);
-	}
-
-	private transient Logger log;
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(Delete.class.getName());
-		}
-		return log;
 	}
 }

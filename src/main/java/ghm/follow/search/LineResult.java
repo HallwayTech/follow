@@ -7,9 +7,10 @@ import java.util.List;
 /**
  * Keeps results information about a line in the searchable text.
  * 
- * @author chall
+ * @author Carl Hall (carl.hall@gmail.com)
  */
-public class LineResult {
+public class LineResult
+{
 	// line position of the found term
 	public int lineNumber;
 
@@ -28,10 +29,11 @@ public class LineResult {
 	/**
 	 * Constructor
 	 * 
-	 * @author chall
+	 * @author Carl Hall (carl.hall@gmail.com)
 	 * @param lineNumber
 	 */
-	public LineResult(int lineNumber, int start, int end) {
+	public LineResult(int lineNumber, int start, int end)
+	{
 		wordResults = new ArrayList<WordResult>();
 		this.lineNumber = lineNumber;
 		this.start = start;
@@ -42,44 +44,49 @@ public class LineResult {
 	/**
 	 * Get the word results associated with this line.
 	 * 
-	 * @author chall
+	 * @author Carl Hall (carl.hall@gmail.com)
 	 * @return
 	 */
-	public List<WordResult> getWordResults() {
+	public List<WordResult> getWordResults()
+	{
 		return wordResults;
 	}
 
 	/**
 	 * Get a specific word result associated with this line.
 	 * 
-	 * @author chall
+	 * @author Carl Hall (carl.hall@gmail.com)
 	 * @param index
 	 * @return
 	 */
-	public WordResult getWordResult(int index) {
+	public WordResult getWordResult(int index)
+	{
 		return (WordResult) wordResults.get(index);
 	}
 
 	/**
 	 * Get the caret position of the first occurring word result on this line.
 	 * 
-	 * @author chall
+	 * @author Carl Hall (carl.hall@gmail.com)
 	 * @return
 	 */
-	public int getFirstWordPosition() {
+	public int getFirstWordPosition()
+	{
 		return firstPosition;
 	}
 
 	/**
 	 * Add a <code>WordResult</code> to this line
 	 * 
-	 * @author chall
+	 * @author Carl Hall (carl.hall@gmail.com)
 	 * @param wordResult
 	 */
-	public void addWord(WordResult wordResult) {
+	public void addWord(WordResult wordResult)
+	{
 		wordResult.parent = this;
 
-		if (wordResult.start < firstPosition) {
+		if (wordResult.start < firstPosition)
+		{
 			firstPosition = wordResult.start;
 		}
 		wordResults.add(wordResult);
@@ -88,23 +95,28 @@ public class LineResult {
 	/**
 	 * Builds a string that is conducive for showing as a result list entry
 	 * 
-	 * @author chall
+	 * @author Carl Hall (carl.hall@gmail.com)
 	 */
-	public String toString() {
+	public String toString()
+	{
 		StringBuffer retval = new StringBuffer("Line " + lineNumber);
 
-		if (wordResults.size() > 0) {
+		if (wordResults.size() > 0)
+		{
 			retval.append(" (");
 			Iterator<WordResult> words = wordResults.iterator();
 
-			while (words.hasNext()) {
+			while (words.hasNext())
+			{
 				WordResult word = words.next();
 				String wordString = word.toString();
 
-				if (wordString.length() > 0) {
+				if (wordString.length() > 0)
+				{
 					retval.append(wordString);
 
-					if (words.hasNext()) {
+					if (words.hasNext())
+					{
 						retval.append(",");
 					}
 				}

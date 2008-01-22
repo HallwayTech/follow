@@ -12,13 +12,15 @@ import java.io.Writer;
 import org.junit.After;
 import org.junit.Before;
 
-public abstract class BaseTestCase {
+public abstract class BaseTestCase
+{
 	protected FileFollower follower_;
 	protected File followedFile_;
 	protected Writer followedFileWriter_;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws Exception
+	{
 		followedFile_ = createTempFile();
 		followedFile_.deleteOnExit();
 		followedFileWriter_ = new BufferedWriter(new FileWriter(followedFile_));
@@ -26,24 +28,28 @@ public abstract class BaseTestCase {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws Exception
+	{
 		follower_.stopAndWait();
 		followedFileWriter_.flush();
 		followedFileWriter_.close();
 	}
 
-	protected void writeToFollowedFileAndWait(String string) throws Exception {
+	protected void writeToFollowedFileAndWait(String string) throws Exception
+	{
 		followedFileWriter_.write(string);
 		followedFileWriter_.flush();
 		Thread.sleep(follower_.getLatency() + 100);
 	}
 
-	protected void clearFollowedFile() throws Exception {
+	protected void clearFollowedFile() throws Exception
+	{
 		followedFileWriter_.close();
 		new FileWriter(followedFile_, false).write("");
 	}
 
-	protected File createTempFile() throws IOException {
+	protected File createTempFile() throws IOException
+	{
 		File file = File.createTempFile("followedFile", null);
 		file.deleteOnExit();
 		return file;

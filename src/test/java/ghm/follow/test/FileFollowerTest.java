@@ -13,17 +13,20 @@ import ghm.follow.io.OutputDestination;
 
 import static org.junit.Assert.*;
 
-public class FileFollowerTest extends BaseTestCase {
+public class FileFollowerTest extends BaseTestCase
+{
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws Exception
+	{
 		super.setUp();
 		testination_ = new Testination();
 		follower_.addOutputDestination(testination_);
 	}
 
 	@Test
-	public void textShouldMatchInputWhenAddingAfterStart() throws Exception {
+	public void textShouldMatchInputWhenAddingAfterStart() throws Exception
+	{
 		follower_.start();
 		String control = "control";
 		writeToFollowedFileAndWait(control);
@@ -34,7 +37,8 @@ public class FileFollowerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testShouldMatchInputWhenLatencyIsShort() throws Exception {
+	public void testShouldMatchInputWhenLatencyIsShort() throws Exception
+	{
 		follower_.setLatency(100);
 		follower_.start();
 		String control = "control";
@@ -43,7 +47,8 @@ public class FileFollowerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void textShouldMatchInputWhenBufferSizeIsSmall() throws Exception {
+	public void textShouldMatchInputWhenBufferSizeIsSmall() throws Exception
+	{
 		int bufferSize = 10;
 		follower_.setBufferSize(bufferSize);
 		follower_.start();
@@ -60,7 +65,8 @@ public class FileFollowerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void textInMultipleDestinationsShouldMatch() throws Exception {
+	public void textInMultipleDestinationsShouldMatch() throws Exception
+	{
 		Testination testination2 = new Testination();
 		follower_.addOutputDestination(testination2);
 		follower_.start();
@@ -71,7 +77,8 @@ public class FileFollowerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testJTextComponentDestinationFor2Minutes() throws Exception {
+	public void testJTextComponentDestinationFor2Minutes() throws Exception
+	{
 		JTextPane textPane = new JTextPane();
 		JTextComponentDestination dest = new JTextComponentDestination(textPane, true);
 		follower_.addOutputDestination(dest);
@@ -79,19 +86,22 @@ public class FileFollowerTest extends BaseTestCase {
 		Date start = new Date();
 		long end = start.getTime() + (2 * 1000 * 60);
 		Random rand = new Random();
-		while (end > new Date().getTime()) {
+		while (end > new Date().getTime())
+		{
 			StringBuffer sb = new StringBuffer();
 			double length = rand.nextDouble() * 100;
-			while (length > 0) {
+			while (length > 0)
+			{
 				sb.append((char) (length-- % 26));
-//				if (rand.nextDouble() >= .8) {
-//					sb = new StringBuffer();
-//					dest.clear();
-////					clearFollowedFile();
-//					break;
-//				}
+				// if (rand.nextDouble() >= .8) {
+				// sb = new StringBuffer();
+				// dest.clear();
+				// // clearFollowedFile();
+				// break;
+				// }
 			}
-			if (sb.length() > 0 && rand.nextBoolean()) {
+			if (sb.length() > 0 && rand.nextBoolean())
+			{
 				sb.append("\n");
 			}
 			writeToFollowedFileAndWait(sb.toString());
@@ -101,12 +111,15 @@ public class FileFollowerTest extends BaseTestCase {
 
 	private Testination testination_;
 
-	class Testination implements OutputDestination {
-		public void print(String s) {
+	class Testination implements OutputDestination
+	{
+		public void print(String s)
+		{
 			strBuf_.append(s);
 		}
 
-		public void clear() {
+		public void clear()
+		{
 			strBuf_.delete(0, strBuf_.length());
 		}
 

@@ -5,20 +5,24 @@ import ghm.follow.gui.FollowAppAction;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 
-public class Find extends FollowAppAction {
+public class Find extends FollowAppAction
+{
 	public static final String NAME = "find";
 
 	private FindDialog _dialog;
 
-	public Find(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.Find.name"), FollowApp.getResourceBundle()
-				.getString("action.Find.mnemonic"), FollowApp.getResourceBundle().getString(
-				"action.Find.accelerator"));
+	public Find(FollowApp app)
+	{
+		super(app, FollowApp.getResourceString("action.Find.name"),
+				FollowApp.getResourceString("action.Find.mnemonic"),
+				FollowApp.getResourceString("action.Find.accelerator"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		getApp().setCursor(Cursor.WAIT_CURSOR);
-		if (_dialog == null) {
+		if (_dialog == null)
+		{
 			_dialog = new FindDialog(this);
 			_dialog.setLocationRelativeTo(getApp().getFrame());
 			_dialog.setLocation(100, 100);

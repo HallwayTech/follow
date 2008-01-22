@@ -70,20 +70,21 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-//import javax.swing.UIManager;
-//import javax.swing.UnsupportedLookAndFeelException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,8 +95,9 @@ import org.slf4j.LoggerFactory;
  * @see #main(String[])
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class FollowApp {
-	private transient static Logger log;
+public class FollowApp
+{
+	private static Logger log = LoggerFactory.getLogger(FollowApp.class);
 	private int currentCursor_ = Cursor.DEFAULT_CURSOR;
 	private Cursor defaultCursor_;
 	private Cursor waitCursor_;
@@ -111,7 +113,8 @@ public class FollowApp {
 
 	private FollowAppAttributes attributes_;
 	private static FollowApp instance_;
-	private static ResourceBundle resBundle_ = ResourceBundle.getBundle("ghm.follow.FollowAppResourceBundle");
+	private static ResourceBundle resBundle_ = ResourceBundle
+			.getBundle("ghm.follow.FollowAppResourceBundle");
 	private JFrame frame_;
 
 	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -124,18 +127,22 @@ public class FollowApp {
 	 *            names of files to be opened
 	 */
 	FollowApp(List<String> fileNames) throws IOException, InterruptedException,
-			InvocationTargetException {
+			InvocationTargetException
+	{
 		this(fileNames, null);
 	}
 
-	FollowApp(List<String> fileNames, File propertyFile) throws IOException,
-			InterruptedException, InvocationTargetException {
+	FollowApp(List<String> fileNames, File propertyFile) throws IOException, InterruptedException,
+			InvocationTargetException
+	{
 		// Create & show startup status window
-		startupStatus_ = new StartupStatus(getResourceBundle());
+		startupStatus_ = new StartupStatus(resBundle_);
 		centerWindowInScreen(startupStatus_);
 		startupStatus_.pack();
-		SwingUtilities.invokeAndWait(new Runnable() {
-			public void run() {
+		SwingUtilities.invokeAndWait(new Runnable()
+		{
+			public void run()
+			{
 				startupStatus_.setVisible(true);
 			}
 		});
@@ -143,44 +150,31 @@ public class FollowApp {
 		// Ghastly workaround for bug in Font construction, in review by
 		// Sun with review id 108683.
 		GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-		SwingUtilities.invokeAndWait(new Runnable() {
-			public void run() {
+		SwingUtilities.invokeAndWait(new Runnable()
+		{
+			public void run()
+			{
 				startupStatus_.markDone(startupStatus_.LOAD_SYSTEM_FONTS);
 			}
 		});
 
 		// create frame first
-		frame_ = new JFrame(getResourceBundle().getString("frame.title"));
-
-		// set the look and feel to be more native
-		/*
-		try {
-	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (ClassNotFoundException cnfe) {
-		  getLog().info("Unable to load native look and feel");
-		}
-		catch (InstantiationException ie) {
-		  getLog().info("Unable to load native look and feel");
-		}
-		catch (IllegalAccessException iae) {
-		  getLog().info("Unable to load native look and feel");
-		}
-		catch (UnsupportedLookAndFeelException ulfe) {
-		  getLog().info("Unable to load native look and feel");
-		}
-		*/
+		frame_ = new JFrame(getResourceString("frame.title"));
 
 		// initialize attributes
 		attributes_ = new FollowAppAttributes(this, propertyFile);
-		for (String fileName : fileNames) {
+		for (String fileName : fileNames)
+		{
 			File file = new File(fileName);
-			if (!file.exists()) {
-				String msg = MessageFormat.format(getResourceBundle().getString(
-						"message.cmdLineFileNotFound.text"), new Object[] { file });
-				getLog().info(msg);
+			if (!file.exists())
+			{
+				String msg = MessageFormat.format(
+						getResourceString("message.cmdLineFileNotFound.text"),
+						new Object[] { file });
+				log.info(msg);
 			}
-			else if (!getAttributes().followedFileListContains(file)) {
+			else if (!getAttributes().followedFileListContains(file))
+			{
 				getAttributes().addFollowedFile(file);
 			}
 		}
@@ -192,7 +186,7 @@ public class FollowApp {
 		systemInterface_ = new DefaultSystemInterface(this);
 
 		// initialize menubar
-		JMenuBar jMenuBar = MenuBuilder.buildMenuBar(getResourceBundle(), getActions());
+		JMenuBar jMenuBar = MenuBuilder.buildMenuBar(resBundle_, getActions());
 
 		// initialize popupMenu
 		popupMenu_ = MenuBuilder.buildPopupMenu(getActions());
@@ -210,10 +204,12 @@ public class FollowApp {
 
 		// This is an ugly hack. It seems like JFrame.setLocation() is buggy
 		// on Solaris jdk versions before 1.4
-		if (HAS_SOLARIS_BUG) {
+		if (HAS_SOLARIS_BUG)
+		{
 			frame_.setLocation(50, 50);
 		}
-		else {
+		else
+		{
 			frame_.setLocation(getAttributes().getX(), getAttributes().getY());
 		}
 		// track window close events
@@ -229,44 +225,52 @@ public class FollowApp {
 		List<File> files = getAttributes().getFollowedFiles();
 		StringBuffer nonexistentFilesBuffer = null;
 		int nonexistentFileCount = 0;
-		for (File file : files) {
-			try {
+		for (File file : files)
+		{
+			try
+			{
 				open(file, false);
 			}
-			catch (FileNotFoundException e) {
+			catch (FileNotFoundException e)
+			{
 				// This file has been deleted since the previous execution.
 				// Remove it from the list of followed files
 				getAttributes().removeFollowedFile(file);
 				nonexistentFileCount++;
-				if (nonexistentFilesBuffer == null) {
+				if (nonexistentFilesBuffer == null)
+				{
 					nonexistentFilesBuffer = new StringBuffer(file.getAbsolutePath());
 				}
-				else {
+				else
+				{
 					nonexistentFilesBuffer.append(file.getAbsolutePath());
 				}
 				nonexistentFilesBuffer.append(MESSAGE_LINE_SEPARATOR);
 			}
 		}
-		if (nonexistentFileCount > 0) {
+		if (nonexistentFileCount > 0)
+		{
 			// Alert the user of the fact that one or more files have been
 			// deleted since the previous execution
-			String text = getResourceBundle().getString(
-					"message.filesDeletedSinceLastExecution.text");
+			String text = getResourceString("message.filesDeletedSinceLastExecution.text");
 			String message = MessageFormat.format(text, new Object[] { nonexistentFileCount,
 					nonexistentFilesBuffer.toString() });
-			String title = getResourceBundle().getString(
-					"message.filesDeletedSinceLastExecution.title");
+			String title = getResourceString("message.filesDeletedSinceLastExecution.title");
 			JOptionPane.showMessageDialog(frame_, message, title, JOptionPane.WARNING_MESSAGE);
 		}
-		if (tabbedPane_.getTabCount() > 0) {
-			if (tabbedPane_.getTabCount() > getAttributes().getSelectedTabIndex()) {
+		if (tabbedPane_.getTabCount() > 0)
+		{
+			if (tabbedPane_.getTabCount() > getAttributes().getSelectedTabIndex())
+			{
 				tabbedPane_.setSelectedIndex(getAttributes().getSelectedTabIndex());
 			}
-			else {
+			else
+			{
 				tabbedPane_.setSelectedIndex(0);
 			}
 		}
-		else {
+		else
+		{
 			getAction(Close.NAME).setEnabled(false);
 			getAction(Reload.NAME).setEnabled(false);
 			getAction(Edit.NAME).setEnabled(false);
@@ -281,11 +285,61 @@ public class FollowApp {
 	}
 
 	/**
+	 * Get a string from the resource bundle. Convenience method to shorten and centralize this
+	 * common call
+	 * 
+	 * @param key
+	 * @return The value of key in the resource bundle. null if the key is not found.
+	 */
+	public static String getResourceString(String key)
+	{
+		String value = null;
+		try
+		{
+			value = resBundle_.getString(key);
+		}
+		catch (MissingResourceException mre)
+		{
+			log.warn(mre.getMessage());
+		}
+		return value;
+	}
+
+	/**
+	 * Gets an image icon from the resource path.
+	 * 
+	 * @param clazz
+	 *            The class to use as an entry point to the resource path. Image path should be
+	 *            relative to this class.
+	 * @param iconNameKey
+	 *            The resource key name where the image is defined.
+	 * @return An image icon based on the URL generated from the value of iconNameKey. null if no
+	 *         URL can be found.
+	 */
+	public static ImageIcon getIcon(Class<?> clazz, String iconNameKey)
+	{
+		String filename = getResourceString(iconNameKey);
+		URL url = clazz.getResource(filename);
+		log.debug("Class: " + clazz + ", iconNameKey: " + iconNameKey);
+		log.debug("filename: " + filename);
+		log.debug("url: " + url);
+
+		ImageIcon icon = null;
+		if (url != null)
+		{
+			icon = new ImageIcon(url);
+			log.debug("errored: " + (java.awt.MediaTracker.ERRORED == icon.getImageLoadStatus()));
+		}
+		return icon;
+	}
+
+	/**
 	 * Loads the actions used in the application
 	 * 
 	 * @throws IOException
 	 */
-	private void loadActions() throws IOException {
+	private void loadActions() throws IOException
+	{
 		// initialize actions
 		putAction(Open.NAME, new Open(this));
 		putAction(Close.NAME, new Close(this));
@@ -300,7 +354,8 @@ public class FollowApp {
 		putAction(DeleteAll.NAME, new DeleteAll(this));
 		putAction(Configure.NAME, new Configure(this));
 		putAction(About.NAME, new About(this));
-		if (DEBUG) {
+		if (DEBUG)
+		{
 			putAction(Debug.NAME, new Debug(this));
 		}
 		putAction(Pause.NAME, new Pause(this));
@@ -315,29 +370,35 @@ public class FollowApp {
 	/**
 	 * @param jMenuBar
 	 */
-	private void initFrame(JMenuBar jMenuBar) {
+	private void initFrame(JMenuBar jMenuBar)
+	{
 		frame_.setJMenuBar(jMenuBar);
 		frame_.getContentPane().add(toolBar_, BorderLayout.NORTH);
 		frame_.getContentPane().add(tabbedPane_, BorderLayout.CENTER);
 		frame_.setSize(getAttributes().getWidth(), getAttributes().getHeight());
 	}
 
-	public void refreshRecentFilesMenu() {
-		if (recentFilesMenu_ != null) {
+	public void refreshRecentFilesMenu()
+	{
+		if (recentFilesMenu_ != null)
+		{
 			recentFilesMenu_.removeAll();
 			List<File> recentFiles = getAttributes().getRecentFiles();
 			// descend down the list to order files by last opened
-			for (int i = recentFiles.size() - 1; i >= 0; i--) {
+			for (int i = recentFiles.size() - 1; i >= 0; i--)
+			{
 				recentFilesMenu_.add(new Open(this, recentFiles.get(i)));
 			}
 		}
 	}
 
-	public void show() {
+	public void show()
+	{
 		frame_.setVisible(true);
 	}
 
-	public FollowAppAction getAction(String name) {
+	public FollowAppAction getAction(String name)
+	{
 		return actions_.get(name);
 	}
 
@@ -346,33 +407,39 @@ public class FollowApp {
 	 * 
 	 * @return
 	 */
-	public HashMap<String, FollowAppAction> getActions() {
+	public HashMap<String, FollowAppAction> getActions()
+	{
 		return actions_;
 	}
 
-	public void putAction(String name, FollowAppAction action) {
+	public void putAction(String name, FollowAppAction action)
+	{
 		actions_.put(name, action);
 	}
 
 	/**
-	 * Warning: This method should be called only from (1) the FollowApp
-	 * initializer (before any components are realized) or (2) from the event
-	 * dispatching thread.
+	 * Warning: This method should be called only from (1) the FollowApp initializer (before any
+	 * components are realized) or (2) from the event dispatching thread.
 	 */
 	void open(File file, boolean addFileToAttributes, boolean startFollowing)
-			throws FileNotFoundException {
-		if (file == null) {
+			throws FileNotFoundException
+	{
+		if (file == null)
+		{
 			throw new FileNotFoundException("file is null.");
 		}
-		if (!file.exists()) {
+		if (!file.exists())
+		{
 			throw new FileNotFoundException(file.getName() + " not found.");
 		}
 		FileFollowingPane fileFollowingPane = (FileFollowingPane) fileToFollowingPaneMap_.get(file);
-		if (fileFollowingPane != null) {
+		if (fileFollowingPane != null)
+		{
 			// File is already open; merely select its tab
 			tabbedPane_.setSelectedComponent(fileFollowingPane);
 		}
-		else {
+		else
+		{
 			fileFollowingPane = new FileFollowingPane(file, getAttributes().getBufferSize(),
 					getAttributes().getLatency(), getAttributes().autoScroll(), getAttributes()
 							.getFont(), getAttributes().getTabSize());
@@ -382,12 +449,14 @@ public class FollowApp {
 			ffpTextPane.setFont(getAttributes().getFont());
 			ffpTextPane.addMouseListener(getRightClickListener());
 			fileToFollowingPaneMap_.put(file, fileFollowingPane);
-			if (startFollowing) {
+			if (startFollowing)
+			{
 				fileFollowingPane.startFollowing();
 			}
 			tabbedPane_.addTab(file.getName(), null, fileFollowingPane, file.getAbsolutePath());
 			int tabCount = tabbedPane_.getTabCount();
-			if (tabCount < 10) {
+			if (tabCount < 10)
+			{
 				// KeyEvent.VK_1 through KeyEvent.VK_9 is represented by the
 				// ascii characters 1-9 (49-57)
 				int index = tabCount - 1;
@@ -395,14 +464,17 @@ public class FollowApp {
 			}
 			tabbedPane_.setSelectedIndex(tabCount - 1);
 			// add a listener to set the pause icon correctly
-			fileFollowingPane.addComponentListener(new ComponentAdapter() {
-				public void componentShown(ComponentEvent e) {
+			fileFollowingPane.addComponentListener(new ComponentAdapter()
+			{
+				public void componentShown(ComponentEvent e)
+				{
 					FileFollowingPane ffp = (FileFollowingPane) e.getSource();
 					Pause pause = (Pause) getAction(Pause.NAME);
 					pause.setIconByState(ffp.isFollowingPaused());
 				}
 			});
-			if (!getAction(Close.NAME).isEnabled()) {
+			if (!getAction(Close.NAME).isEnabled())
+			{
 				getAction(Close.NAME).setEnabled(true);
 				getAction(Reload.NAME).setEnabled(true);
 				getAction(Edit.NAME).setEnabled(true);
@@ -414,7 +486,8 @@ public class FollowApp {
 				getAction(DeleteAll.NAME).setEnabled(true);
 				getAction(Pause.NAME).setEnabled(true);
 			}
-			if (addFileToAttributes) {
+			if (addFileToAttributes)
+			{
 				getAttributes().addFollowedFile(file);
 				getAttributes().addRecentFile(file);
 				refreshRecentFilesMenu();
@@ -422,31 +495,36 @@ public class FollowApp {
 		}
 	}
 
-	public void open(File file, boolean addFileToAttributes) throws FileNotFoundException {
+	public void open(File file, boolean addFileToAttributes) throws FileNotFoundException
+	{
 		open(file, addFileToAttributes, getAttributes().autoScroll());
 	}
 
 	/**
-	 * Warning: This method should be called only from the event dispatching
-	 * thread.
+	 * Warning: This method should be called only from the event dispatching thread.
 	 * 
 	 * @param cursorType
 	 *            may be Cursor.DEFAULT_CURSOR or Cursor.WAIT_CURSOR
 	 */
-	public void setCursor(int cursorType) {
-		if (cursorType == currentCursor_) {
+	public void setCursor(int cursorType)
+	{
+		if (cursorType == currentCursor_)
+		{
 			return;
 		}
-		switch (cursorType) {
+		switch (cursorType)
+		{
 			case Cursor.DEFAULT_CURSOR:
-				if (defaultCursor_ == null) {
+				if (defaultCursor_ == null)
+				{
 					defaultCursor_ = Cursor.getDefaultCursor();
 				}
 				frame_.setCursor(defaultCursor_);
 				break;
 
 			case Cursor.WAIT_CURSOR:
-				if (waitCursor_ == null) {
+				if (waitCursor_ == null)
+				{
 					waitCursor_ = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
 				}
 				frame_.setCursor(waitCursor_);
@@ -460,11 +538,16 @@ public class FollowApp {
 	}
 
 	// Lazy initializer for the right-click listener which invokes a popup menu
-	private MouseListener getRightClickListener() {
-		if (rightClickListener_ == null) {
-			rightClickListener_ = new MouseAdapter() {
-				public void mouseReleased(MouseEvent e) {
-					if (SwingUtilities.isRightMouseButton(e)) {
+	private MouseListener getRightClickListener()
+	{
+		if (rightClickListener_ == null)
+		{
+			rightClickListener_ = new MouseAdapter()
+			{
+				public void mouseReleased(MouseEvent e)
+				{
+					if (SwingUtilities.isRightMouseButton(e))
+					{
 						Component source = e.getComponent();
 						popupMenu_.show(source, e.getX(), e.getY());
 					}
@@ -474,121 +557,136 @@ public class FollowApp {
 		return rightClickListener_;
 	}
 
-	public void enableDragAndDrop(Component c) {
+	public void enableDragAndDrop(Component c)
+	{
 		// Invoking this constructor automatically sets the component's drop
 		// target
 		new DropTarget(c, new DndFileOpener(this));
 	}
 
-	public void disableDragAndDrop(Component c) {
+	public void disableDragAndDrop(Component c)
+	{
 		c.setDropTarget(null);
 	}
 
-	public FileFollowingPane getSelectedFileFollowingPane() {
+	public FileFollowingPane getSelectedFileFollowingPane()
+	{
 		return (FileFollowingPane) tabbedPane_.getSelectedComponent();
 	}
 
-	public List<FileFollowingPane> getAllFileFollowingPanes() {
+	public List<FileFollowingPane> getAllFileFollowingPanes()
+	{
 		int tabCount = tabbedPane_.getTabCount();
 		List<FileFollowingPane> allFileFollowingPanes = new ArrayList<FileFollowingPane>();
-		for (int i = 0; i < tabCount; i++) {
+		for (int i = 0; i < tabCount; i++)
+		{
 			allFileFollowingPanes.add((FileFollowingPane) tabbedPane_.getComponentAt(i));
 		}
 		return allFileFollowingPanes;
 	}
 
-	public FollowAppAttributes getAttributes() {
+	public FollowAppAttributes getAttributes()
+	{
 		return attributes_;
 	}
 
-	public Map<File, FileFollowingPane> getFileToFollowingPaneMap() {
+	public Map<File, FileFollowingPane> getFileToFollowingPaneMap()
+	{
 		return fileToFollowingPaneMap_;
 	}
 
-	public JFrame getFrame() {
+	public JFrame getFrame()
+	{
 		return frame_;
 	}
 
-	public static FollowApp getInstance() {
+	public static FollowApp getInstance()
+	{
 		return instance_;
 	}
 
-	public static ResourceBundle getResourceBundle() {
-		return resBundle_;
-	}
-
-	public SystemInterface getSystemInterface() {
+	public SystemInterface getSystemInterface()
+	{
 		return systemInterface_;
 	}
 
-	public void setSystemInterface(SystemInterface systemInterface) {
+	public void setSystemInterface(SystemInterface systemInterface)
+	{
 		this.systemInterface_ = systemInterface;
 	}
 
-	public JTabbedPane getTabbedPane() {
+	public JTabbedPane getTabbedPane()
+	{
 		return tabbedPane_;
 	}
 
 	// We should remove this hack once JDK 1.4 gets wide adoption on Solaris.
-	static {
+	static
+	{
 		boolean isSolaris = "SunOS".equals(System.getProperty("os.name"));
 
-		if (isSolaris) {
+		if (isSolaris)
+		{
 			String version = System.getProperty("java.version");
-			if ((version != null) && version.startsWith("1.")) {
+			if ((version != null) && version.startsWith("1."))
+			{
 				String substring = version.substring(2, 3);
-				try {
+				try
+				{
 					int minor = Integer.parseInt(substring);
-					if (minor < 4) {
+					if (minor < 4)
+					{
 						HAS_SOLARIS_BUG = true;
 					}
 				}
-				catch (NumberFormatException nfe) {
+				catch (NumberFormatException nfe)
+				{
 					// Nothing else to do.
 				}
 			}
 		}
 	}
 
-	public static void centerWindowInScreen(Window window) {
+	public static void centerWindowInScreen(Window window)
+	{
 		Dimension screenSize = window.getToolkit().getScreenSize();
 		Dimension windowSize = window.getPreferredSize();
 		window.setLocation((int) (screenSize.getWidth() / 2 - windowSize.getWidth() / 2),
 				(int) (screenSize.getHeight() / 2 - windowSize.getHeight() / 2));
 	}
 
-	private static Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(FollowApp.class.getName());
-		}
-		return log;
-	}
-
 	/**
-	 * Invoke this method to start the Follow application. If any command-line
-	 * arguments are passed in, they are assume to be filenames and are opened
-	 * in the Follow application
+	 * Invoke this method to start the Follow application. If any command-line arguments are passed
+	 * in, they are assume to be filenames and are opened in the Follow application
 	 * 
 	 * @param args
 	 *            files to be opened
 	 */
-	public static void main(String[] args) {
-		try {
+	public static void main(String[] args)
+	{
+		try
+		{
 			ArrayList<String> fileNames = new ArrayList<String>();
 			File propFile = null;
-			for (int i = 0; i < args.length; i++) {
-				if (args[i].startsWith("-")) {
-					if ("-propFile".equalsIgnoreCase(args[i])) {
+			for (int i = 0; i < args.length; i++)
+			{
+				if (args[i].startsWith("-"))
+				{
+					if ("-propFile".equalsIgnoreCase(args[i]))
+					{
 						propFile = new File(args[++i]);
 					}
 				}
-				else {
+				else
+				{
 					fileNames.add(args[i]);
 				}
 			}
 			instance_ = new FollowApp(fileNames, propFile);
-			SwingUtilities.invokeAndWait(new Runnable() {
-				public void run() {
+			SwingUtilities.invokeAndWait(new Runnable()
+			{
+				public void run()
+				{
 					// ensure all widgets inited before opening files
 					instance_.show();
 					instance_.startupStatus_.markDone(instance_.startupStatus_.CREATE_WIDGETS);
@@ -601,8 +699,9 @@ public class FollowApp {
 			// ((FileFollowingPane)instance_.tabbedPane_.getComponentAt(i)).startFollowing();
 			// }
 		}
-		catch (Throwable t) {
-			getLog().error("Unhandled exception", t);
+		catch (Throwable t)
+		{
+			log.error("Unhandled exception", t);
 			System.exit(-1);
 		}
 	}

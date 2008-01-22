@@ -27,18 +27,21 @@ import java.awt.event.ActionEvent;
 /**
  * Action which clears the highlighted search in the current pane
  * 
- * @author <a href="mailto:chall@cfhdev.com">Carl Hall</a>
+ * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class ClearHighlights extends FollowAppAction {
+public class ClearHighlights extends FollowAppAction
+{
 	public static final String NAME = "clearHighlights";
 
-	public ClearHighlights(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.ClearHighlights.name"),
-				FollowApp.getResourceBundle().getString("action.ClearHighlights.mnemonic"),
-				FollowApp.getResourceBundle().getString("action.ClearHighlights.accelerator"));
+	public ClearHighlights(FollowApp app)
+	{
+		super(app, FollowApp.getResourceString("action.ClearHighlights.name"),
+				FollowApp.getResourceString("action.ClearHighlights.mnemonic"),
+				FollowApp.getResourceString("action.ClearHighlights.accelerator"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		// get the current selected tab
 		FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
 		// search the tab with the given text

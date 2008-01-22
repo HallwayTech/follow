@@ -23,16 +23,16 @@ import java.awt.event.ActionEvent;
 /**
  * Switches to the previous tab in the frame.
  * 
- * @author <a href="mailto:chall@cfhdev.com">Carl Hall</a>
+ * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public class PreviousTab extends FollowAppAction {
 	public static final String NAME = "previousTab";
 
 	public PreviousTab(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.PreviousFile.name"), FollowApp
-				.getResourceBundle().getString("action.PreviousFile.mnemonic"), FollowApp
-				.getResourceBundle().getString("action.PreviousFile.accelerator"), FollowApp
-				.getResourceBundle().getString("action.PreviousFile.icon"));
+		super(app, FollowApp.getResourceString("action.PreviousFile.name"),
+				FollowApp.getResourceString("action.PreviousFile.mnemonic"),
+				FollowApp.getResourceString("action.PreviousFile.accelerator"),
+				FollowApp.getIcon(PreviousTab.class, "action.PreviousFile.icon"));
 	}
 
 	/**

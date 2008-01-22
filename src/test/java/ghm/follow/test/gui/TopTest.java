@@ -6,10 +6,12 @@ import ghm.follow.nav.Top;
 
 import static org.junit.Assert.*;
 
-public class TopTest extends AppLaunchingTestCase {
+public class TopTest extends AppLaunchingTestCase
+{
 
 	@Test
-	public void testTop() {
+	public void testTop()
+	{
 		assertEquals(false, _app.getAction(Top.NAME).isEnabled());
 	}
 }

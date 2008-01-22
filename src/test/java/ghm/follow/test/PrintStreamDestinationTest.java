@@ -11,10 +11,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class PrintStreamDestinationTest extends BaseTestCase {
+public class PrintStreamDestinationTest extends BaseTestCase
+{
 
 	@Test
-	public void testPrintCalled() throws Exception {
+	public void testPrintCalled() throws Exception
+	{
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		PrintStreamDestination dest = new PrintStreamDestination(new PrintStream(byteStream));
 		follower_ = new FileFollower(followedFile_, new OutputDestination[] { dest });

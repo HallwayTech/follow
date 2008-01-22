@@ -32,17 +32,20 @@ import javax.swing.JViewport;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class Bottom extends FollowAppAction {
+public class Bottom extends FollowAppAction
+{
 	public static final String NAME = "bottom";
 
-	public Bottom(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.Bottom.name"), FollowApp.getResourceBundle()
-				.getString("action.Bottom.mnemonic"), FollowApp.getResourceBundle().getString(
-				"action.Bottom.accelerator"), FollowApp.getResourceBundle().getString(
-				"action.Bottom.icon"));
+	public Bottom(FollowApp app)
+	{
+		super(app, FollowApp.getResourceString("action.Bottom.name"),
+				FollowApp.getResourceString("action.Bottom.mnemonic"),
+				FollowApp.getResourceString("action.Bottom.accelerator"),
+				FollowApp.getIcon(Bottom.class, "action.Bottom.icon"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
 		SearchableTextPane textArea = fileFollowingPane.getTextPane();
 		textArea.setCaretPosition(textArea.getDocument().getLength());

@@ -33,41 +33,54 @@ import javax.swing.JOptionPane;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class Open extends FollowAppAction {
+public class Open extends FollowAppAction
+{
 	public static final String NAME = "open";
 
 	private File recentFile;
 
-	public Open(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.Open.name"), FollowApp.getResourceBundle()
-				.getString("action.Open.mnemonic"), FollowApp.getResourceBundle().getString(
-				"action.Open.accelerator"), FollowApp.getResourceBundle().getString("action.Open.icon"));
+	public Open(FollowApp app)
+	{
+		super(app, FollowApp.getResourceString("action.Open.name"),
+				FollowApp.getResourceString("action.Open.mnemonic"),
+				FollowApp.getResourceString("action.Open.accelerator"),
+				FollowApp.getIcon(Open.class, "action.Open.icon"));
 	}
 
-	public Open(FollowApp app, File recentFile) {
-		super(app, recentFile.getAbsolutePath(), FollowApp.getResourceBundle().getString(
-				"action.Open.mnemonic"), FollowApp.getResourceBundle().getString(
-				"action.Open.accelerator"));
+	public Open(FollowApp app, File recentFile)
+	{
+		super(app, recentFile.getAbsolutePath(),
+				FollowApp.getResourceString("action.Open.mnemonic"),
+				FollowApp.getResourceString("action.Open.accelerator"));
 		this.recentFile = recentFile;
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		File f = null;
-		try {
-			if (recentFile != null) {
+		try
+		{
+			if (recentFile != null)
+			{
 				f = recentFile;
 				getApp().open(recentFile, getApp().getAttributes().autoScroll());
-			} else {
+			}
+			else
+			{
 				f = getApp().getSystemInterface().getFileFromUser();
-				if (f != null) {
+				if (f != null)
+				{
 					getApp().open(f, getApp().getAttributes().autoScroll());
 				}
 			}
-		} catch (FileNotFoundException ex) {
-			String msg = MessageFormat.format(FollowApp.getResourceBundle().getString(
-					"message.cmdLineFileNotFound.text"), new Object[] { f });
-			JOptionPane.showMessageDialog(getApp().getFrame(), msg, FollowApp.getResourceBundle()
-					.getString("message.filesDeletedSinceLastExecution.title"),
+		}
+		catch (FileNotFoundException ex)
+		{
+			String msg = MessageFormat.format(
+					FollowApp.getResourceString("message.cmdLineFileNotFound.text"),
+					new Object[] { f });
+			JOptionPane.showMessageDialog(getApp().getFrame(), msg,
+					FollowApp.getResourceString("message.filesDeletedSinceLastExecution.title"),
 					JOptionPane.WARNING_MESSAGE);
 		}
 

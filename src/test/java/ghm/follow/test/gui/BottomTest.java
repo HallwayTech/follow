@@ -10,10 +10,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class BottomTest extends AppLaunchingTestCase {
+public class BottomTest extends AppLaunchingTestCase
+{
 
 	@Test
-	public void testEnabled() throws Exception {
+	public void testEnabled() throws Exception
+	{
 		assertEquals(false, _app.getAction(Bottom.NAME).isEnabled());
 		File file = createTempFile();
 		_systemInterface.setFileFromUser(file);

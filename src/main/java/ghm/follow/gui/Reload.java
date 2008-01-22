@@ -27,16 +27,19 @@ import java.awt.event.ActionEvent;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class Reload extends FollowAppAction {
+public class Reload extends FollowAppAction
+{
 	public static final String NAME = "reload";
 
-	public Reload(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.Reload.name"), FollowApp.getResourceBundle()
-				.getString("action.Reload.mnemonic"), FollowApp.getResourceBundle().getString(
-				"action.Reload.accelerator"));
+	public Reload(FollowApp app)
+	{
+		super(app, FollowApp.getResourceString("action.Reload.name"),
+				FollowApp.getResourceString("action.Reload.mnemonic"),
+				FollowApp.getResourceString("action.Reload.accelerator"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
 		fileFollowingPane.restartFollowing();
 	}

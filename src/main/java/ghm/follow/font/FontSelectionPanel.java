@@ -53,26 +53,28 @@ import javax.swing.event.ListSelectionListener;
  * href="http://gregmerrill.imagineis.com/fontSelectionPanel"
  * >http://gregmerrill.imagineis.com/fontSelectionPanel</a>.
  */
-public class FontSelectionPanel extends JPanel {
+public class FontSelectionPanel extends JPanel
+{
 
 	/**
-	 * Like {@link #FontSelectionPanel(java.awt.Font)}, except an initialFont
-	 * of <code>null</code> will be used.
+	 * Like {@link #FontSelectionPanel(java.awt.Font)}, except an initialFont of <code>null</code>
+	 * will be used.
 	 */
-	public FontSelectionPanel() {
+	public FontSelectionPanel()
+	{
 		this(null);
 	}
 
 	/**
-	 * Like {@link #FontSelectionPanel(java.awt.Font, String[], int[])}, except
-	 * that a default list of styles (<code>{"Plain", "Bold", "Italic", "Bold Italic"}</code>)
-	 * and font sizes (<code>{8, 9, 10, 12, 14}</code>) will be used.
+	 * Like {@link #FontSelectionPanel(java.awt.Font, String[], int[])}, except that a default list
+	 * of styles (<code>{"Plain", "Bold", "Italic", "Bold Italic"}</code>) and font sizes (<code>{8, 9, 10, 12, 14}</code>)
+	 * will be used.
 	 * 
 	 * @param initialFont
-	 *            see
-	 *            {@link #FontSelectionPanel(java.awt.Font, String[], int[])}
+	 *            see {@link #FontSelectionPanel(java.awt.Font, String[], int[])}
 	 */
-	public FontSelectionPanel(Font initialFont) {
+	public FontSelectionPanel(Font initialFont)
+	{
 		this(initialFont,
 		// Don't change the following two values without changing the javadocs
 				new String[] { "Plain", "Bold", "Italic", "Bold Italic" }, new int[] { 8, 9, 10,
@@ -80,28 +82,27 @@ public class FontSelectionPanel extends JPanel {
 	}
 
 	/**
-	 * Construct a new FontSelectionPanel whose family, style & size widget
-	 * selections are set according to the supplied initial Font. Additionally,
-	 * the style & size values available will be dictated by the values in
-	 * styleDisplayNames and predefinedSizes, respectively.
+	 * Construct a new FontSelectionPanel whose family, style & size widget selections are set
+	 * according to the supplied initial Font. Additionally, the style & size values available will
+	 * be dictated by the values in styleDisplayNames and predefinedSizes, respectively.
 	 * 
 	 * @param initialFont
-	 *            the newly constructed FontSelectionPanel's family, style, and
-	 *            size widgets will be set according to this value. This value
-	 *            may be null, in which case an initial font will be
-	 *            automatically created. This auto-created font will have a
-	 *            family, style, and size corresponding to the first avaiable
-	 *            value in the widget form family, style, and size respectively.
+	 *            the newly constructed FontSelectionPanel's family, style, and size widgets will be
+	 *            set according to this value. This value may be null, in which case an initial font
+	 *            will be automatically created. This auto-created font will have a family, style,
+	 *            and size corresponding to the first avaiable value in the widget form family,
+	 *            style, and size respectively.
 	 * @param styleDisplayNames
-	 *            must contain exactly four members. The members of this array
-	 *            represent the following styles, in order: Font.PLAIN,
-	 *            Font.BOLD, Font.ITALIC, and Font.BOLD+Font.ITALIC
+	 *            must contain exactly four members. The members of this array represent the
+	 *            following styles, in order: Font.PLAIN, Font.BOLD, Font.ITALIC, and
+	 *            Font.BOLD+Font.ITALIC
 	 * @param predefinedSizes
-	 *            must contain one or more predefined font sizes which will be
-	 *            available to the user as a convenience for populating the font
-	 *            size text field; all values must be greater than 0.
+	 *            must contain one or more predefined font sizes which will be available to the user
+	 *            as a convenience for populating the font size text field; all values must be
+	 *            greater than 0.
 	 */
-	public FontSelectionPanel(Font initialFont, String[] styleDisplayNames, int[] predefinedSizes) {
+	public FontSelectionPanel(Font initialFont, String[] styleDisplayNames, int[] predefinedSizes)
+	{
 		super(new GridBagLayout());
 		this.setBorder(new EmptyBorder(12, 12, 11, 11));
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -109,7 +110,8 @@ public class FontSelectionPanel extends JPanel {
 		String[] availableFontFamilyNames = GraphicsEnvironment.getLocalGraphicsEnvironment()
 				.getAvailableFontFamilyNames();
 
-		if (initialFont == null) {
+		if (initialFont == null)
+		{
 			initialFont = new Font(availableFontFamilyNames[0], Font.PLAIN, predefinedSizes[0]);
 		}
 
@@ -117,9 +119,12 @@ public class FontSelectionPanel extends JPanel {
 		fontFamilyList_ = new JList(availableFontFamilyNames);
 		fontFamilyList_.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		fontFamilyList_.setVisibleRowCount(8);
-		ListSelectionListener phraseCanvasUpdater = new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
+		ListSelectionListener phraseCanvasUpdater = new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				if (!e.getValueIsAdjusting())
+				{
 					observable_.setChanged();
 					observable_.notifyObservers();
 				}
@@ -162,13 +167,17 @@ public class FontSelectionPanel extends JPanel {
 
 		// Phrase Canvas (displays current font selection)
 		phraseCanvas_ = new PhraseCanvas(initialFont.getFamily(), initialFont, Color.black);
-		addObserver(new Observer() {
-			public void update(Observable o, Object arg) {
-				try {
+		addObserver(new Observer()
+		{
+			public void update(Observable o, Object arg)
+			{
+				try
+				{
 					phraseCanvas_.setPhrase((String) fontFamilyList_.getSelectedValue());
 					phraseCanvas_.setFont(FontSelectionPanel.this.getSelectedFont());
 				}
-				catch (InvalidFontException e) {
+				catch (InvalidFontException e)
+				{
 					phraseCanvas_.setPhrase("");
 				}
 				phraseCanvas_.invalidate();
@@ -214,23 +223,26 @@ public class FontSelectionPanel extends JPanel {
 	 * @exception IllegalArgumentException
 	 *                thrown if
 	 *                <ul>
-	 *                <li>predefinedSizes does not contain one or more integer
-	 *                values
-	 *                <li>predefinedSizes contains any integers with a value of
-	 *                less than 1
+	 *                <li>predefinedSizes does not contain one or more integer values
+	 *                <li>predefinedSizes contains any integers with a value of less than 1
 	 *                </ul>
 	 */
-	private Integer[] validateAndConvertPredefinedSizes(int[] predefinedSizes) {
-		if (predefinedSizes == null) {
+	private Integer[] validateAndConvertPredefinedSizes(int[] predefinedSizes)
+	{
+		if (predefinedSizes == null)
+		{
 			throw new IllegalArgumentException("int[] predefinedSizes may not be null");
 		}
-		if (predefinedSizes.length < 1) {
+		if (predefinedSizes.length < 1)
+		{
 			throw new IllegalArgumentException(
 					"int[] predefinedSizes must contain one or more values");
 		}
 		Integer[] predefinedSizeIntegers = new Integer[predefinedSizes.length];
-		for (int i = 0; i < predefinedSizes.length; i++) {
-			if (predefinedSizes[i] < 1) {
+		for (int i = 0; i < predefinedSizes.length; i++)
+		{
+			if (predefinedSizes[i] < 1)
+			{
 				throw new IllegalArgumentException(
 						"int[] predefinedSizes may not contain integers with value less than 1");
 			}
@@ -240,16 +252,16 @@ public class FontSelectionPanel extends JPanel {
 	}
 
 	/**
-	 * Adds an Observer to this FontSelectionPanel; the supplied Observer will
-	 * have its update() method called any time the Font currently specified in
-	 * the FontSelectionPanel changes. (The <tt>arg</tt> supplied to the
-	 * Observer will be <tt>null</tt>.)
+	 * Adds an Observer to this FontSelectionPanel; the supplied Observer will have its update()
+	 * method called any time the Font currently specified in the FontSelectionPanel changes. (The
+	 * <tt>arg</tt> supplied to the Observer will be <tt>null</tt>.)
 	 * 
 	 * @param o
 	 *            observer to be added
 	 * @see java.util.Observer
 	 */
-	public void addObserver(Observer o) {
+	public void addObserver(Observer o)
+	{
 		observable_.addObserver(o);
 	}
 
@@ -260,7 +272,8 @@ public class FontSelectionPanel extends JPanel {
 	 *            Observer to be removed
 	 * @see java.util.Observer
 	 */
-	public void deleteObserver(Observer o) {
+	public void deleteObserver(Observer o)
+	{
 		observable_.deleteObserver(o);
 	}
 
@@ -274,9 +287,11 @@ public class FontSelectionPanel extends JPanel {
 	 * @exception NoFontFamilySelectedException
 	 *                thrown if no font family is currently selected
 	 */
-	public String getSelectedFontFamily() throws NoFontFamilySelectedException {
+	public String getSelectedFontFamily() throws NoFontFamilySelectedException
+	{
 		String fontFamily = (String) fontFamilyList_.getSelectedValue();
-		if (fontFamily == null) {
+		if (fontFamily == null)
+		{
 			throw new NoFontFamilySelectedException("No font family is currently selected");
 		}
 		return fontFamily;
@@ -285,12 +300,13 @@ public class FontSelectionPanel extends JPanel {
 	/**
 	 * Returns the currently selected font style.
 	 * 
-	 * @return currently selected font style. This value will correspond to one
-	 *         of the font styles specified in {@link java.awt.Font}
+	 * @return currently selected font style. This value will correspond to one of the font styles
+	 *         specified in {@link java.awt.Font}
 	 * @exception NoFontStyleSelectedException
 	 *                thrown if no font style is currently selected
 	 */
-	public int getSelectedFontStyle() throws NoFontStyleSelectedException {
+	public int getSelectedFontStyle() throws NoFontStyleSelectedException
+	{
 		return fontStyleList_.getSelectedStyle();
 	}
 
@@ -303,18 +319,23 @@ public class FontSelectionPanel extends JPanel {
 	 * @exception InvalidFontSizeException
 	 *                thrown if the font size currently specified is invalid
 	 */
-	public int getSelectedFontSize() throws NoFontSizeSpecifiedException, InvalidFontSizeException {
+	public int getSelectedFontSize() throws NoFontSizeSpecifiedException, InvalidFontSizeException
+	{
 		String fontSize = fontSize_.getText();
-		if ((fontSize == null) || (fontSize.equals(""))) {
+		if ((fontSize == null) || (fontSize.equals("")))
+		{
 			throw new NoFontSizeSpecifiedException("No font size specified");
 		}
-		if (fontSize.length() > maxNumCharsInFontSize_) {
+		if (fontSize.length() > maxNumCharsInFontSize_)
+		{
 			throw new InvalidFontSizeException("Too many characters in font size");
 		}
-		try {
+		try
+		{
 			return Integer.parseInt(fontSize);
 		}
-		catch (NumberFormatException e) {
+		catch (NumberFormatException e)
+		{
 			throw new InvalidFontSizeException("The number specified in the font size text field ("
 					+ fontSize_.getText() + ") is not a valid integer.");
 		}
@@ -325,29 +346,28 @@ public class FontSelectionPanel extends JPanel {
 	 * 
 	 * @return currently selected font.
 	 * @exception InvalidFontException
-	 *                thrown if no valid font is currently specified; the actual
-	 *                class of the exception thrown may be
-	 *                {@link InvalidFontException},
-	 *                {@link NoFontFamilySelectedException},
-	 *                {@link NoFontStyleSelectedException},
-	 *                {@link NoFontSizeSpecifiedException}, or
-	 *                {@link InvalidFontSizeException}
+	 *                thrown if no valid font is currently specified; the actual class of the
+	 *                exception thrown may be {@link InvalidFontException},
+	 *                {@link NoFontFamilySelectedException}, {@link NoFontStyleSelectedException},
+	 *                {@link NoFontSizeSpecifiedException}, or {@link InvalidFontSizeException}
 	 */
-	public Font getSelectedFont() throws InvalidFontException {
+	public Font getSelectedFont() throws InvalidFontException
+	{
 		return new Font(getSelectedFontFamily(), getSelectedFontStyle(), getSelectedFontSize());
 	}
 
 	/**
-	 * Changes the currently selected font by assigning all widget values to
-	 * match the family/style/size values of the supplied font
+	 * Changes the currently selected font by assigning all widget values to match the
+	 * family/style/size values of the supplied font
 	 * 
 	 * @param font
 	 *            font whose values should be used to set widgets
 	 * @exception IllegalArgumentException
-	 *                thrown if the family or style of the font supplied are not
-	 *                available or invalid
+	 *                thrown if the family or style of the font supplied are not available or
+	 *                invalid
 	 */
-	public void setSelectedFont(Font font) {
+	public void setSelectedFont(Font font)
+	{
 		setSelectedFontFamily(font.getFamily());
 		setSelectedFontStyle(font.getStyle());
 		setSelectedFontSize(font.getSize());
@@ -359,14 +379,17 @@ public class FontSelectionPanel extends JPanel {
 	 * @param family
 	 *            family to which selection should change
 	 * @exception IllegalArgumentException
-	 *                thrown if the supplied font family is not among the list
-	 *                of available font families
+	 *                thrown if the supplied font family is not among the list of available font
+	 *                families
 	 */
-	public void setSelectedFontFamily(String family) {
+	public void setSelectedFontFamily(String family)
+	{
 		ListModel familyListModel = fontFamilyList_.getModel();
-		for (int i = 0; i < familyListModel.getSize(); i++) {
-                        String listEntry = String.valueOf(familyListModel.getElementAt(i));
-			if (listEntry.equalsIgnoreCase(family)) {
+		for (int i = 0; i < familyListModel.getSize(); i++)
+		{
+			String listEntry = String.valueOf(familyListModel.getElementAt(i));
+			if (listEntry.equalsIgnoreCase(family))
+			{
 				fontFamilyList_.setSelectedValue(listEntry, true);
 				return;
 			}
@@ -381,11 +404,11 @@ public class FontSelectionPanel extends JPanel {
 	 * @param style
 	 *            style to which selection should change
 	 * @exception IllegalArgumentException
-	 *                thrown if the supplied font style is not one of
-	 *                Font.PLAIN, Font.BOLD, Font.ITALIC, or
-	 *                Font.BOLD+Font.ITALIC
+	 *                thrown if the supplied font style is not one of Font.PLAIN, Font.BOLD,
+	 *                Font.ITALIC, or Font.BOLD+Font.ITALIC
 	 */
-	public void setSelectedFontStyle(int style) {
+	public void setSelectedFontStyle(int style)
+	{
 		fontStyleList_.setSelectedStyle(style);
 	}
 
@@ -395,7 +418,8 @@ public class FontSelectionPanel extends JPanel {
 	 * @param size
 	 *            size to which selection should change
 	 */
-	public void setSelectedFontSize(int size) {
+	public void setSelectedFontSize(int size)
+	{
 		fontSize_.setText(String.valueOf(size));
 	}
 
@@ -403,31 +427,36 @@ public class FontSelectionPanel extends JPanel {
 	protected int maxNumCharsInFontSize_ = 3;
 
 	/**
-	 * This class synchronizes font size value between the list containing
-	 * available font sizes & the text field in which font size is ultimately
-	 * specified.
+	 * This class synchronizes font size value between the list containing available font sizes &
+	 * the text field in which font size is ultimately specified.
 	 */
-	protected class FontSizeSynchronizer implements DocumentListener, ListSelectionListener {
+	protected class FontSizeSynchronizer implements DocumentListener, ListSelectionListener
+	{
 		/**
 		 * @param list
 		 *            list containing predefined font sizes
 		 * @param textField
 		 *            text field in which font size is specified
 		 */
-		public FontSizeSynchronizer(JList list, JTextField textField) {
+		public FontSizeSynchronizer(JList list, JTextField textField)
+		{
 			list_ = list;
 			textField_ = textField;
 		}
 
 		/** @see javax.swing.event.ListSelectionListener */
-		public void valueChanged(ListSelectionEvent e) {
-			if (updating_) {
+		public void valueChanged(ListSelectionEvent e)
+		{
+			if (updating_)
+			{
 				return;
 			}
 			updating_ = true;
-			if (!e.getValueIsAdjusting()) {
+			if (!e.getValueIsAdjusting())
+			{
 				Object selectedValue = ((JList) e.getSource()).getSelectedValue();
-				if (selectedValue != null) {
+				if (selectedValue != null)
+				{
 					textField_.setText(selectedValue.toString());
 				}
 				observable_.setChanged();
@@ -437,43 +466,53 @@ public class FontSelectionPanel extends JPanel {
 		}
 
 		/** @see javax.swing.event.DocumentListener */
-		public void changedUpdate(DocumentEvent e) {
+		public void changedUpdate(DocumentEvent e)
+		{
 			handle(e);
 		}
 
 		/** @see javax.swing.event.DocumentListener */
-		public void insertUpdate(DocumentEvent e) {
+		public void insertUpdate(DocumentEvent e)
+		{
 			handle(e);
 		}
 
 		/** @see javax.swing.event.DocumentListener */
-		public void removeUpdate(DocumentEvent e) {
+		public void removeUpdate(DocumentEvent e)
+		{
 			handle(e);
 		}
 
 		/** Handles all DocumentEvents */
-		protected void handle(DocumentEvent e) {
-			if (updating_) {
+		protected void handle(DocumentEvent e)
+		{
+			if (updating_)
+			{
 				return;
 			}
 			updating_ = true;
-			try {
+			try
+			{
 				Integer currentFontSizeInteger = Integer.valueOf(textField_.getText());
 				boolean currentSizeWasInList = false;
 				Object listMember;
-				for (int i = 0; i < list_.getModel().getSize(); i++) {
+				for (int i = 0; i < list_.getModel().getSize(); i++)
+				{
 					listMember = list_.getModel().getElementAt(i);
-					if (listMember.equals(currentFontSizeInteger)) {
+					if (listMember.equals(currentFontSizeInteger))
+					{
 						list_.setSelectedValue(currentFontSizeInteger, true);
 						currentSizeWasInList = true;
 						break;
 					}
 				}
-				if (!currentSizeWasInList) {
+				if (!currentSizeWasInList)
+				{
 					list_.clearSelection();
 				}
 			}
-			catch (NumberFormatException nfe) {
+			catch (NumberFormatException nfe)
+			{
 				list_.clearSelection();
 			}
 			observable_.setChanged();
@@ -490,37 +529,40 @@ public class FontSelectionPanel extends JPanel {
 	// Static inner classes
 	//
 	/**
-	 * Represents a list of the four font styles: plain, bold, italic, and bold
-	 * italic
+	 * Represents a list of the four font styles: plain, bold, italic, and bold italic
 	 */
-	protected static class FontStyleList extends JList {
+	protected static class FontStyleList extends JList
+	{
 		/**
-		 * Construct a new FontStyleList, using the supplied values for style
-		 * display names
+		 * Construct a new FontStyleList, using the supplied values for style display names
 		 * 
 		 * @param styleDisplayNames
-		 *            must contain exactly four members. The members of this
-		 *            array represent the following styles, in order:
-		 *            Font.PLAIN, Font.BOLD, Font.ITALIC, and
+		 *            must contain exactly four members. The members of this array represent the
+		 *            following styles, in order: Font.PLAIN, Font.BOLD, Font.ITALIC, and
 		 *            Font.BOLD+Font.ITALIC
 		 * @exception IllegalArgumentException
-		 *                thrown if styleDisplayNames does not contain exactly
-		 *                four String values
+		 *                thrown if styleDisplayNames does not contain exactly four String values
 		 */
-		public FontStyleList(String[] styleDisplayNames) {
+		public FontStyleList(String[] styleDisplayNames)
+		{
 			super(validateStyleDisplayNames(styleDisplayNames));
 		}
 
-		private static String[] validateStyleDisplayNames(String[] styleDisplayNames) {
-			if (styleDisplayNames == null) {
+		private static String[] validateStyleDisplayNames(String[] styleDisplayNames)
+		{
+			if (styleDisplayNames == null)
+			{
 				throw new IllegalArgumentException("String[] styleDisplayNames may not be null");
 			}
-			if (styleDisplayNames.length != 4) {
+			if (styleDisplayNames.length != 4)
+			{
 				throw new IllegalArgumentException(
 						"String[] styleDisplayNames must have a length of 4");
 			}
-			for (int i = 0; i < styleDisplayNames.length; i++) {
-				if (styleDisplayNames[i] == null) {
+			for (int i = 0; i < styleDisplayNames.length; i++)
+			{
+				if (styleDisplayNames[i] == null)
+				{
 					throw new IllegalArgumentException(
 							"No member of String[] styleDisplayNames may be null");
 				}
@@ -533,18 +575,20 @@ public class FontSelectionPanel extends JPanel {
 		 * @exception NoFontStyleSelectedException
 		 *                thrown if no font style is currently selected
 		 */
-		public int getSelectedStyle() throws NoFontStyleSelectedException {
-			switch (this.getSelectedIndex()) {
-			case 0:
-				return Font.PLAIN;
-			case 1:
-				return Font.BOLD;
-			case 2:
-				return Font.ITALIC;
-			case 3:
-				return Font.BOLD + Font.ITALIC;
-			default:
-				throw new NoFontStyleSelectedException("No font style is currently selected");
+		public int getSelectedStyle() throws NoFontStyleSelectedException
+		{
+			switch (this.getSelectedIndex())
+			{
+				case 0:
+					return Font.PLAIN;
+				case 1:
+					return Font.BOLD;
+				case 2:
+					return Font.ITALIC;
+				case 3:
+					return Font.BOLD + Font.ITALIC;
+				default:
+					throw new NoFontStyleSelectedException("No font style is currently selected");
 			}
 		}
 
@@ -554,36 +598,39 @@ public class FontSelectionPanel extends JPanel {
 		 * @param style
 		 *            new selected style for this FontStyleList
 		 * @exception IllegalArgumentException
-		 *                thrown if style is not one of Font.PLAIN, Font.BOLD,
-		 *                Font.ITALIC, or Font.BOLD+Font.ITALIC
+		 *                thrown if style is not one of Font.PLAIN, Font.BOLD, Font.ITALIC, or
+		 *                Font.BOLD+Font.ITALIC
 		 */
-		public void setSelectedStyle(int style) {
-			switch (style) {
-			case Font.PLAIN:
-				this.setSelectedIndex(0);
-				break;
-			case Font.BOLD:
-				this.setSelectedIndex(1);
-				break;
-			case Font.ITALIC:
-				this.setSelectedIndex(2);
-				break;
-			case Font.BOLD + Font.ITALIC:
-				this.setSelectedIndex(3);
-				break;
-			default:
-				throw new IllegalArgumentException("int style must come from java.awt.Font");
+		public void setSelectedStyle(int style)
+		{
+			switch (style)
+			{
+				case Font.PLAIN:
+					this.setSelectedIndex(0);
+					break;
+				case Font.BOLD:
+					this.setSelectedIndex(1);
+					break;
+				case Font.ITALIC:
+					this.setSelectedIndex(2);
+					break;
+				case Font.BOLD + Font.ITALIC:
+					this.setSelectedIndex(3);
+					break;
+				default:
+					throw new IllegalArgumentException("int style must come from java.awt.Font");
 			}
 		}
 	}
 
 	/**
-	 * An implementation of {@link javax.swing.ListCellRenderer} which right
-	 * justifies all cells.
+	 * An implementation of {@link javax.swing.ListCellRenderer} which right justifies all cells.
 	 */
-	protected static class ListCellRenderer extends DefaultListCellRenderer {
+	protected static class ListCellRenderer extends DefaultListCellRenderer
+	{
 		public Component getListCellRendererComponent(JList list, Object value, int index,
-				boolean isSelected, boolean cellHasFocus) {
+				boolean isSelected, boolean cellHasFocus)
+		{
 			JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index,
 					isSelected, cellHasFocus);
 			label.setHorizontalAlignment(JLabel.RIGHT);
@@ -592,24 +639,26 @@ public class FontSelectionPanel extends JPanel {
 	}
 
 	/**
-	 * Subclass of {@link java.util.Observable} which allows <tt>public</tt>
-	 * access to the setChanged() method.
+	 * Subclass of {@link java.util.Observable} which allows <tt>public</tt> access to the
+	 * setChanged() method.
 	 */
-	protected static class PublicChangeObservable extends Observable {
+	protected static class PublicChangeObservable extends Observable
+	{
 		/** @see java.util.Observable#setChanged() */
-		public void setChanged() {
+		public void setChanged()
+		{
 			super.setChanged();
 		}
 	}
 
 	/**
-	 * Component for displaying a "phrase" (a brief, one or two word String)
-	 * using a particular font & a particular color.
+	 * Component for displaying a "phrase" (a brief, one or two word String) using a particular font &
+	 * a particular color.
 	 */
-	static class PhraseCanvas extends Canvas {
+	static class PhraseCanvas extends Canvas
+	{
 		/**
-		 * Constructs a new PhraseCanvas with the supplied phrase, font, and
-		 * color.
+		 * Constructs a new PhraseCanvas with the supplied phrase, font, and color.
 		 * 
 		 * @param phrase
 		 *            phrase to be displayed in this PhraseCanvas
@@ -618,14 +667,16 @@ public class FontSelectionPanel extends JPanel {
 		 * @param color
 		 *            Color to use when rendering the phrase
 		 */
-		public PhraseCanvas(String phrase, Font font, Color color) {
+		public PhraseCanvas(String phrase, Font font, Color color)
+		{
 			phrase_ = phrase;
 			font_ = font;
 			color_ = color;
 		}
 
 		/** @see java.awt.Canvas#paint(java.awt.Graphics) */
-		public void paint(Graphics g) {
+		public void paint(Graphics g)
+		{
 			// Workaround for bug in Font.createGlyphVector(), in review by
 			// Sun with review id 108400.
 			Font dummyFont = new Font(font_.getFamily(), font_.getStyle(), font_.getSize() + 1);
@@ -645,17 +696,21 @@ public class FontSelectionPanel extends JPanel {
 			// canvas; else the glyph vector will be bottom-aligned
 			Rectangle2D logicalBounds = glyphVector.getLogicalBounds();
 			double x;
-			if (logicalBounds.getWidth() < this.getWidth()) {
+			if (logicalBounds.getWidth() < this.getWidth())
+			{
 				x = (this.getWidth() / 2) - (logicalBounds.getWidth() / 2);
 			}
-			else {
+			else
+			{
 				x = 0;
 			}
 			double y;
-			if (logicalBounds.getHeight() < this.getHeight()) {
+			if (logicalBounds.getHeight() < this.getHeight())
+			{
 				y = (this.getHeight() / 2) + (logicalBounds.getHeight() / 2);
 			}
-			else {
+			else
+			{
 				y = this.getHeight();
 			}
 			g.setColor(color_);
@@ -668,7 +723,8 @@ public class FontSelectionPanel extends JPanel {
 		 * 
 		 * @return phrase to be rendered by this PhraseCanvas
 		 */
-		public String getPhrase() {
+		public String getPhrase()
+		{
 			return phrase_;
 		}
 
@@ -676,11 +732,11 @@ public class FontSelectionPanel extends JPanel {
 		 * Sets the phrase to be rendered by this PhraseCanvas.
 		 * 
 		 * @param phrase
-		 *            new phrase to be rendered by this PhraseCanvas; this new
-		 *            value will be rendered the next time
-		 *            {@link #paint(java.awt.Graphics)} is called
+		 *            new phrase to be rendered by this PhraseCanvas; this new value will be
+		 *            rendered the next time {@link #paint(java.awt.Graphics)} is called
 		 */
-		public void setPhrase(String phrase) {
+		public void setPhrase(String phrase)
+		{
 			phrase_ = phrase;
 		}
 
@@ -691,7 +747,8 @@ public class FontSelectionPanel extends JPanel {
 		 * 
 		 * @return font to use when rendering the phrase
 		 */
-		public Font getFont() {
+		public Font getFont()
+		{
 			return font_;
 		}
 
@@ -699,11 +756,11 @@ public class FontSelectionPanel extends JPanel {
 		 * Sets the font to use when rendering the phrase.
 		 * 
 		 * @param font
-		 *            new font to use when rendering the phrase; this new value
-		 *            will be used to render the phrase the next time
-		 *            {@link #paint(java.awt.Graphics)} is called
+		 *            new font to use when rendering the phrase; this new value will be used to
+		 *            render the phrase the next time {@link #paint(java.awt.Graphics)} is called
 		 */
-		public void setFont(Font font) {
+		public void setFont(Font font)
+		{
 			font_ = font;
 		}
 
@@ -714,7 +771,8 @@ public class FontSelectionPanel extends JPanel {
 		 * 
 		 * @return color to use when rendering the phrase
 		 */
-		public Color getColor() {
+		public Color getColor()
+		{
 			return color_;
 		}
 
@@ -722,11 +780,11 @@ public class FontSelectionPanel extends JPanel {
 		 * Sets the color to use when rendering the phrase.
 		 * 
 		 * @param color
-		 *            new color to use when rendering the phrase; this new value
-		 *            will be used to render the phrase the next time
-		 *            {@link #paint(java.awt.Graphics)} is called
+		 *            new color to use when rendering the phrase; this new value will be used to
+		 *            render the phrase the next time {@link #paint(java.awt.Graphics)} is called
 		 */
-		public void setColor(Color color) {
+		public void setColor(Color color)
+		{
 			color_ = color;
 		}
 
@@ -735,10 +793,10 @@ public class FontSelectionPanel extends JPanel {
 		/**
 		 * Returns true iff anti-aliasing is used when rendering the phrase.
 		 * 
-		 * @return whether or not anti-aliasing is used when rendering the
-		 *         phrase
+		 * @return whether or not anti-aliasing is used when rendering the phrase
 		 */
-		public boolean isAntialiasOn() {
+		public boolean isAntialiasOn()
+		{
 			return antialiasOn_;
 		}
 
@@ -746,11 +804,12 @@ public class FontSelectionPanel extends JPanel {
 		 * Turn anti-aliasing on or off.
 		 * 
 		 * @param antialiasOn
-		 *            whether or not to use anti-aliasing when rendering the
-		 *            phrase this new value will be used to render the phrase
-		 *            the next time {@link #paint(java.awt.Graphics)} is called
+		 *            whether or not to use anti-aliasing when rendering the phrase this new value
+		 *            will be used to render the phrase the next time
+		 *            {@link #paint(java.awt.Graphics)} is called
 		 */
-		public void setAntialiasOn(boolean antialiasOn) {
+		public void setAntialiasOn(boolean antialiasOn)
+		{
 			antialiasOn_ = antialiasOn;
 		}
 

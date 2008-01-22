@@ -26,14 +26,19 @@ import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 
 /**
- * Implementation of {@link OutputDestination} which appends Strings to a
- * {@link JTextPane}.
+ * Implementation of {@link OutputDestination} which appends Strings to a {@link JTextPane}.
  * 
  * @see OutputDestination
  * @see JTextPane
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class JTextPaneDestination implements OutputDestination {
+public class JTextPaneDestination implements OutputDestination
+{
+	private Logger log = LoggerFactory.getLogger(JTextPaneDestination.class.getName());
+
+	protected JTextPane jTextPane_;
+
+	protected boolean autoPositionCaret_;
 
 	/**
 	 * Construct a new JTextPaneDestination.
@@ -41,29 +46,33 @@ public class JTextPaneDestination implements OutputDestination {
 	 * @param jTextPane
 	 *            text will be appended to this text area
 	 * @param autoPositionCaret
-	 *            if true, caret will be automatically moved to the bottom of
-	 *            the text area when text is appended
+	 *            if true, caret will be automatically moved to the bottom of the text area when
+	 *            text is appended
 	 */
-	public JTextPaneDestination(JTextPane jTextPane, boolean autoPositionCaret) {
+	public JTextPaneDestination(JTextPane jTextPane, boolean autoPositionCaret)
+	{
 		jTextPane_ = jTextPane;
 		autoPositionCaret_ = autoPositionCaret;
 	}
 
-	public JTextPane getJTextPane() {
+	public JTextPane getJTextPane()
+	{
 		return jTextPane_;
 	}
 
-	public void setJTextArea(JTextPane jTextPane) {
+	public void setJTextArea(JTextPane jTextPane)
+	{
 		jTextPane_ = jTextPane;
 	}
 
 	/**
-	 * Add a filtered view to this destination. Filtered views show only a
-	 * subset of the total output based on filter conditions.
+	 * Add a filtered view to this destination. Filtered views show only a subset of the total
+	 * output based on filter conditions.
 	 * 
 	 * @since 1.8.0
 	 */
-	public void addFilteredView() {
+	public void addFilteredView()
+	{
 
 	}
 
@@ -72,58 +81,53 @@ public class JTextPaneDestination implements OutputDestination {
 	 * 
 	 * @since 1.8.0
 	 */
-	public void removeFilteredView() {
+	public void removeFilteredView()
+	{
 
 	}
 
 	/**
-	 * @return whether caret will be automatically moved to the bottom of the
-	 *         text area when text is appended
+	 * @return whether caret will be automatically moved to the bottom of the text area when text is
+	 *         appended
 	 */
-	public boolean autoPositionCaret() {
+	public boolean autoPositionCaret()
+	{
 		return autoPositionCaret_;
 	}
 
 	/**
 	 * @param autoPositionCaret
-	 *            if true, caret will be automatically moved to the bottom of
-	 *            the text area when text is appended
+	 *            if true, caret will be automatically moved to the bottom of the text area when
+	 *            text is appended
 	 */
-	public void setAutoPositionCaret(boolean autoPositionCaret) {
+	public void setAutoPositionCaret(boolean autoPositionCaret)
+	{
 		autoPositionCaret_ = autoPositionCaret;
 	}
 
-	public void print(String s) {
-		try {
+	public void print(String s)
+	{
+		try
+		{
 			jTextPane_.getDocument().insertString(jTextPane_.getDocument().getLength(), s, null);
-			if (autoPositionCaret_) {
+			if (autoPositionCaret_)
+			{
 				jTextPane_.setCaretPosition(jTextPane_.getDocument().getLength());
 			}
 		}
-		catch (BadLocationException e) {
+		catch (BadLocationException e)
+		{
 			// just ignore, nothing we can do
-			getLog().error("BadLocationException in JTextPaneDestination", e);
+			log.error("BadLocationException in JTextPaneDestination", e);
 		}
 	}
 
-	public void clear() {
+	public void clear()
+	{
 		jTextPane_.setText("");
-		if (autoPositionCaret_) {
+		if (autoPositionCaret_)
+		{
 			jTextPane_.setCaretPosition(0);
 		}
 	}
-
-	private transient Logger log;
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(JTextPaneDestination.class.getName());
-		}
-		return log;
-	}
-
-	protected JTextPane jTextPane_;
-
-	protected boolean autoPositionCaret_;
-
 }

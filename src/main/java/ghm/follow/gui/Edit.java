@@ -27,20 +27,24 @@ import java.awt.event.ActionEvent;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class Edit extends FollowAppAction {
+public class Edit extends FollowAppAction
+{
 	public static final String NAME = "edit";
 
-	public Edit(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.Edit.name"), FollowApp.getResourceBundle()
-				.getString("action.Edit.mnemonic"), FollowApp.getResourceBundle().getString(
-				"action.Edit.accelerator"));
+	public Edit(FollowApp app)
+	{
+		super(app, FollowApp.getResourceString("action.Edit.name"),
+				FollowApp.getResourceString("action.Edit.mnemonic"),
+				FollowApp.getResourceString("action.Edit.accelerator"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
 
 		String config = getApp().getAttributes().getEditor();
-		if (!config.equals("")) {
+		if (!config.equals(""))
+		{
 			ExternalEditor editor = new ExternalEditor(config);
 			editor.exec(fileFollowingPane.getFollowedFile());
 		}

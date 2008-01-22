@@ -16,22 +16,26 @@ import javax.swing.text.Element;
 import javax.swing.text.Utilities;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
-public class SearchableTextPane extends JTextArea {
+public class SearchableTextPane extends JTextArea
+{
+	private Logger log = LoggerFactory.getLogger(SearchableTextPane.class.getName());
 	private int lastSearchPos = -1;
 	private String lastSearchTerm;
 	private final DefaultHighlightPainter wordPainter = new DefaultHighlightPainter(Color.YELLOW);
 
-	public SearchableTextPane(Font font, int tabSize) {
+	public SearchableTextPane(Font font, int tabSize)
+	{
 		// set the display font
 		setFont(font);
 		setTabSize(tabSize);
 	}
 
 	/**
-	 * Override this to keep the text from wrapping and to make the viewable
-	 * area as wide as the tabbed pane
+	 * Override this to keep the text from wrapping and to make the viewable area as wide as the
+	 * tabbed pane
 	 */
-	public boolean getScrollableTracksViewportWidth() {
+	public boolean getScrollableTracksViewportWidth()
+	{
 		Component parent = getParent();
 		ComponentUI ui = getUI();
 
@@ -39,30 +43,35 @@ public class SearchableTextPane extends JTextArea {
 	}
 
 	/**
-	 * Highlight <code>term</code> wherever it is found in the view. Also
-	 * highlights the entire line on which the term is found.
+	 * Highlight <code>term</code> wherever it is found in the view. Also highlights the entire
+	 * line on which the term is found.
 	 * 
 	 * @param term
 	 * @param caseSensitive
 	 * @param useRegularExpression
 	 * @return
 	 */
-	public List<LineResult> highlight(String term, int flags) {
+	public List<LineResult> highlight(String term, int flags)
+	{
 		List<LineResult> lineResults = new ArrayList<LineResult>();
 		// Remove all old highlights
 		removeHighlights();
 		// Search for pattern
-		if ((term != null) && (term.length() > 0)) {
+		if ((term != null) && (term.length() > 0))
+		{
 			// look for instances of the term in the text
 
-			try {
+			try
+			{
 				Document doc = getDocument();
 				String text = doc.getText(0, doc.getLength());
 				List<WordResult> searchResults = new SearchEngine(flags).search(term, text);
 				lineResults = convertWords2Lines(searchResults);
-				for (LineResult lineResult : lineResults) {
+				for (LineResult lineResult : lineResults)
+				{
 					List<WordResult> wordResults = lineResult.getWordResults();
-					for (WordResult wordResult : wordResults) {
+					for (WordResult wordResult : wordResults)
+					{
 						// highlight the searched term
 						int wordStart = wordResult.start;
 						int wordEnd = wordResult.end;
@@ -71,8 +80,9 @@ public class SearchableTextPane extends JTextArea {
 					}
 				}
 			}
-			catch (BadLocationException e) {
-				getLog().error("BadLocationException in SearchableTextPane", e);
+			catch (BadLocationException e)
+			{
+				log.error("BadLocationException in SearchableTextPane", e);
 				lineResults = new ArrayList<LineResult>();
 			}
 		}
@@ -86,20 +96,22 @@ public class SearchableTextPane extends JTextArea {
 	 * @param wordEnd
 	 * @param highlighter
 	 */
-	private void addHighlight(int start, int length) throws BadLocationException {
+	private void addHighlight(int start, int length) throws BadLocationException
+	{
 		getHighlighter().addHighlight(start, start + length, wordPainter);
 	}
 
 	/**
 	 * Removes highlights from text area
 	 */
-	public void removeHighlights() {
+	public void removeHighlights()
+	{
 		getHighlighter().removeAllHighlights();
 	}
 
 	/**
-	 * Searches for a term. If the term provided matches the last searched term,
-	 * the last found position is used as a starting point.<br>
+	 * Searches for a term. If the term provided matches the last searched term, the last found
+	 * position is used as a starting point.<br>
 	 * <br>
 	 * Developer note: this method isn't currently used.
 	 * 
@@ -108,28 +120,35 @@ public class SearchableTextPane extends JTextArea {
 	 * @return The position where the term was found.<br>
 	 *         If the term is null, empty or not found, -1 is returned.
 	 */
-	public int search(String term) {
-		if (term != null && term.length() > 0) {
-			if (term.equals(lastSearchTerm)) {
+	public int search(String term)
+	{
+		if (term != null && term.length() > 0)
+		{
+			if (term.equals(lastSearchTerm))
+			{
 				// assume to start at the beginning
 				int pos = 0;
 				// if there is a previous search position, start there plus the
 				// length
 				// of the last term so that last term again isn't found again
-				if (lastSearchPos != -1) {
+				if (lastSearchPos != -1)
+				{
 					pos = lastSearchPos + lastSearchTerm.length();
 				}
 				lastSearchPos = search(lastSearchTerm, pos);
 			}
-			else {
+			else
+			{
 				lastSearchPos = search(term, 0);
 			}
 		}
 		// remember the term if it was found
-		if (lastSearchPos == -1) {
+		if (lastSearchPos == -1)
+		{
 			lastSearchTerm = null;
 		}
-		else {
+		else
+		{
 			lastSearchTerm = term;
 		}
 		return lastSearchPos;
@@ -147,18 +166,21 @@ public class SearchableTextPane extends JTextArea {
 	 * @return The position where the term was found.<br>
 	 *         If the term is null, empty or not found, -1 is returned.
 	 */
-	public int search(String term, int startPos) {
+	public int search(String term, int startPos)
+	{
 		int pos = 0;
-		try {
+		try
+		{
 			Document doc = getDocument();
 			String text = doc.getText(0, doc.getLength());
 
 			// Search for pattern
 			pos = text.indexOf(term, startPos);
 		}
-		catch (BadLocationException e) {
+		catch (BadLocationException e)
+		{
 			// just return -1;
-			getLog().error("BadLocationException in SearchableTextPane", e);
+			log.warn("BadLocationException in SearchableTextPane", e);
 			pos = -1;
 		}
 		return pos;
@@ -170,14 +192,18 @@ public class SearchableTextPane extends JTextArea {
 	 * @param words
 	 * @return
 	 */
-	private List<LineResult> convertWords2Lines(List<WordResult> words) throws BadLocationException {
+	private List<LineResult> convertWords2Lines(List<WordResult> words) throws BadLocationException
+	{
 		ArrayList<LineResult> lines = new ArrayList<LineResult>();
 		LineResult tempLine = null;
 		int lastLine = -1;
-		for (WordResult word : words) {
+		for (WordResult word : words)
+		{
 			int line = getLineOfOffset(word.start);
-			if (line != lastLine) {
-				if (tempLine != null) {
+			if (line != lastLine)
+			{
+				if (tempLine != null)
+				{
 					lines.add(tempLine);
 				}
 				Element elem = Utilities.getParagraphElement(this, word.start);
@@ -190,7 +216,8 @@ public class SearchableTextPane extends JTextArea {
 			// allow other things to happen in case the search takes a while
 			Thread.yield();
 		}
-		if (tempLine != null) {
+		if (tempLine != null)
+		{
 			lines.add(tempLine);
 		}
 		return lines;
@@ -203,7 +230,8 @@ public class SearchableTextPane extends JTextArea {
 	 * @param lineResult
 	 */
 	private void updateWordResult(WordResult wordResult, LineResult lineResult)
-			throws BadLocationException {
+			throws BadLocationException
+	{
 		lineResult.addWord(wordResult);
 		// increase by 1 because offset starts at 0.
 		// 1 is clearer to the user since most people don't start counting
@@ -212,14 +240,5 @@ public class SearchableTextPane extends JTextArea {
 		wordResult.parent.lineNumber = line + 1;
 		int lineOffset = getLineStartOffset(line);
 		wordResult.setLineOffset(lineOffset);
-	}
-
-	private transient Logger log;
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(SearchableTextPane.class.getName());
-		}
-		return log;
 	}
 }

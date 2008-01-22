@@ -31,16 +31,20 @@ import javax.swing.JViewport;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class Top extends FollowAppAction {
+public class Top extends FollowAppAction
+{
 	public static final String NAME = "top";
-	
-	public Top(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.Top.name"), FollowApp.getResourceBundle()
-				.getString("action.Top.mnemonic"), FollowApp.getResourceBundle().getString(
-				"action.Top.accelerator"), FollowApp.getResourceBundle().getString("action.Top.icon"));
+
+	public Top(FollowApp app)
+	{
+		super(app, FollowApp.getResourceString("action.Top.name"),
+				FollowApp.getResourceString("action.Top.mnemonic"),
+				FollowApp.getResourceString("action.Top.accelerator"),
+				FollowApp.getIcon(Top.class, "action.Top.icon"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
 		fileFollowingPane.getTextPane().setCaretPosition(0);
 		JViewport viewport = fileFollowingPane.getViewport();

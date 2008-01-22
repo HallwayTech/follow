@@ -32,70 +32,69 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Will write window position/size to the supplied FollowAppAttributes object.
- * The supplied keys will be used when writing position/size values to the
- * FollowAppAttributes object.
+ * Will write window position/size to the supplied FollowAppAttributes object. The supplied keys
+ * will be used when writing position/size values to the FollowAppAttributes object.
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class WindowTracker extends WindowAdapter {
-	private transient Logger log;
+public class WindowTracker extends WindowAdapter
+{
+	private Logger log = LoggerFactory.getLogger(WindowTracker.class);
 	protected FollowAppAttributes attributes;
 	protected JTabbedPane tabbedPane;
 	protected SystemInterface systemInterface;
 
 	/**
-	 * Construct a new WindowTracker which will write window position/size to
-	 * the supplied FollowAppAttributes object. The supplied keys will be used
-	 * when writing position/size values to the FollowAppAttributes object.
+	 * Construct a new WindowTracker which will write window position/size to the supplied
+	 * FollowAppAttributes object. The supplied keys will be used when writing position/size values
+	 * to the FollowAppAttributes object.
 	 * 
 	 * @param attributes
-	 *            attributes object to which window size & position should be
-	 *            written
+	 *            attributes object to which window size & position should be written
 	 */
 	public WindowTracker(FollowAppAttributes attributes, JTabbedPane tabbedPane,
-			SystemInterface systemInterface) {
+			SystemInterface systemInterface)
+	{
 		this.attributes = attributes;
 		this.tabbedPane = tabbedPane;
 		this.systemInterface = systemInterface;
 	}
 
 	/**
-	 * Each time this method is invoked, the position/size of the window which
-	 * is closing will be written to the FollowAppAttributes object.
+	 * Each time this method is invoked, the position/size of the window which is closing will be
+	 * written to the FollowAppAttributes object.
 	 */
 	@Override
-	public void windowClosing(WindowEvent e) {
+	public void windowClosing(WindowEvent e)
+	{
 		Window window = (Window) e.getSource();
 		attributes.setWidth(window.getWidth());
 		attributes.setHeight(window.getHeight());
 		attributes.setX(window.getX());
 		attributes.setY(window.getY());
 
-		if (tabbedPane.getTabCount() > 0) {
+		if (tabbedPane.getTabCount() > 0)
+		{
 			attributes.setSelectedTabIndex(tabbedPane.getSelectedIndex());
 		}
 		((Window) e.getSource()).dispose();
 	}
 
 	@Override
-	public void windowClosed(WindowEvent e) {
-		try {
+	public void windowClosed(WindowEvent e)
+	{
+		try
+		{
 			attributes.store();
 		}
-		catch (IOException ioe) {
-			getLog().error("Error encountered while storing properties...", ioe);
+		catch (IOException ioe)
+		{
+			log.error("Error encountered while storing properties...", ioe);
 		}
-		finally {
+		finally
+		{
 			systemInterface.exit(0);
 		}
-	}
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(WindowTracker.this.getClass());
-		}
-		return log;
 	}
 }

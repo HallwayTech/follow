@@ -29,25 +29,30 @@ import java.awt.event.ActionEvent;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class Close extends FollowAppAction {
+public class Close extends FollowAppAction
+{
 	public static final String NAME = "close";
 
-	public Close(FollowApp app) {
-		super(app, FollowApp.getResourceBundle().getString("action.Close.name"), FollowApp
-				.getResourceBundle().getString("action.Close.mnemonic"), FollowApp
-				.getResourceBundle().getString("action.Close.accelerator"));
+	public Close(FollowApp app)
+	{
+		super(app, FollowApp.getResourceString("action.Close.name"),
+				FollowApp.getResourceString("action.Close.mnemonic"),
+				FollowApp.getResourceString("action.Close.accelerator"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
 		int tab = getApp().getTabbedPane().getSelectedIndex();
-		if (tab >= 0) {
+		if (tab >= 0)
+		{
 			getApp().getTabbedPane().removeTabAt(tab);
 			getApp().disableDragAndDrop(fileFollowingPane.getTextPane());
 			getApp().getAttributes().removeFollowedFile(fileFollowingPane.getFollowedFile());
 			fileFollowingPane.stopFollowing();
 			getApp().getFileToFollowingPaneMap().remove(fileFollowingPane.getFollowedFile());
-			if (getApp().getFileToFollowingPaneMap().size() == 0) {
+			if (getApp().getFileToFollowingPaneMap().size() == 0)
+			{
 				getApp().getAction(Close.NAME).setEnabled(false);
 				getApp().getAction(Top.NAME).setEnabled(false);
 				getApp().getAction(Bottom.NAME).setEnabled(false);

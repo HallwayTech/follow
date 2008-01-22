@@ -29,19 +29,23 @@ import java.util.List;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class ClearAll extends FollowAppAction {
+public class ClearAll extends FollowAppAction
+{
 	public static final String NAME = "clearAll";
 
-	public ClearAll(FollowApp app) throws IOException {
-		super(app, FollowApp.getResourceBundle().getString("action.ClearAll.name"), FollowApp
-				.getResourceBundle().getString("action.ClearAll.mnemonic"), FollowApp.getResourceBundle()
-				.getString("action.ClearAll.accelerator"), FollowApp.getResourceBundle().getString(
-				"action.ClearAll.icon"));
+	public ClearAll(FollowApp app) throws IOException
+	{
+		super(app, FollowApp.getResourceString("action.ClearAll.name"),
+				FollowApp.getResourceString("action.ClearAll.mnemonic"),
+				FollowApp.getResourceString("action.ClearAll.accelerator"),
+				FollowApp.getIcon(ClearAll.class, "action.ClearAll.icon"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		List<FileFollowingPane> allFileFollowingPanes = getApp().getAllFileFollowingPanes();
-		for (FileFollowingPane fileFollowingPane : allFileFollowingPanes) {
+		for (FileFollowingPane fileFollowingPane : allFileFollowingPanes)
+		{
 			fileFollowingPane.getTextPane().setText("");
 		}
 	}

@@ -14,8 +14,10 @@ import java.util.ResourceBundle;
 
 import javax.swing.JMenuBar;
 
-public class MenuBuilder {
-	private MenuBuilder() {
+public class MenuBuilder
+{
+	private MenuBuilder()
+	{
 	}
 
 	/**
@@ -24,7 +26,8 @@ public class MenuBuilder {
 	 * @return reference the constructed menu bar
 	 */
 	public static JMenuBar buildMenuBar(ResourceBundle resources,
-			HashMap<String, FollowAppAction> actions) {
+			HashMap<String, FollowAppAction> actions)
+	{
 		// create menu bar and add menus
 		JMenuBar jMenuBar = new JMenuBar();
 
@@ -48,7 +51,8 @@ public class MenuBuilder {
 	}
 
 	public static Menu buildFileMenu(ResourceBundle resources,
-			HashMap<String, FollowAppAction> actions) {
+			HashMap<String, FollowAppAction> actions)
+	{
 		Menu fileMenu = new Menu(resources.getString("menu.File.name"), resources
 				.getString("menu.File.mnemonic"));
 		fileMenu.addFollowAppAction(actions.get(Open.NAME));
@@ -67,7 +71,8 @@ public class MenuBuilder {
 	}
 
 	public static Menu buildEditMenu(ResourceBundle resources,
-			HashMap<String, FollowAppAction> actions) {
+			HashMap<String, FollowAppAction> actions)
+	{
 		Menu editMenu = new Menu(resources.getString("menu.Edit.name"), resources
 				.getString("menu.Edit.mnemonic"));
 		editMenu.addFollowAppAction(actions.get(Find.NAME));
@@ -78,7 +83,8 @@ public class MenuBuilder {
 	}
 
 	public static Menu buildToolsMenu(ResourceBundle resources,
-			HashMap<String, FollowAppAction> actions) {
+			HashMap<String, FollowAppAction> actions)
+	{
 		Menu toolsMenu = new Menu(resources.getString("menu.Tools.name"), resources
 				.getString("menu.Tools.mnemonic"));
 		toolsMenu.addFollowAppAction(actions.get(Top.NAME));
@@ -95,7 +101,8 @@ public class MenuBuilder {
 	}
 
 	public static Menu buildWindowMenu(ResourceBundle resources,
-			HashMap<String, FollowAppAction> actions) {
+			HashMap<String, FollowAppAction> actions)
+	{
 		Menu windowMenu = new Menu(resources.getString("menu.Window.name"), resources
 				.getString("menu.Window.mnemonic"));
 		windowMenu.addFollowAppAction(actions.get(NextTab.NAME));
@@ -104,7 +111,8 @@ public class MenuBuilder {
 	}
 
 	public static Menu buildHelpMenu(ResourceBundle resources,
-			HashMap<String, FollowAppAction> actions) {
+			HashMap<String, FollowAppAction> actions)
+	{
 		Menu helpMenu = new Menu(resources.getString("menu.Help.name"), resources
 				.getString("menu.Help.mnemonic"));
 		helpMenu.addFollowAppAction(actions.get(About.NAME));
@@ -116,7 +124,8 @@ public class MenuBuilder {
 	 * 
 	 * @return
 	 */
-	public static PopupMenu buildPopupMenu(HashMap<String, FollowAppAction> actions) {
+	public static PopupMenu buildPopupMenu(HashMap<String, FollowAppAction> actions)
+	{
 		PopupMenu popupMenu = new PopupMenu();
 		popupMenu.addFollowAppAction(actions.get(Open.NAME));
 		popupMenu.addFollowAppAction(actions.get(Close.NAME));
@@ -140,7 +149,8 @@ public class MenuBuilder {
 	 * 
 	 * @return
 	 */
-	public static ToolBar buildToolBar(HashMap<String, FollowAppAction> actions) {
+	public static ToolBar buildToolBar(HashMap<String, FollowAppAction> actions)
+	{
 		ToolBar toolBar = new ToolBar();
 		toolBar.addFollowAppAction(actions.get(Open.NAME));
 		toolBar.addSeparator();

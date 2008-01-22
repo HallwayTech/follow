@@ -26,14 +26,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link OutputDestination} which appends Strings to a
- * {@link JTextComponent}.
+ * Implementation of {@link OutputDestination} which appends Strings to a {@link JTextComponent}.
  * 
  * @see OutputDestination
  * @see JTextCompnent
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class JTextComponentDestination extends FilterableOutputDestination {
+public class JTextComponentDestination extends FilterableOutputDestination
+{
+	private Logger log = LoggerFactory.getLogger(JTextComponentDestination.class);
 	protected JTextComponent _comp;
 	protected boolean autoPositionCaret_;
 
@@ -43,29 +44,33 @@ public class JTextComponentDestination extends FilterableOutputDestination {
 	 * @param jTextPane
 	 *            text will be appended to this text area
 	 * @param autoPositionCaret
-	 *            if true, caret will be automatically moved to the bottom of
-	 *            the text area when text is appended
+	 *            if true, caret will be automatically moved to the bottom of the text area when
+	 *            text is appended
 	 */
-	public JTextComponentDestination(JTextComponent jTextComponent, boolean autoPositionCaret) {
+	public JTextComponentDestination(JTextComponent jTextComponent, boolean autoPositionCaret)
+	{
 		_comp = jTextComponent;
 		autoPositionCaret_ = autoPositionCaret;
 	}
 
-	public JTextComponent getJTextComponent() {
+	public JTextComponent getJTextComponent()
+	{
 		return _comp;
 	}
 
-	public void setJTextComponent(JTextComponent comp) {
+	public void setJTextComponent(JTextComponent comp)
+	{
 		_comp = comp;
 	}
 
 	/**
-	 * Add a filtered view to this destination. Filtered views show only a
-	 * subset of the total output based on filter conditions.
+	 * Add a filtered view to this destination. Filtered views show only a subset of the total
+	 * output based on filter conditions.
 	 * 
 	 * @since 1.8.0
 	 */
-	public void addFilteredView() {
+	public void addFilteredView()
+	{
 
 	}
 
@@ -74,53 +79,53 @@ public class JTextComponentDestination extends FilterableOutputDestination {
 	 * 
 	 * @since 1.8.0
 	 */
-	public void removeFilteredView() {
+	public void removeFilteredView()
+	{
 
 	}
 
 	/**
-	 * @return whether caret will be automatically moved to the bottom of the
-	 *         text area when text is appended
+	 * @return whether caret will be automatically moved to the bottom of the text area when text is
+	 *         appended
 	 */
-	public boolean autoPositionCaret() {
+	public boolean autoPositionCaret()
+	{
 		return autoPositionCaret_;
 	}
 
 	/**
 	 * @param autoPositionCaret
-	 *            if true, caret will be automatically moved to the bottom of
-	 *            the text area when text is appended
+	 *            if true, caret will be automatically moved to the bottom of the text area when
+	 *            text is appended
 	 */
-	public void setAutoPositionCaret(boolean autoPositionCaret) {
+	public void setAutoPositionCaret(boolean autoPositionCaret)
+	{
 		autoPositionCaret_ = autoPositionCaret;
 	}
 
-	public void handlePrint(String s) {
-		try {
+	public void handlePrint(String s)
+	{
+		try
+		{
 			_comp.getDocument().insertString(_comp.getDocument().getLength(), s, null);
-			if (autoPositionCaret_) {
+			if (autoPositionCaret_)
+			{
 				_comp.setCaretPosition(_comp.getDocument().getLength());
 			}
 		}
-		catch (BadLocationException e) {
+		catch (BadLocationException e)
+		{
 			// just ignore, nothing we can do
-			getLog().error("BadLocationException in JTextComponentDestination", e);
+			log.error("BadLocationException in JTextComponentDestination", e);
 		}
 	}
 
-	public void clear() {
+	public void clear()
+	{
 		_comp.setText("");
-		if (autoPositionCaret_) {
+		if (autoPositionCaret_)
+		{
 			_comp.setCaretPosition(0);
 		}
-	}
-
-	private transient Logger log;
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(JTextComponentDestination.class.getName());
-		}
-		return log;
 	}
 }

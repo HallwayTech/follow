@@ -3,9 +3,10 @@ package ghm.follow.search;
 /**
  * Container for positions of found terms.
  * 
- * @author chall
+ * @author Carl Hall (carl.hall@gmail.com)
  */
-public class WordResult {
+public class WordResult
+{
 	// term described by these positions
 	public String term;
 
@@ -20,40 +21,49 @@ public class WordResult {
 
 	// end position of term on line
 	public int termEndLine;
-	
+
 	// parent line result for back referencing
 	public LineResult parent;
 
-	public WordResult(int start, int end, String term) {
+	public WordResult(int start, int end, String term)
+	{
 		this.start = start;
 		this.end = end;
-		 this.term = term;
+		this.term = term;
 		setLineOffset(-1);
 	}
 
-	public WordResult(int start, int end, String term, int lineOffset) {
+	public WordResult(int start, int end, String term, int lineOffset)
+	{
 		this(start, end, term);
 		setLineOffset(lineOffset);
 	}
 
-	public void setLineOffset(int lineOffset) {
-		if (lineOffset >= 0) {
+	public void setLineOffset(int lineOffset)
+	{
+		if (lineOffset >= 0)
+		{
 			termStartLine = start - lineOffset + 1;
 			termEndLine = end - lineOffset;
 		}
-		else {
+		else
+		{
 			termStartLine = 0;
 			termEndLine = 0;
 		}
 	}
-	
-	public String toString() {
+
+	public String toString()
+	{
 		String retval = "";
-		if (termStartLine > 0 && termEndLine > 0) {
-			if (termStartLine == termEndLine) {
+		if (termStartLine > 0 && termEndLine > 0)
+		{
+			if (termStartLine == termEndLine)
+			{
 				retval += termStartLine;
 			}
-			else {
+			else
+			{
 				retval += termStartLine + "-" + termEndLine;
 			}
 		}

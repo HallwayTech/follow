@@ -37,10 +37,12 @@ import javax.swing.JPanel;
 /**
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class DisableableConfirm extends JDialog {
+public class DisableableConfirm extends JDialog
+{
 
 	public DisableableConfirm(Frame parent, String title, String message, String confirmButtonText,
-			String doNotConfirmButtonText, String disableText) {
+			String doNotConfirmButtonText, String disableText)
+	{
 		super(parent, title, true);
 
 		// messagePanel will contain the string contents of the message
@@ -49,7 +51,8 @@ public class DisableableConfirm extends JDialog {
 		gbc.anchor = GridBagConstraints.WEST;
 		StringTokenizer stknzr = new StringTokenizer(message, "\n\r");
 		gbc.gridy = 0;
-		while (stknzr.hasMoreTokens()) {
+		while (stknzr.hasMoreTokens())
+		{
 			messagePanel.add(new JLabel(stknzr.nextToken()), gbc);
 			gbc.gridy++;
 		}
@@ -61,16 +64,20 @@ public class DisableableConfirm extends JDialog {
 
 		JPanel buttonPanel = new JPanel();
 		JButton confirmButton = new JButton(confirmButtonText);
-		confirmButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		confirmButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				confirmed_ = true;
 				DisableableConfirm.this.dispose();
 			}
 		});
 		buttonPanel.add(confirmButton);
 		JButton doNotConfirmButton = new JButton(doNotConfirmButtonText);
-		doNotConfirmButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		doNotConfirmButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				confirmed_ = false;
 				DisableableConfirm.this.dispose();
 			}
@@ -93,11 +100,13 @@ public class DisableableConfirm extends JDialog {
 	private JCheckBox disabledCheckBox_;
 	private boolean confirmed_;
 
-	boolean markedDisabled() {
+	boolean markedDisabled()
+	{
 		return disabledCheckBox_.isSelected();
 	}
 
-	boolean markedConfirmed() {
+	boolean markedConfirmed()
+	{
 		return confirmed_;
 	}
 

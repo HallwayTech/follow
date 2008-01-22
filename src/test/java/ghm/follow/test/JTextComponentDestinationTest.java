@@ -11,25 +11,31 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class JTextComponentDestinationTest extends BaseTestCase {
+public class JTextComponentDestinationTest extends BaseTestCase
+{
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws Exception
+	{
 		super.setUp();
 		jTextArea_ = new JTextArea();
 	}
 
 	@Test
-	public void testNoAutoscroll() throws Exception {
+	public void testNoAutoscroll() throws Exception
+	{
 		validateTextContentAndCaretPos(new JTextComponentDestination(jTextArea_, false));
 	}
 
 	@Test
-	public void testAutoscroll() throws Exception {
+	public void testAutoscroll() throws Exception
+	{
 		validateTextContentAndCaretPos(new JTextComponentDestination(jTextArea_, true));
 	}
 
-	private void validateTextContentAndCaretPos(JTextComponentDestination destination) throws Exception {
+	private void validateTextContentAndCaretPos(JTextComponentDestination destination)
+			throws Exception
+	{
 		follower_ = new FileFollower(followedFile_, new OutputDestination[] { destination });
 		follower_.start();
 		String control = "control";
@@ -46,12 +52,15 @@ public class JTextComponentDestinationTest extends BaseTestCase {
 		validateCaretPosition(destination);
 	}
 
-	private void validateCaretPosition(JTextComponentDestination destination) {
+	private void validateCaretPosition(JTextComponentDestination destination)
+	{
 		int caretPos = destination.getJTextComponent().getCaret().getMark();
-		if (destination.autoPositionCaret()) {
+		if (destination.autoPositionCaret())
+		{
 			assertEquals(destination.getJTextComponent().getText().length(), caretPos);
 		}
-		else {
+		else
+		{
 			assertEquals(0, caretPos);
 		}
 	}

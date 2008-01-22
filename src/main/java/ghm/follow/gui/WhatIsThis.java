@@ -23,36 +23,28 @@ import ghm.follow.FollowApp;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 /**
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class WhatIsThis extends JButton {
+public class WhatIsThis extends JButton
+{
 
-	public WhatIsThis(final FollowApp app, final String title, final String text) {
-		super(getWhatIsThisIcon(app));
+	public WhatIsThis(final FollowApp app, final String title, final String text)
+	{
+		super(FollowApp.getIcon(WhatIsThis.class, "WhatIsThis.icon"));
 		setBorderPainted(false);
 		setToolTipText(title);
 		setMargin(new Insets(0, 0, 0, 0));
-		addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				JOptionPane.showMessageDialog(app.getFrame(), text, title,
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 	}
-
-	public static Icon getWhatIsThisIcon(FollowApp app) {
-		if (whatIsThisIcon == null) {
-			whatIsThisIcon = new ImageIcon(app.getClass().getResource(
-					FollowApp.getResourceBundle().getString("WhatIsThis.icon")));
-		}
-		return whatIsThisIcon;
-	}
-
-	static Icon whatIsThisIcon;
 }

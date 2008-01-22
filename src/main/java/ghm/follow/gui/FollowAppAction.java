@@ -23,6 +23,7 @@ import ghm.follow.InvalidVkException;
 
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,93 +36,108 @@ import javax.swing.KeyStroke;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public abstract class FollowAppAction extends AbstractAction {
+public abstract class FollowAppAction extends AbstractAction
+{
+	private static Logger log = LoggerFactory.getLogger(FollowAppAction.class);
 
-	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator) {
+	private FollowApp app_;
+	private int mnemonic_;
+	private KeyStroke accelerator_;
+
+	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator)
+	{
 		super(name);
 		init(app, mnemonic, accelerator);
 	}
 
 	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator,
-			String iconName) {
-		super(name, new ImageIcon(app.getClass().getResource(iconName)));
+			ImageIcon icon)
+	{
+		super(name, icon);
 		init(app, mnemonic, accelerator);
+		putValue(SMALL_ICON, icon);
 	}
 
-	private void init(FollowApp app, String mnemonic, String accelerator) {
+	private void init(FollowApp app, String mnemonic, String accelerator)
+	{
 		app_ = app;
-		try {
+		try
+		{
 			setMnemonic(mnemonic);
 		}
-		catch (InvalidVkException e) {
-			getLog().error("Invalid mnemonic", e);
+		catch (InvalidVkException e)
+		{
+			log.warn("Invalid mnemonic", e);
 		}
-		try {
+		try
+		{
 			setAccelerator(accelerator);
 		}
-		catch (InvalidVkException e) {
-			getLog().error("Invalid accelerator", e);
+		catch (InvalidVkException e)
+		{
+			log.warn("Invalid accelerator", e);
 		}
 	}
 
-	int getMnemonic() {
+	int getMnemonic()
+	{
 		return mnemonic_;
 	}
 
-	void setMnemonic(int mnemonic) {
+	void setMnemonic(int mnemonic)
+	{
 		mnemonic_ = mnemonic;
 	}
 
-	void setMnemonic(String mnemonic) throws InvalidVkException {
-		if (mnemonic != null && mnemonic.length() > 0) {
+	void setMnemonic(String mnemonic) throws InvalidVkException
+	{
+		if (mnemonic != null && mnemonic.length() > 0)
+		{
 			setMnemonic(mnemonic.charAt(0));
 		}
 	}
 
-	KeyStroke getAccelerator() {
+	KeyStroke getAccelerator()
+	{
 		return accelerator_;
 	}
 
-	void setAccelerator(KeyStroke accelerator) {
+	void setAccelerator(KeyStroke accelerator)
+	{
 		accelerator_ = accelerator;
 	}
 
-	void setAccelerator(String accelerator) throws InvalidVkException {
-		if (accelerator != null && accelerator.length() > 0) {
+	void setAccelerator(String accelerator) throws InvalidVkException
+	{
+		if (accelerator != null && accelerator.length() > 0)
+		{
 			setAccelerator(KeyStroke.getKeyStroke(findKeyEventVk(accelerator), KeyEvent.CTRL_MASK));
 		}
 	}
 
-	private int findKeyEventVk(String key) throws InvalidVkException {
-		if (!key.startsWith("VK_")) {
+	private int findKeyEventVk(String key) throws InvalidVkException
+	{
+		if (!key.startsWith("VK_"))
+		{
 			key = "VK_" + key;
 		}
-		try {
+		try
+		{
 			Field field = KeyEvent.class.getDeclaredField(key.toUpperCase());
 			return field.getInt(KeyEvent.class);
 		}
-		catch (NoSuchFieldException e) {
+		catch (NoSuchFieldException e)
+		{
 			throw new InvalidVkException("Unable to match mnemonic to a field in KeyEvent", e);
 		}
-		catch (IllegalAccessException e) {
+		catch (IllegalAccessException e)
+		{
 			throw new InvalidVkException(e.getMessage(), e);
 		}
 	}
 
-	public FollowApp getApp() {
+	public FollowApp getApp()
+	{
 		return app_;
 	}
-
-	private transient Logger log;
-
-	private Logger getLog() {
-		if (log == null) {
-			log = LoggerFactory.getLogger(FollowAppAction.class.getName());
-		}
-		return log;
-	}
-
-	private FollowApp app_;
-	private int mnemonic_;
-	private KeyStroke accelerator_;
 }

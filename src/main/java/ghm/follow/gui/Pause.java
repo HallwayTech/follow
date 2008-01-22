@@ -18,26 +18,26 @@ package ghm.follow.gui;
 import ghm.follow.FollowApp;
 
 import java.awt.event.ActionEvent;
-import java.util.ResourceBundle;
 
-import javax.swing.Action;
 import javax.swing.ImageIcon;
 
 /**
- * Pauses/unpauses the autoscrolling of files that are open in the Follow
- * application.
+ * Pauses/unpauses the autoscrolling of files that are open in the Follow application.
  * 
- * @author <a href="mailto:chall@cfhdev.com">Carl Hall</a>
+ * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class Pause extends FollowAppAction {
+public class Pause extends FollowAppAction
+{
 	public static final String NAME = "pause";
 
-	public Pause(FollowApp app) {
+	public Pause(FollowApp app)
+	{
 		// false is passed into getIcon(..) because a file follower never
 		// starts in a paused state
-		super(app, FollowApp.getResourceBundle().getString("action.Pause.name"), FollowApp.getResourceBundle()
-				.getString("action.Pause.mnemonic"), FollowApp.getResourceBundle().getString(
-				"action.Pause.accelerator"), getIcon(false, FollowApp.getResourceBundle()));
+		super(app, FollowApp.getResourceString("action.Pause.name"),
+				FollowApp.getResourceString("action.Pause.mnemonic"),
+				FollowApp.getResourceString("action.Pause.accelerator"),
+				FollowApp.getIcon(Pause.class, getIconName(false)));
 	}
 
 	/**
@@ -45,22 +45,27 @@ public class Pause extends FollowAppAction {
 	 * 
 	 * @param e
 	 */
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		playPausePane(getApp().getSelectedFileFollowingPane());
 	}
 
 	/**
-	 * Plays or pauses a pane depending on it's current state. If following, it
-	 * pauses. If not following, it plays.
+	 * Plays or pauses a pane depending on it's current state. If following, it pauses. If not
+	 * following, it plays.
 	 * 
 	 * @param pane
 	 */
-	public void playPausePane(FileFollowingPane pane) {
-		if (pane.isFollowing()) {
-			if (pane.isFollowingPaused()) {
+	public void playPausePane(FileFollowingPane pane)
+	{
+		if (pane.isFollowing())
+		{
+			if (pane.isFollowingPaused())
+			{
 				pane.unpauseFollowing();
 			}
-			else {
+			else
+			{
 				pane.pauseFollowing();
 			}
 			setIconByState(pane.isFollowingPaused());
@@ -72,18 +77,19 @@ public class Pause extends FollowAppAction {
 	 * 
 	 * @param paused
 	 */
-	public void setIconByState(boolean paused) {
+	public void setIconByState(boolean paused)
+	{
 		// get the icon to be set
-		ImageIcon icon = new ImageIcon(getApp().getClass().getResource(
-				Pause.getIcon(paused, FollowApp.getResourceBundle())));
+		ImageIcon icon = FollowApp.getIcon(Pause.class, Pause.getIconName(paused));
+
 		// set the icon in the action. when updating here, the icon is changed
 		// whether the event is caused by menu, button click or key combo
-		getApp().getAction(Pause.NAME).putValue(Action.SMALL_ICON, icon);
+		getApp().getAction(Pause.NAME).putValue(SMALL_ICON, icon);
 	}
 
-	private static String getIcon(boolean paused, ResourceBundle resBundle) {
-		String image = (paused ? resBundle.getString("action.Pause.offIcon") : resBundle
-				.getString("action.Pause.onIcon"));
+	private static String getIconName(boolean paused)
+	{
+		String image = (paused ? "action.Pause.offIcon" : "action.Pause.onIcon");
 		return image;
 	}
 }

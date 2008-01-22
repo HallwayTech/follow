@@ -10,10 +10,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class CommandLineTest extends AppLaunchingTestCase {
+public class CommandLineTest extends AppLaunchingTestCase
+{
 
 	@Test
-	public void testNoArgs() throws Exception {
+	public void testNoArgs() throws Exception
+	{
 		FollowApp.main(appendPropFileArg(null));
 		doPostLaunch();
 		// should be no file as we're opening a new instance (no history) with
@@ -22,31 +24,36 @@ public class CommandLineTest extends AppLaunchingTestCase {
 	}
 
 	@Test
-	public void testOneArg() throws Exception {
+	public void testOneArg() throws Exception
+	{
 		File temp = createTempFile();
 		String[] args = new String[] { temp.toString() };
 		args = appendPropFileArg(args);
 		FollowApp.main(args);
 		doPostLaunch();
 		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
-		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles.size() == 1);
+		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles
+				.size() == 1);
 		File followedFile = followedFiles.get(0);
 		assertEquals("File found doesn't match expected file", temp, followedFile);
 	}
 
 	@Test
-	public void testOneArgDuplicate() throws Exception {
+	public void testOneArgDuplicate() throws Exception
+	{
 		File temp = createTempFile();
 		String[] args = new String[] { temp.toString() };
 		args = appendPropFileArg(args);
 		FollowApp.main(args);
 		doPostLaunch();
 		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
-		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles.size() == 1);
+		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles
+				.size() == 1);
 		File followedFile = followedFiles.get(0);
 		assertEquals("File found doesn't match expected file", temp, followedFile);
 		invokeAction(_app.getAction(Exit.NAME));
-		while (!_systemInterface.exitCalled()) {
+		while (!_systemInterface.exitCalled())
+		{
 			Thread.sleep(250);
 		}
 		// reopen app with same file as argument
@@ -54,25 +61,29 @@ public class CommandLineTest extends AppLaunchingTestCase {
 		doPostLaunch();
 		followedFiles = _app.getAttributes().getFollowedFiles();
 		// should still be one because Follow shouldn't open the same file twice
-		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles.size() == 1);
+		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles
+				.size() == 1);
 		// make sure followedFile is the expected file
 		followedFile = (File) followedFiles.get(0);
 		assertEquals(temp, followedFile);
 	}
 
 	@Test
-	public void testOneArgReopen() throws Exception {
+	public void testOneArgReopen() throws Exception
+	{
 		File temp = createTempFile();
 		String[] args = new String[] { temp.toString() };
 		args = appendPropFileArg(args);
 		FollowApp.main(args);
 		doPostLaunch();
 		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
-		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles.size() == 1);
+		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles
+				.size() == 1);
 		File followedFile = followedFiles.get(0);
 		assertEquals("File found doesn't match expected file", temp, followedFile);
 		invokeAction(_app.getAction(Exit.NAME));
-		while (!_systemInterface.exitCalled()) {
+		while (!_systemInterface.exitCalled())
+		{
 			Thread.sleep(250);
 		}
 		// reopen app with same file as argument
@@ -80,14 +91,16 @@ public class CommandLineTest extends AppLaunchingTestCase {
 		doPostLaunch();
 		followedFiles = _app.getAttributes().getFollowedFiles();
 		// should still be one because Follow shouldn't open the same file twice
-		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles.size() == 1);
+		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles
+				.size() == 1);
 		// make sure followedFile is the expected file
 		followedFile = (File) followedFiles.get(0);
 		assertEquals(temp, followedFile);
 	}
 
 	@Test
-	public void testTwoArgs() throws Exception {
+	public void testTwoArgs() throws Exception
+	{
 		File[] temp = new File[2];
 		temp[0] = createTempFile();
 		temp[1] = createTempFile();
@@ -102,9 +115,11 @@ public class CommandLineTest extends AppLaunchingTestCase {
 	}
 
 	@Test
-	public void testDuplicateArgs() throws Exception {
+	public void testDuplicateArgs() throws Exception
+	{
 		File temp = createTempFile();
-		String[] args = new String[] { temp.toString(), createTempFile().toString(), temp.toString() };
+		String[] args = new String[] { temp.toString(), createTempFile().toString(),
+				temp.toString() };
 		args = appendPropFileArg(args);
 		FollowApp.main(args);
 		doPostLaunch();

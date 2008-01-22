@@ -6,7 +6,7 @@ import javax.swing.text.JTextComponent;
 /**
  * An {@link OutputDestination} that filters what is shown.
  * 
- * @author chall
+ * @author Carl Hall (carl.hall@gmail.com)
  */
 public class FilteredDestination extends JTextComponentDestination {
 	private String filterTerm;

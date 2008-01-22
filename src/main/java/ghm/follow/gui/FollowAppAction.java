@@ -55,7 +55,11 @@ public abstract class FollowAppAction extends AbstractAction
 	{
 		super(name, icon);
 		init(app, mnemonic, accelerator);
-		putValue(SMALL_ICON, icon);
+	}
+
+	public FollowApp getApp()
+	{
+		return app_;
 	}
 
 	private void init(FollowApp app, String mnemonic, String accelerator)
@@ -77,6 +81,16 @@ public abstract class FollowAppAction extends AbstractAction
 		{
 			log.warn("Invalid accelerator", e);
 		}
+	}
+
+	/**
+	 * Set the icon for this action.
+	 * 
+	 * @param icon
+	 */
+	protected void setIcon(ImageIcon icon)
+	{
+		putValue(SMALL_ICON, icon);
 	}
 
 	int getMnemonic()
@@ -134,10 +148,5 @@ public abstract class FollowAppAction extends AbstractAction
 		{
 			throw new InvalidVkException(e.getMessage(), e);
 		}
-	}
-
-	public FollowApp getApp()
-	{
-		return app_;
 	}
 }

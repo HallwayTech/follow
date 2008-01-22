@@ -412,6 +412,14 @@ public class FollowApp
 		return actions_;
 	}
 
+	/**
+	 * Set an action to the action map of the application.
+	 * 
+	 * @param name
+	 *            The key to set the action to.
+	 * @param action
+	 *            The action to create an association for.
+	 */
 	public void putAction(String name, FollowAppAction action)
 	{
 		actions_.put(name, action);

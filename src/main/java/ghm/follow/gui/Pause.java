@@ -84,7 +84,7 @@ public class Pause extends FollowAppAction
 
 		// set the icon in the action. when updating here, the icon is changed
 		// whether the event is caused by menu, button click or key combo
-		getApp().getAction(Pause.NAME).putValue(SMALL_ICON, icon);
+		setIcon(icon);
 	}
 
 	private static String getIconName(boolean paused)

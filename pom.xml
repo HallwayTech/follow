@@ -4,7 +4,7 @@
 	<groupId>follow</groupId>
 	<artifactId>follow</artifactId>
 	<name>Follow</name>
-	<version>1.7.2</version>
+	<version>1.7.3</version>
 	<url>http://follow.sf.net</url>
 	<build>
 		<resources>

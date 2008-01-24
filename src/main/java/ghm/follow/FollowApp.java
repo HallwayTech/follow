@@ -276,7 +276,11 @@ public class FollowApp
 			}
 		}
 
+		// enable actions based on state
 		updateActions();
+
+		// refresh the recent files list
+		refreshRecentFilesMenu();
 	}
 
 	/**

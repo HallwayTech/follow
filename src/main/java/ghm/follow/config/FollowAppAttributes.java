@@ -22,6 +22,8 @@ import ghm.follow.FollowApp;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -85,6 +87,8 @@ public class FollowAppAttributes
 	public static final int v1_4 = 5;
 	public static final int v1_5_0 = 6;
 	public static final int v1_6_0 = 7;
+
+	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	public FollowAppAttributes(FollowApp app) throws IOException
 	{
@@ -229,7 +233,7 @@ public class FollowAppAttributes
 	 */
 	private List<String> getFollowedFilesList()
 	{
-		return properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
+		return getEnumeratedProperty(FOLLOWED_FILES_KEY);
 	}
 
 	protected List<File> getFiles(List<String> fileList)
@@ -295,9 +299,9 @@ public class FollowAppAttributes
 	 */
 	public void addFollowedFile(File file)
 	{
-		List<String> fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
+		List<String> fileNames = getEnumeratedProperty(FOLLOWED_FILES_KEY);
 		fileNames.add(file.getAbsolutePath());
-		properties_.setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
+		setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
 	}
 
 	/**
@@ -307,9 +311,9 @@ public class FollowAppAttributes
 	 */
 	public void removeFollowedFile(File file)
 	{
-		List<String> fileNames = properties_.getEnumeratedProperty(FOLLOWED_FILES_KEY);
+		List<String> fileNames = getEnumeratedProperty(FOLLOWED_FILES_KEY);
 		fileNames.remove(file.getAbsolutePath());
-		properties_.setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
+		setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
 	}
 
 	public int getTabPlacement()
@@ -362,7 +366,7 @@ public class FollowAppAttributes
 
 	public void setLastFileChooserDirectory(File file)
 	{
-		properties_.setProperty(LAST_FILE_CHOOSER_DIR_KEY, file.getAbsolutePath());
+		setString(LAST_FILE_CHOOSER_DIR_KEY, file.getAbsolutePath());
 	}
 
 	public int getBufferSize()
@@ -416,14 +420,14 @@ public class FollowAppAttributes
 
 	public Font getFont()
 	{
-		Font font = new Font(properties_.getProperty(FONT_FAMILY_KEY), getInt(FONT_STYLE_KEY),
+		Font font = new Font(getString(FONT_FAMILY_KEY), getInt(FONT_STYLE_KEY),
 				getInt(FONT_SIZE_KEY));
 		return font;
 	}
 
 	public void setFont(Font font)
 	{
-		properties_.setProperty(FONT_FAMILY_KEY, font.getFontName());
+		setString(FONT_FAMILY_KEY, font.getFontName());
 		setInt(FONT_STYLE_KEY, font.getStyle());
 		setInt(FONT_SIZE_KEY, font.getSize());
 	}
@@ -460,7 +464,7 @@ public class FollowAppAttributes
 
 	public String getEditor()
 	{
-		String result = properties_.getProperty(EDITOR_KEY);
+		String result = getString(EDITOR_KEY);
 		if (result == null)
 		{
 			result = "";
@@ -471,7 +475,7 @@ public class FollowAppAttributes
 
 	public void setEditor(String value)
 	{
-		properties_.setProperty(EDITOR_KEY, value);
+		setString(EDITOR_KEY, value);
 	}
 
 	/**
@@ -497,18 +501,8 @@ public class FollowAppAttributes
 			{
 				fileList.add(file.getAbsolutePath());
 			}
-			properties_.setEnumeratedProperty(RECENT_FILES_KEY, fileList);
+			setEnumeratedProperty(RECENT_FILES_KEY, fileList);
 		}
-	}
-
-	/**
-	 * Get a list of recently opened files
-	 * 
-	 * @return List recently opened files as Strings
-	 */
-	private List<String> getRecentFilesList()
-	{
-		return properties_.getEnumeratedProperty(RECENT_FILES_KEY);
 	}
 
 	/**
@@ -540,7 +534,7 @@ public class FollowAppAttributes
 			{
 				files.remove(0);
 			}
-			properties_.setEnumeratedProperty(RECENT_FILES_KEY, files);
+			setEnumeratedProperty(RECENT_FILES_KEY, files);
 		}
 		setInt(RECENT_FILES_MAX_KEY, max);
 	}
@@ -555,27 +549,19 @@ public class FollowAppAttributes
 		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(
 				defaultPropertyFileName));
 		properties_.store(bos, null);
+		// close this stream.  no need to flush it since Properties.store(..) does that
 		bos.close();
 	}
 
-	private int getInt(String key)
+	// The listener list wrapper methods.
+	public synchronized void addPropertyChangeListener(PropertyChangeListener listener)
 	{
-		return Integer.parseInt(properties_.getProperty(key));
+		pcs.addPropertyChangeListener(listener);
 	}
 
-	private void setInt(String key, int value)
+	public synchronized void removePropertyChangeListener(PropertyChangeListener listener)
 	{
-		properties_.setProperty(key, String.valueOf(value));
-	}
-
-	private boolean getBoolean(String key)
-	{
-		return "true".equals(properties_.getProperty(key));
-	}
-
-	private void setBoolean(String key, boolean value)
-	{
-		properties_.setProperty(key, String.valueOf(value));
+		pcs.removePropertyChangeListener(listener);
 	}
 
 	public FollowAppAttributes getDefaultAttributes() throws IOException
@@ -606,6 +592,64 @@ public class FollowAppAttributes
 			}
 		}
 		return defaultAttributes_;
+	}
+
+	/**
+	 * Get a list of recently opened files
+	 * 
+	 * @return List recently opened files as Strings
+	 */
+	private List<String> getRecentFilesList()
+	{
+		return getEnumeratedProperty(RECENT_FILES_KEY);
+	}
+
+	private int getInt(String key)
+	{
+		return Integer.parseInt(getString(key));
+	}
+
+	private void setInt(String key, int value)
+	{
+		int oldValue = getInt(key);
+		properties_.setProperty(key, String.valueOf(value));
+		pcs.firePropertyChange(key, oldValue, value);
+	}
+
+	private boolean getBoolean(String key)
+	{
+		return "true".equals(getString(key));
+	}
+
+	private void setBoolean(String key, boolean value)
+	{
+		boolean oldValue = getBoolean(key);
+		properties_.setProperty(key, String.valueOf(value));
+		pcs.firePropertyChange(key, oldValue, value);
+	}
+
+	private String getString(String key)
+	{
+		return properties_.getProperty(key);
+	}
+
+	private void setString(String key, String value)
+	{
+		String oldValue = getString(key);
+		properties_.setProperty(key, value);
+		pcs.firePropertyChange(key, oldValue, value);
+	}
+
+	private List<String> getEnumeratedProperty(String key)
+	{
+		return properties_.getEnumeratedProperty(key);
+	}
+
+	private void setEnumeratedProperty(String key, List<String> values)
+	{
+		List<String> oldValue = getEnumeratedProperty(key);
+		properties_.setEnumeratedProperty(key, values);
+		pcs.firePropertyChange(key, oldValue, values);
 	}
 
 	private EnumeratedProperties getDefaultProperties() throws IOException

@@ -1,6 +1,8 @@
 package ghm.follow.gui;
 
 import ghm.follow.config.Configure;
+import ghm.follow.config.FollowAppAttributes;
+import ghm.follow.gui.FollowAppAction.ActionContext;
 import ghm.follow.nav.Bottom;
 import ghm.follow.nav.NextTab;
 import ghm.follow.nav.PreviousTab;
@@ -9,12 +11,17 @@ import ghm.follow.search.ClearAllHighlights;
 import ghm.follow.search.ClearHighlights;
 import ghm.follow.search.Find;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import javax.accessibility.AccessibleContext;
 import javax.swing.JMenuBar;
+import javax.swing.JTabbedPane;
 
-public class MenuBuilder
+public class ComponentBuilder
 {
 	public static Menu fileMenu;
 	public static Menu editMenu;
@@ -25,7 +32,7 @@ public class MenuBuilder
 	// file menu items
 	public static Menu recentFilesMenu;
 
-	private MenuBuilder()
+	private ComponentBuilder()
 	{
 	}
 
@@ -41,19 +48,19 @@ public class MenuBuilder
 		JMenuBar jMenuBar = new JMenuBar();
 
 		// file menu
-		fileMenu = MenuBuilder.buildFileMenu(resources, actions);
+		fileMenu = ComponentBuilder.buildFileMenu(resources, actions);
 		jMenuBar.add(fileMenu);
 		// edit menu
-		editMenu = MenuBuilder.buildEditMenu(resources, actions);
+		editMenu = ComponentBuilder.buildEditMenu(resources, actions);
 		jMenuBar.add(editMenu);
 		// tool menu
-		toolsMenu = MenuBuilder.buildToolsMenu(resources, actions);
+		toolsMenu = ComponentBuilder.buildToolsMenu(resources, actions);
 		jMenuBar.add(toolsMenu);
 		// window menu
-		windowMenu = MenuBuilder.buildWindowMenu(resources, actions);
+		windowMenu = ComponentBuilder.buildWindowMenu(resources, actions);
 		jMenuBar.add(windowMenu);
 		// help menu
-		helpMenu = MenuBuilder.buildHelpMenu(resources, actions);
+		helpMenu = ComponentBuilder.buildHelpMenu(resources, actions);
 		jMenuBar.add(helpMenu);
 
 		return jMenuBar;
@@ -153,6 +160,18 @@ public class MenuBuilder
 		return popupMenu;
 	}
 
+	public static JTabbedPane buildTabbedPane(FollowAppAttributes attributes,
+			final Collection<FollowAppAction> actions)
+	{
+		final JTabbedPane tabbedPane = new TabbedPane(attributes);
+
+		// enable actions based on state
+		tabbedPane.addPropertyChangeListener(AccessibleContext.ACCESSIBLE_VISIBLE_DATA_PROPERTY,
+				new TabChangedListener(tabbedPane, actions));
+
+		return tabbedPane;
+	}
+
 	/**
 	 * Builds the toolbar shown at the top of the application
 	 * 
@@ -176,5 +195,34 @@ public class MenuBuilder
 		toolBar.addSeparator();
 		toolBar.addFollowAppAction(actions.get(Configure.NAME));
 		return toolBar;
+	}
+
+	private static class TabChangedListener implements PropertyChangeListener
+	{
+		private JTabbedPane tabbedPane;
+		private Collection<FollowAppAction> actions;
+		public TabChangedListener(JTabbedPane tabbedPane, Collection<FollowAppAction> actions)
+		{
+			this.tabbedPane = tabbedPane;
+			this.actions = actions;
+		}
+
+		public void propertyChange(PropertyChangeEvent evt)
+		{
+			if (evt.getOldValue() instanceof FileFollowingPane
+					|| evt.getNewValue() instanceof FileFollowingPane)
+			{
+				int tabCount = tabbedPane.getTabCount();
+				for (FollowAppAction a : actions)
+				{
+					if (tabCount <= 1 && a.getContext() == ActionContext.MULTI_FILE)
+						a.setEnabled(false);
+					else if (tabCount == 0 && a.getContext() == ActionContext.SINGLE_FILE)
+						a.setEnabled(false);
+					else
+						a.setEnabled(true);
+				}
+			}
+		}
 	}
 }

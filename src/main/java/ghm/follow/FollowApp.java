@@ -34,16 +34,14 @@ import ghm.follow.gui.Exit;
 import ghm.follow.gui.FileFollowingPane;
 import ghm.follow.gui.FollowAppAction;
 import ghm.follow.gui.Menu;
-import ghm.follow.gui.MenuBuilder;
+import ghm.follow.gui.ComponentBuilder;
 import ghm.follow.gui.Open;
 import ghm.follow.gui.Pause;
 import ghm.follow.gui.PopupMenu;
 import ghm.follow.gui.Reload;
 import ghm.follow.gui.Reset;
 import ghm.follow.gui.StartupStatus;
-import ghm.follow.gui.TabbedPane;
 import ghm.follow.gui.ToolBar;
-import ghm.follow.gui.FollowAppAction.ActionContext;
 import ghm.follow.nav.Bottom;
 import ghm.follow.nav.NextTab;
 import ghm.follow.nav.PreviousTab;
@@ -67,6 +65,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -123,6 +123,33 @@ public class FollowApp
 	public static final boolean DEBUG = Boolean.getBoolean("follow.debug");
 	public static boolean HAS_SOLARIS_BUG = false;
 
+	// We should remove this hack once JDK 1.4 gets wide adoption on Solaris.
+	static
+	{
+		boolean isSolaris = "SunOS".equals(System.getProperty("os.name"));
+
+		if (isSolaris)
+		{
+			String version = System.getProperty("java.version");
+			if ((version != null) && version.startsWith("1."))
+			{
+				String substring = version.substring(2, 3);
+				try
+				{
+					int minor = Integer.parseInt(substring);
+					if (minor < 4)
+					{
+						HAS_SOLARIS_BUG = true;
+					}
+				}
+				catch (NumberFormatException nfe)
+				{
+					// Nothing else to do.
+				}
+			}
+		}
+	}
+
 	/**
 	 * @param fileNames
 	 *            names of files to be opened
@@ -159,7 +186,7 @@ public class FollowApp
 			}
 		});
 
-		// create frame first
+		// create frame first. the close operation is handled in WindowTracker
 		frame_ = new JFrame(getResourceString("frame.title"));
 
 		// initialize attributes
@@ -174,9 +201,9 @@ public class FollowApp
 						new Object[] { file });
 				log.info(msg);
 			}
-			else if (!getAttributes().followedFileListContains(file))
+			else if (!attributes_.followedFileListContains(file))
 			{
-				getAttributes().addFollowedFile(file);
+				attributes_.addFollowedFile(file);
 			}
 		}
 
@@ -187,20 +214,20 @@ public class FollowApp
 		systemInterface_ = new DefaultSystemInterface(this);
 
 		// initialize menubar
-		JMenuBar jMenuBar = MenuBuilder.buildMenuBar(resBundle_, getActions());
+		JMenuBar jMenuBar = ComponentBuilder.buildMenuBar(resBundle_, getActions());
 
 		// set the recent files menu to local variable so it can be updated easily
-		recentFilesMenu_ = MenuBuilder.recentFilesMenu;
+		recentFilesMenu_ = ComponentBuilder.recentFilesMenu;
 
 		// initialize popupMenu
-		popupMenu_ = MenuBuilder.buildPopupMenu(getActions());
+		popupMenu_ = ComponentBuilder.buildPopupMenu(getActions());
 
 		// initialize toolbar
-		toolBar_ = MenuBuilder.buildToolBar(getActions());
+		toolBar_ = ComponentBuilder.buildToolBar(getActions());
 
 		// initialize tabbedPane, but wait to open files until after frame
 		// initialization
-		tabbedPane_ = new TabbedPane(getAttributes());
+		tabbedPane_ = ComponentBuilder.buildTabbedPane(attributes_, actions_.values());
 		enableDragAndDrop(tabbedPane_);
 
 		// initialize frame
@@ -214,10 +241,11 @@ public class FollowApp
 		}
 		else
 		{
-			frame_.setLocation(getAttributes().getX(), getAttributes().getY());
+			frame_.setLocation(attributes_.getX(), attributes_.getY());
 		}
-		// track window close events
-		frame_.addWindowListener(new WindowTracker(getAttributes(), tabbedPane_, systemInterface_));
+
+		// track window close events. WindowTracker handles the close operation
+		frame_.addWindowListener(new WindowTracker(attributes_, tabbedPane_, systemInterface_));
 		enableDragAndDrop(frame_);
 
 		// Open files from attributes; this is done after the frame is complete
@@ -226,7 +254,7 @@ public class FollowApp
 		// before frame creation (as in v1.0), frame creation may take longer
 		// because there are more threads (spawned in the course of open())
 		// contending for processor time.
-		List<File> files = getAttributes().getFollowedFiles();
+		List<File> files = attributes_.getFollowedFiles();
 		StringBuffer nonexistentFilesBuffer = null;
 		int nonexistentFileCount = 0;
 		for (File file : files)
@@ -239,7 +267,7 @@ public class FollowApp
 			{
 				// This file has been deleted since the previous execution.
 				// Remove it from the list of followed files
-				getAttributes().removeFollowedFile(file);
+				attributes_.removeFollowedFile(file);
 				nonexistentFileCount++;
 				if (nonexistentFilesBuffer == null)
 				{
@@ -266,9 +294,9 @@ public class FollowApp
 		int tabCount = tabbedPane_.getTabCount();
 		if (tabCount > 0)
 		{
-			if (tabCount > getAttributes().getSelectedTabIndex())
+			if (tabCount > attributes_.getSelectedTabIndex())
 			{
-				tabbedPane_.setSelectedIndex(getAttributes().getSelectedTabIndex());
+				tabbedPane_.setSelectedIndex(attributes_.getSelectedTabIndex());
 			}
 			else
 			{
@@ -276,41 +304,28 @@ public class FollowApp
 			}
 		}
 
-		// enable actions based on state
-		updateActions();
-
 		// refresh the recent files list
-		refreshRecentFilesMenu();
+		attributes_.addPropertyChangeListener(FollowAppAttributes.RECENT_FILES_KEY,
+				new RecentFileListener());
+		attributes_.addPropertyChangeListener(FollowAppAttributes.RECENT_FILES_MAX_KEY,
+				new RecentFileListener());
+				
 	}
 
 	/**
 	 * Close the current tab
 	 */
-	public void closeFile() {
+	public void closeFile()
+	{
 		FileFollowingPane fileFollowingPane = getSelectedFileFollowingPane();
-		int tab = getTabbedPane().getSelectedIndex();
+		int tab = tabbedPane_.getSelectedIndex();
 		if (tab >= 0)
 		{
-			getTabbedPane().removeTabAt(tab);
+			tabbedPane_.removeTabAt(tab);
 			disableDragAndDrop(fileFollowingPane.getTextPane());
-			getAttributes().removeFollowedFile(fileFollowingPane.getFollowedFile());
+			attributes_.removeFollowedFile(fileFollowingPane.getFollowedFile());
 			fileFollowingPane.stopFollowing();
-			getFileToFollowingPaneMap().remove(fileFollowingPane.getFollowedFile());
-			updateActions();
-		}
-	}
-
-	private void updateActions()
-	{
-		int tabCount = tabbedPane_.getTabCount();
-		for (FollowAppAction a : actions_.values())
-		{
-			if (a.getContext() == ActionContext.MULTI_FILE && tabCount <= 1)
-				a.setEnabled(false);
-			else if (a.getContext() == ActionContext.SINGLE_FILE && tabCount == 0)
-				a.setEnabled(false);
-			else
-				a.setEnabled(true);
+			fileToFollowingPaneMap_.remove(fileFollowingPane.getFollowedFile());
 		}
 	}
 
@@ -405,21 +420,7 @@ public class FollowApp
 		frame_.setJMenuBar(jMenuBar);
 		frame_.getContentPane().add(toolBar_, BorderLayout.NORTH);
 		frame_.getContentPane().add(tabbedPane_, BorderLayout.CENTER);
-		frame_.setSize(getAttributes().getWidth(), getAttributes().getHeight());
-	}
-
-	public void refreshRecentFilesMenu()
-	{
-		if (recentFilesMenu_ != null)
-		{
-			recentFilesMenu_.removeAll();
-			List<File> recentFiles = getAttributes().getRecentFiles();
-			// descend down the list to order files by last opened
-			for (int i = recentFiles.size() - 1; i >= 0; i--)
-			{
-				recentFilesMenu_.add(new Open(this, recentFiles.get(i)));
-			}
-		}
+		frame_.setSize(attributes_.getWidth(), attributes_.getHeight());
 	}
 
 	public void show()
@@ -452,6 +453,10 @@ public class FollowApp
 	 */
 	public void putAction(String name, FollowAppAction action)
 	{
+		if (FollowAppAction.ActionContext.APP == action.getContext())
+			action.setEnabled(true);
+		else
+			action.setEnabled(false);
 		actions_.put(name, action);
 	}
 
@@ -478,13 +483,13 @@ public class FollowApp
 		}
 		else
 		{
-			fileFollowingPane = new FileFollowingPane(file, getAttributes().getBufferSize(),
-					getAttributes().getLatency(), getAttributes().autoScroll(), getAttributes()
-							.getFont(), getAttributes().getTabSize());
+			fileFollowingPane = new FileFollowingPane(file, attributes_.getBufferSize(),
+					attributes_.getLatency(), attributes_.autoScroll(), attributes_.getFont(),
+					attributes_.getTabSize());
 			SearchableTextPane ffpTextPane = fileFollowingPane.getTextPane();
 			enableDragAndDrop(ffpTextPane);
 			fileFollowingPane.setSize(frame_.getSize());
-			ffpTextPane.setFont(getAttributes().getFont());
+			ffpTextPane.setFont(attributes_.getFont());
 			ffpTextPane.addMouseListener(getRightClickListener());
 			fileToFollowingPaneMap_.put(file, fileFollowingPane);
 			if (startFollowing)
@@ -512,22 +517,18 @@ public class FollowApp
 				}
 			});
 
-			// show the correct actions
-			updateActions();
-
 			// add the file to history
 			if (addFileToAttributes)
 			{
-				getAttributes().addFollowedFile(file);
-				getAttributes().addRecentFile(file);
-				refreshRecentFilesMenu();
+				attributes_.addFollowedFile(file);
+				attributes_.addRecentFile(file);
 			}
 		}
 	}
 
 	public void openFile(File file, boolean addFileToAttributes) throws FileNotFoundException
 	{
-		openFile(file, addFileToAttributes, getAttributes().autoScroll());
+		openFile(file, addFileToAttributes, attributes_.autoScroll());
 	}
 
 	/**
@@ -589,8 +590,7 @@ public class FollowApp
 
 	public void enableDragAndDrop(Component c)
 	{
-		// Invoking this constructor automatically sets the component's drop
-		// target
+		// Invoking this constructor automatically sets the component's drop target
 		new DropTarget(c, new DndFileOpener(this));
 	}
 
@@ -650,33 +650,6 @@ public class FollowApp
 		return tabbedPane_;
 	}
 
-	// We should remove this hack once JDK 1.4 gets wide adoption on Solaris.
-	static
-	{
-		boolean isSolaris = "SunOS".equals(System.getProperty("os.name"));
-
-		if (isSolaris)
-		{
-			String version = System.getProperty("java.version");
-			if ((version != null) && version.startsWith("1."))
-			{
-				String substring = version.substring(2, 3);
-				try
-				{
-					int minor = Integer.parseInt(substring);
-					if (minor < 4)
-					{
-						HAS_SOLARIS_BUG = true;
-					}
-				}
-				catch (NumberFormatException nfe)
-				{
-					// Nothing else to do.
-				}
-			}
-		}
-	}
-
 	public static void centerWindowInScreen(Window window)
 	{
 		Dimension screenSize = window.getToolkit().getScreenSize();
@@ -733,6 +706,25 @@ public class FollowApp
 		{
 			log.error("Unhandled exception", t);
 			System.exit(-1);
+		}
+	}
+
+	private class RecentFileListener implements PropertyChangeListener
+	{
+		public void propertyChange(PropertyChangeEvent evt)
+		{
+			if (recentFilesMenu_ != null)
+			{
+				recentFilesMenu_.removeAll();
+				List<File> recentFiles = attributes_.getRecentFiles();
+				// descend down the list to order files by last opened
+				for (int i = recentFiles.size() - 1; i >= 0; i--)
+				{
+					// have to use FollowApp.this because 'this' is now the context of
+					// the inner class
+					recentFilesMenu_.add(new Open(FollowApp.this, recentFiles.get(i)));
+				}
+			}
 		}
 	}
 }

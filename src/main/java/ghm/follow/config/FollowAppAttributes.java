@@ -559,9 +559,19 @@ public class FollowAppAttributes
 		pcs.addPropertyChangeListener(listener);
 	}
 
+	public synchronized void addPropertyChangeListener(String prop, PropertyChangeListener listener)
+	{
+		pcs.addPropertyChangeListener(prop, listener);
+	}
+
 	public synchronized void removePropertyChangeListener(PropertyChangeListener listener)
 	{
 		pcs.removePropertyChangeListener(listener);
+	}
+
+	public synchronized void removePropertyChangeListener(String prop, PropertyChangeListener listener)
+	{
+		pcs.removePropertyChangeListener(prop, listener);
 	}
 
 	public FollowAppAttributes getDefaultAttributes() throws IOException

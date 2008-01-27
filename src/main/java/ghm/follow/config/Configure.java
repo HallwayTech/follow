@@ -389,7 +389,7 @@ public class Configure extends FollowAppAction
 						getApp().getAttributes().setEditor(editor_.getText());
 						getApp().getAttributes().setTabSize(tabSize_.getText());
 						getApp().getAttributes().setRecentFilesMax(recentFilesMax_.getText());
-						getApp().refreshRecentFilesMenu();
+//						getApp().refreshRecentFilesMenu();
 						Font selectedFont;
 						try
 						{

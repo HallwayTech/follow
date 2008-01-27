@@ -161,7 +161,7 @@ public class ComponentBuilder
 	}
 
 	public static JTabbedPane buildTabbedPane(FollowAppAttributes attributes,
-			final Collection<FollowAppAction> actions)
+			Collection<FollowAppAction> actions)
 	{
 		final JTabbedPane tabbedPane = new TabbedPane(attributes);
 
@@ -201,6 +201,7 @@ public class ComponentBuilder
 	{
 		private JTabbedPane tabbedPane;
 		private Collection<FollowAppAction> actions;
+
 		public TabChangedListener(JTabbedPane tabbedPane, Collection<FollowAppAction> actions)
 		{
 			this.tabbedPane = tabbedPane;

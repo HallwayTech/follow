@@ -616,7 +616,11 @@ public class FollowAppAttributes
 
 	private int getInt(String key)
 	{
-		return Integer.parseInt(getString(key));
+		int retval = 0;
+		String s = getString(key);
+		if (s != null)
+			retval = Integer.parseInt(getString(key));
+		return retval;
 	}
 
 	private void setInt(String key, int value)

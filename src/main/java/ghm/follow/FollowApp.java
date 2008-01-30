@@ -41,7 +41,9 @@ import ghm.follow.gui.PopupMenu;
 import ghm.follow.gui.Reload;
 import ghm.follow.gui.Reset;
 import ghm.follow.gui.StartupStatus;
+import ghm.follow.gui.TabbedPane;
 import ghm.follow.gui.ToolBar;
+import ghm.follow.gui.FollowAppAction.ActionContext;
 import ghm.follow.nav.Bottom;
 import ghm.follow.nav.NextTab;
 import ghm.follow.nav.PreviousTab;
@@ -227,7 +229,7 @@ public class FollowApp
 
 		// initialize tabbedPane, but wait to open files until after frame
 		// initialization
-		tabbedPane_ = ComponentBuilder.buildTabbedPane(attributes_, actions_.values());
+		tabbedPane_ = new TabbedPane(attributes_);
 		enableDragAndDrop(tabbedPane_);
 
 		// initialize frame
@@ -327,6 +329,7 @@ public class FollowApp
 			fileFollowingPane.stopFollowing();
 			fileToFollowingPaneMap_.remove(fileFollowingPane.getFollowedFile());
 		}
+		updateActions();
 	}
 
 	/**
@@ -523,6 +526,22 @@ public class FollowApp
 				attributes_.addFollowedFile(file);
 				attributes_.addRecentFile(file);
 			}
+
+			updateActions();
+		}
+	}
+
+	private void updateActions()
+	{
+		int tabCount = tabbedPane_.getTabCount();
+		for (FollowAppAction a : actions_.values())
+		{
+			if (tabCount <= 1 && a.getContext() == ActionContext.MULTI_FILE)
+				a.setEnabled(false);
+			else if (tabCount == 0 && a.getContext() == ActionContext.SINGLE_FILE)
+				a.setEnabled(false);
+			else
+				a.setEnabled(true);
 		}
 	}
 

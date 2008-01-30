@@ -1,8 +1,6 @@
 package ghm.follow.gui;
 
 import ghm.follow.config.Configure;
-import ghm.follow.config.FollowAppAttributes;
-import ghm.follow.gui.FollowAppAction.ActionContext;
 import ghm.follow.nav.Bottom;
 import ghm.follow.nav.NextTab;
 import ghm.follow.nav.PreviousTab;
@@ -11,15 +9,10 @@ import ghm.follow.search.ClearAllHighlights;
 import ghm.follow.search.ClearHighlights;
 import ghm.follow.search.Find;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import javax.accessibility.AccessibleContext;
 import javax.swing.JMenuBar;
-import javax.swing.JTabbedPane;
 
 public class ComponentBuilder
 {
@@ -160,18 +153,6 @@ public class ComponentBuilder
 		return popupMenu;
 	}
 
-	public static JTabbedPane buildTabbedPane(FollowAppAttributes attributes,
-			Collection<FollowAppAction> actions)
-	{
-		final JTabbedPane tabbedPane = new TabbedPane(attributes);
-
-		// enable actions based on state
-		tabbedPane.addPropertyChangeListener(AccessibleContext.ACCESSIBLE_VISIBLE_DATA_PROPERTY,
-				new TabChangedListener(tabbedPane, actions));
-
-		return tabbedPane;
-	}
-
 	/**
 	 * Builds the toolbar shown at the top of the application
 	 * 
@@ -195,35 +176,5 @@ public class ComponentBuilder
 		toolBar.addSeparator();
 		toolBar.addFollowAppAction(actions.get(Configure.NAME));
 		return toolBar;
-	}
-
-	private static class TabChangedListener implements PropertyChangeListener
-	{
-		private JTabbedPane tabbedPane;
-		private Collection<FollowAppAction> actions;
-
-		public TabChangedListener(JTabbedPane tabbedPane, Collection<FollowAppAction> actions)
-		{
-			this.tabbedPane = tabbedPane;
-			this.actions = actions;
-		}
-
-		public void propertyChange(PropertyChangeEvent evt)
-		{
-			if (evt.getOldValue() instanceof FileFollowingPane
-					|| evt.getNewValue() instanceof FileFollowingPane)
-			{
-				int tabCount = tabbedPane.getTabCount();
-				for (FollowAppAction a : actions)
-				{
-					if (tabCount <= 1 && a.getContext() == ActionContext.MULTI_FILE)
-						a.setEnabled(false);
-					else if (tabCount == 0 && a.getContext() == ActionContext.SINGLE_FILE)
-						a.setEnabled(false);
-					else
-						a.setEnabled(true);
-				}
-			}
-		}
 	}
 }

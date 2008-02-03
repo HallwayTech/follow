@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>follow</groupId>
 	<artifactId>follow</artifactId>
@@ -8,9 +10,25 @@
 	<url>http://follow.sf.net</url>
 	<build>
 		<resources>
+			<!-- filter resources that are plain text -->
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/*.png</exclude>
+					<exclude>**/*.gif</exclude>
+					<exclude>**/*.jpg</exclude>
+				</excludes>
+			</resource>
+			<!-- don't filter resources that are binary -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.png</include>
+					<include>**/*.gif</include>
+					<include>**/*.jpg</include>
+				</includes>
 			</resource>
 		</resources>
 		<plugins>
@@ -52,11 +70,11 @@
 			<version>1.4.3</version>
 		</dependency>
 		<!--
-		<dependency>
+			<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.4.3</version>
-		</dependency>
+			</dependency>
 		-->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

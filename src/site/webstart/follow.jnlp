@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp codebase="http://follow.sourceforge.net/webstart" href="follow.jnlp">
+  <information>
+    <title>Follow</title>
+    <vendor>The Follow Team</vendor>
+    <homepage href="http://follow.sourceforge.net/"/>
+    <description>Follow is a Java application which allows a user to monitor ("follow") several log files concurrently. The name and behavior of this application are inspired by the "f" (follow) flag of the UNIX command "tail".</description>
+    <description kind="one-line">Follow</description>
+    <description kind="tooltip">Follow</description>
+    <icon href="http://follow.sourceforge.net/pics/repeat.gif"/>
+<!--
+    <icon kind="splash" href="http://follow.sourceforge.net/pics/Splash.gif"/>
+-->
+    <shortcut>
+      <desktop/>
+      <menu/>
+    </shortcut>
+   <offline-allowed/>
+  </information>
+  <security>
+    <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.5+"/>
+    <jar href="follow.jar"/>
+  </resources>
+  <application-desc/>
+</jnlp>

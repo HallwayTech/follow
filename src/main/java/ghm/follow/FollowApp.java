@@ -192,7 +192,7 @@ public class FollowApp
 		frame_ = new JFrame(getResourceString("frame.title"));
 
 		// initialize attributes
-		attributes_ = new FollowAppAttributes(this, propertyFile);
+		attributes_ = new FollowAppAttributes(propertyFile);
 		for (String fileName : fileNames)
 		{
 			File file = new File(fileName);
@@ -368,15 +368,14 @@ public class FollowApp
 	{
 		String filename = getResourceString(iconNameKey);
 		URL url = clazz.getResource(filename);
-		log.debug("Class: " + clazz + ", iconNameKey: " + iconNameKey);
-		log.debug("filename: " + filename);
-		log.debug("url: " + url);
-
+		log.debug("Class: {}, iconNameKey: {}", clazz, iconNameKey);
+		log.debug("filename: {}", filename);
+		log.debug("url: {}", url);
 		ImageIcon icon = null;
 		if (url != null)
 		{
 			icon = new ImageIcon(url);
-			log.debug("errored: " + (java.awt.MediaTracker.ERRORED == icon.getImageLoadStatus()));
+			log.debug("errored: {}", (java.awt.MediaTracker.ERRORED == icon.getImageLoadStatus()));
 		}
 		return icon;
 	}

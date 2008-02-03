@@ -90,12 +90,13 @@ public class FollowAppAttributes
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-	public FollowAppAttributes(FollowApp app) throws IOException
+	public FollowAppAttributes() throws IOException
 	{
-		this(app, null);
+		// have to cast null so that the constructor call isn't ambiguous
+		this((File) null);
 	}
 
-	public FollowAppAttributes(FollowApp app, File propertyFile) throws IOException
+	public FollowAppAttributes(File propertyFile) throws IOException
 	{
 		if (propertyFile != null)
 		{

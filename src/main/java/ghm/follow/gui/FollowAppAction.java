@@ -36,6 +36,7 @@ import javax.swing.KeyStroke;
  * Base class for all actions in the Follow application.
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
+ * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public abstract class FollowAppAction extends AbstractAction
 {
@@ -43,6 +44,7 @@ public abstract class FollowAppAction extends AbstractAction
 	{
 		MULTI_FILE, SINGLE_FILE, APP;
 	}
+
 	private static Logger log = LoggerFactory.getLogger(FollowAppAction.class);
 
 	private FollowApp app_;
@@ -50,7 +52,8 @@ public abstract class FollowAppAction extends AbstractAction
 	private KeyStroke accelerator_;
 	private ActionContext context_;
 
-	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator, ActionContext type)
+	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator,
+			ActionContext type)
 	{
 		super(name);
 		init(app, mnemonic, accelerator, type);
@@ -59,9 +62,8 @@ public abstract class FollowAppAction extends AbstractAction
 	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator,
 			ImageIcon icon, ActionContext type)
 	{
-		super(name);
+		super(name, icon);
 		init(app, mnemonic, accelerator, type);
-		setIcon(icon);
 	}
 
 	public FollowApp getApp()

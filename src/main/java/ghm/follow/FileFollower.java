@@ -377,13 +377,6 @@ public class FileFollower
 
 							// print the output to the listeners
 							print(output);
-
-							if (log.isDebugEnabled())
-							{
-								int length = (output.length() - 15 < 0) ? output.length() : output
-										.length() - 15;
-								log.debug("Printed data: {}", output.substring(length));
-							}
 						}
 						// no data found so check the file and restart if needed
 						else

@@ -301,8 +301,11 @@ public class FollowAppAttributes
 	public void addFollowedFile(File file)
 	{
 		List<String> fileNames = getEnumeratedProperty(FOLLOWED_FILES_KEY);
-		fileNames.add(file.getAbsolutePath());
-		setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
+		if (!fileListContains(fileNames, file))
+		{
+			fileNames.add(file.getAbsolutePath());
+			setEnumeratedProperty(FOLLOWED_FILES_KEY, fileNames);
+		}
 	}
 
 	/**

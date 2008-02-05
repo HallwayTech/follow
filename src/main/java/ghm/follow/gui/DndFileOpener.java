@@ -71,7 +71,7 @@ public class DndFileOpener implements DropTargetListener
 					List<File> fileList = (List<File>) transferable.getTransferData(flavors[i]);
 					for (File file : fileList)
 					{
-						app_.openFile(file, true);
+						app_.openFile(file);
 					}
 					dropCompleted = true;
 				}

@@ -65,14 +65,14 @@ public class Open extends FollowAppAction
 			if (recentFile != null)
 			{
 				f = recentFile;
-				getApp().openFile(recentFile, true);
+				getApp().openFile(recentFile);
 			}
 			else
 			{
 				f = getApp().getSystemInterface().getFileFromUser();
 				if (f != null)
 				{
-					getApp().openFile(f, true);
+					getApp().openFile(f);
 				}
 			}
 		}

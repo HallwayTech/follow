@@ -85,7 +85,6 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
@@ -191,23 +190,13 @@ public class FollowApp
 		// create frame first. the close operation is handled in WindowTracker
 		frame_ = new JFrame(getResourceString("frame.title"));
 
-		// initialize attributes
+		// load the attributes
 		attributes_ = new FollowAppAttributes(propertyFile);
-		for (String fileName : fileNames)
-		{
-			File file = new File(fileName);
-			if (!file.exists())
-			{
-				String msg = MessageFormat.format(
-						getResourceString("message.cmdLineFileNotFound.text"),
-						new Object[] { file });
-				log.info(msg);
-			}
-			else if (!attributes_.followedFileListContains(file))
-			{
-				attributes_.addFollowedFile(file);
-			}
-		}
+
+		// add listeners to update the recent files list
+		RecentFileListener rfl = new RecentFileListener();
+		attributes_.addPropertyChangeListener(FollowAppAttributes.RECENT_FILES_KEY, rfl);
+		attributes_.addPropertyChangeListener(FollowAppAttributes.RECENT_FILES_MAX_KEY, rfl);
 
 		// load the actions referenced in the application
 		loadActions();
@@ -220,6 +209,9 @@ public class FollowApp
 
 		// set the recent files menu to local variable so it can be updated easily
 		recentFilesMenu_ = ComponentBuilder.recentFilesMenu;
+
+		// fake an event to get the menu setup initially
+		rfl.propertyChange(null);
 
 		// initialize popupMenu
 		popupMenu_ = ComponentBuilder.buildPopupMenu(getActions());
@@ -263,7 +255,7 @@ public class FollowApp
 		{
 			try
 			{
-				openFile(file, false);
+				openFile(file, true);
 			}
 			catch (FileNotFoundException e)
 			{
@@ -282,6 +274,25 @@ public class FollowApp
 				nonexistentFilesBuffer.append(MESSAGE_LINE_SEPARATOR);
 			}
 		}
+
+		// open files from the command line
+		for (String fileName : fileNames)
+		{
+			File file = new File(fileName);
+			if (!file.exists())
+			{
+				String msg = MessageFormat.format(
+						getResourceString("message.cmdLineFileNotFound.text"),
+						new Object[] { file });
+				log.info(msg);
+			}
+			else if (!attributes_.followedFileListContains(file))
+			{
+				openFile(file, true);
+//				attributes_.addFollowedFile(file);
+			}
+		}
+
 		if (nonexistentFileCount > 0)
 		{
 			// Alert the user of the fact that one or more files have been
@@ -289,8 +300,9 @@ public class FollowApp
 			String text = getResourceString("message.filesDeletedSinceLastExecution.text");
 			String message = MessageFormat.format(text, new Object[] { nonexistentFileCount,
 					nonexistentFilesBuffer.toString() });
-			String title = getResourceString("message.filesDeletedSinceLastExecution.title");
-			JOptionPane.showMessageDialog(frame_, message, title, JOptionPane.WARNING_MESSAGE);
+//			String title = getResourceString("message.filesDeletedSinceLastExecution.title");
+//			JOptionPane.showMessageDialog(frame_, message, title, JOptionPane.WARNING_MESSAGE);
+			log.info(message);
 		}
 
 		int tabCount = tabbedPane_.getTabCount();
@@ -305,13 +317,6 @@ public class FollowApp
 				tabbedPane_.setSelectedIndex(0);
 			}
 		}
-
-		// refresh the recent files list
-		attributes_.addPropertyChangeListener(FollowAppAttributes.RECENT_FILES_KEY,
-				new RecentFileListener());
-		attributes_.addPropertyChangeListener(FollowAppAttributes.RECENT_FILES_MAX_KEY,
-				new RecentFileListener());
-				
 	}
 
 	/**
@@ -462,12 +467,16 @@ public class FollowApp
 		actions_.put(name, action);
 	}
 
+	public void openFile(File file) throws FileNotFoundException
+	{
+		openFile(file, attributes_.autoScroll());
+	}
+
 	/**
 	 * Warning: This method should be called only from (1) the FollowApp initializer (before any
 	 * components are realized) or (2) from the event dispatching thread.
 	 */
-	void openFile(File file, boolean addFileToAttributes, boolean startFollowing)
-			throws FileNotFoundException
+	void openFile(File file, boolean startFollowing) throws FileNotFoundException
 	{
 		if (file == null)
 		{
@@ -520,11 +529,8 @@ public class FollowApp
 			});
 
 			// add the file to history
-			if (addFileToAttributes)
-			{
-				attributes_.addFollowedFile(file);
-				attributes_.addRecentFile(file);
-			}
+			attributes_.addFollowedFile(file);
+			attributes_.addRecentFile(file);
 
 			updateActions();
 		}
@@ -542,11 +548,6 @@ public class FollowApp
 			else
 				a.setEnabled(true);
 		}
-	}
-
-	public void openFile(File file, boolean addFileToAttributes) throws FileNotFoundException
-	{
-		openFile(file, addFileToAttributes, attributes_.autoScroll());
 	}
 
 	/**

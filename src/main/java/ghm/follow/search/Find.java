@@ -16,6 +16,7 @@ public class Find extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.Find.name"),
 				FollowApp.getResourceString("action.Find.mnemonic"),
 				FollowApp.getResourceString("action.Find.accelerator"),
+				FollowApp.getIcon(Find.class, "action.Find.icon"),
 				ActionContext.SINGLE_FILE);
 	}
 

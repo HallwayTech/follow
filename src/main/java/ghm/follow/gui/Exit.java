@@ -37,6 +37,7 @@ public class Exit extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.Exit.name"),
 				FollowApp.getResourceString("action.Exit.mnemonic"),
 				FollowApp.getResourceString("action.Exit.accelerator"),
+				FollowApp.getIcon(Exit.class, "action.Exit.icon"),
 				ActionContext.APP);
 	}
 

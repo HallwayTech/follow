@@ -37,6 +37,7 @@ public class About extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.About.name"),
 				FollowApp.getResourceString("action.About.mnemonic"),
 				FollowApp.getResourceString("action.About.accelerator"),
+				FollowApp.getIcon(About.class, "action.About.icon"),
 				ActionContext.APP);
 	}
 

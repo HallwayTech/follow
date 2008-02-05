@@ -20,3 +20,7 @@ You should have received a copy of the GNU General Public License
 along with Follow (see the file named LICENSE.txt); if not, write
 to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 Boston, MA  02111-1307  USA
+
+The icons used in this application are the work of Mark James and
+can be found at http://www.famfamfam.com/lab/icons/silk/.  The icons
+are licensed under Creative Commons (http://creativecommons.org/licenses/by/2.5/).

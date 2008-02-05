@@ -36,6 +36,7 @@ public class Edit extends FollowAppAction
 		super(app, FollowApp.getResourceString("action.Edit.name"),
 				FollowApp.getResourceString("action.Edit.mnemonic"),
 				FollowApp.getResourceString("action.Edit.accelerator"),
+				FollowApp.getIcon(Edit.class, "action.Edit.icon"),
 				ActionContext.SINGLE_FILE);
 	}
 

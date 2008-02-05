@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 package ghm.follow.gui;
 
+import javax.swing.Icon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
@@ -35,6 +36,13 @@ public class Menu extends JMenu
 	{
 		super(name);
 		setMnemonic(mnemonic.charAt(0));
+	}
+
+	public Menu(String name, String mnemonic, Icon icon)
+	{
+		super(name);
+		setMnemonic(mnemonic.charAt(0));
+		setIcon(icon);
 	}
 
 	public void addFollowAppAction(FollowAppAction a)

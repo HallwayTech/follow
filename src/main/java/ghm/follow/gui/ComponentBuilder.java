@@ -1,5 +1,6 @@
 package ghm.follow.gui;
 
+import ghm.follow.FollowApp;
 import ghm.follow.config.Configure;
 import ghm.follow.nav.Bottom;
 import ghm.follow.nav.NextTab;
@@ -71,7 +72,7 @@ public class ComponentBuilder
 		fileMenu.addFollowAppAction(actions.get(Pause.NAME));
 		fileMenu.addSeparator();
 		recentFilesMenu = new Menu(resources.getString("menu.RecentFiles.name"), resources
-				.getString("menu.RecentFiles.mnemonic"));
+				.getString("menu.RecentFiles.mnemonic"), FollowApp.getIcon(ComponentBuilder.class, "menu.RecentFiles.icon"));
 		fileMenu.add(recentFilesMenu);
 		fileMenu.addSeparator();
 		fileMenu.addFollowAppAction(actions.get(Exit.NAME));

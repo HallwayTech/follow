@@ -160,7 +160,7 @@ public class FollowApp
 		this(fileNames, null);
 	}
 
-	FollowApp(List<String> fileNames, File propertyFile) throws IOException, InterruptedException,
+	FollowApp(List<String> filenames, File propertyFile) throws IOException, InterruptedException,
 			InvocationTargetException
 	{
 		// Create & show startup status window
@@ -254,7 +254,7 @@ public class FollowApp
 		{
 			try
 			{
-				openFile(file, true);
+				openFile(file);
 			}
 			catch (FileNotFoundException e)
 			{
@@ -275,20 +275,18 @@ public class FollowApp
 		}
 
 		// open files from the command line
-		for (String fileName : fileNames)
+		for (String filename : filenames)
 		{
-			File file = new File(fileName);
-			if (!file.exists())
+			try
+			{
+				openFile(new File(filename));
+			}
+			catch (FileNotFoundException e)
 			{
 				String msg = MessageFormat.format(
 						getResourceString("message.cmdLineFileNotFound.text"),
-						new Object[] { file });
+						new Object[] { filename });
 				log.info(msg);
-			}
-			else if (!attributes_.followedFileListContains(file))
-			{
-				openFile(file, true);
-//				attributes_.addFollowedFile(file);
 			}
 		}
 

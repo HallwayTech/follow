@@ -38,7 +38,6 @@ import ghm.follow.gui.ComponentBuilder;
 import ghm.follow.gui.Open;
 import ghm.follow.gui.Pause;
 import ghm.follow.gui.PopupMenu;
-import ghm.follow.gui.Reload;
 import ghm.follow.gui.Reset;
 import ghm.follow.gui.StartupStatus;
 import ghm.follow.gui.TabbedPane;
@@ -395,7 +394,6 @@ public class FollowApp
 		// initialize actions
 		putAction(Open.NAME, new Open(this));
 		putAction(Close.NAME, new Close(this));
-		putAction(Reload.NAME, new Reload(this));
 		putAction(Edit.NAME, new Edit(this));
 		putAction(Exit.NAME, new Exit(this));
 		putAction(Top.NAME, new Top(this));

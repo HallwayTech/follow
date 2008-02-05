@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 /**
- * Action which clears the text area for the currently followed file.
+ * Action which restarts the currently selected followed file.
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */

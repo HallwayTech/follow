@@ -66,7 +66,6 @@ public class ComponentBuilder
 				.getString("menu.File.mnemonic"));
 		fileMenu.addFollowAppAction(actions.get(Open.NAME));
 		fileMenu.addFollowAppAction(actions.get(Close.NAME));
-		fileMenu.addFollowAppAction(actions.get(Reload.NAME));
 		fileMenu.addSeparator();
 		fileMenu.addFollowAppAction(actions.get(Reset.NAME));
 		fileMenu.addFollowAppAction(actions.get(Pause.NAME));
@@ -138,15 +137,15 @@ public class ComponentBuilder
 		PopupMenu popupMenu = new PopupMenu();
 		popupMenu.addFollowAppAction(actions.get(Open.NAME));
 		popupMenu.addFollowAppAction(actions.get(Close.NAME));
-		popupMenu.addFollowAppAction(actions.get(Reload.NAME));
+		popupMenu.addSeparator();
+		popupMenu.addFollowAppAction(actions.get(Reset.NAME));
+		popupMenu.addFollowAppAction(actions.get(Pause.NAME));
 		popupMenu.addSeparator();
 		popupMenu.addFollowAppAction(actions.get(Top.NAME));
 		popupMenu.addFollowAppAction(actions.get(Bottom.NAME));
 		popupMenu.addSeparator();
 		popupMenu.addFollowAppAction(actions.get(Clear.NAME));
-		popupMenu.addFollowAppAction(actions.get(ClearAll.NAME));
 		popupMenu.addFollowAppAction(actions.get(Delete.NAME));
-		popupMenu.addFollowAppAction(actions.get(DeleteAll.NAME));
 		popupMenu.addSeparator();
 		popupMenu.addFollowAppAction(actions.get(Configure.NAME));
 		popupMenu.addFollowAppAction(actions.get(Edit.NAME));

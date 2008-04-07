@@ -6,8 +6,55 @@
 	<groupId>follow</groupId>
 	<artifactId>follow</artifactId>
 	<name>Follow</name>
+	<packaging>jar</packaging>
 	<version>1.7.4</version>
 	<url>http://follow.sf.net</url>
+	<description>Follow is a Java application which allows a user to monitor ("follow") several log files concurrently. The name and behavior of this application are inspired by the "f" (follow) flag of the UNIX command "tail".</description>
+	<issueManagement>
+		<system>SourceForge</system>
+		<url>http://sourceforge.net/tracker/?group_id=11206</url>
+	</issueManagement>
+	<developers>
+		<developer>
+			<id>bigdaddydsp</id>
+			<name>Carl Hall</name>
+			<email>carl.hall@gmail.com</email>
+			<roles>
+				<role>Project Admin</role>
+			</roles>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>murali_ca_us</id>
+			<name>Murali Krishnan</name>
+			<email>murali24@yahoo.com</email>
+			<roles>
+				<role>Project Admin</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>greghmerrill</id>
+			<name>Greg Merrill</name>
+			<email>greghmerrill@yahoo.com</email>
+			<roles>
+				<role>Creator</role>
+			</roles>
+		</developer>
+	</developers>
+	<mailingLists>
+		<mailingList>
+			<name>Follow Users</name>
+			<subscribe>follow-users@lists.sourceforge.net</subscribe>
+			<unsubscribe>follow-users@lists.sourceforge.net</unsubscribe>
+			<post>follow-users@sourceforge.net</post>
+			<archive></archive>
+		</mailingList>
+	</mailingLists>
+	<scm>
+		<connection>scm:svn:https://follow.svn.sourceforge.net/svnroot/follow</connection>
+		<developerConnection>scm:svn:https://follow.svn.sourceforge.net/svnroot/follow</developerConnection>
+		<url>scm:svn:http://follow.svn.sourceforge.net/viewvc/follow/</url>
+	</scm>
 	<build>
 		<resources>
 			<!-- filter resources that are plain text -->

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+	<properties>
+		<title>Follow</title>
+		<author email="carl.hall@gmail.com">Carl Hall</author>
+	</properties>
+	<body>
+		<release date="2007-04-07" version="1.7.1">
+			<action type="update">Updated text area and search results to include a line indicator.</action>
+			<action type="revert">Changed use of JTextPane back to JTextArea.</action>
+		</release>
+		<release date="2007-03-26" version="1.7.0">
+			<action type="update">Updated find functionality to include a search results list.</action>
+			<action type="fix">Fixed a CPU saturation (busy wait) bug on opening empty files.</action>
+		</release>
+		<release date="2006-04-11" version="1.5.0">
+			<action type="add">Added find functionality.</action>
+			<action type="add">Added pause functionality.</action>
+			<action type="update">Merged reset functionality from contributed source.</action>
+		</release>
+		<release date="2007-03-26" version="1.4.3">
+			<action type="fix">Fixed a CPU saturation (busy wait) bug on empty files.</action>
+		</release>
+		<release date="2003-07-01" version="1.4.2">
+			<action type="add">"Auto-reload" functionality (restart if the file was deleted and recreated) added.</action>
+			<action type="add">Configurable external editor capability added.</action>
+			<action type="update">Workaround implemented for a Solaris swing bug.</action>
+			<action type="update">Now only the end of the file is initially loaded (like 'tail' does it).</action>
+		</release>
+		<release date="2001-08-25" version="1.4.1">
+			<action type="doc">Documentation/Copyright/License update; no functional change from version 1.4.</action>
+		</release>
+		<release date="2001-06-21" version="1.4.0">
+			<action type="fix">Threading problem "resolved" in 1.3.2 has now actually been resolved.</action>
+			<action type="add">The oft-requested auto-scroll feature has been added.</action>
+		</release>
+		<release date="2001-05-01" version="1.3.2">
+			<action type="fix">Threading problem which occasionally caused application to hang on startup has been resolved (I think...)</action>
+		</release>
+		<release date="2000-09-07" version="1.3.1">
+			<action type="fix">jdk1.3 startup-related issues resolved.</action>
+		</release>
+		<release date="2000-09-04" version="1.3.0">
+			<action type="update">"Clear" and "Clear All" actions redefined to simply clear the text area(s).</action>
+			<action type="add">"Delete" and "Delete All" actions introduced to perform the function previously performed by "Clear" and "Clear All".</action>
+			<action type="update">Configuration dialog now properly displays the currently selected font each time it is invoked.</action>
+		</release>
+		<release date="2000-08-01" version="1.2.0">
+			<action type="add">Font is now configurable.</action>
+		</release>
+		<release date="2000-07-26" version="1.1.0">
+			<action type="add">"Clear All" action (has the same effect as performing the "Clear" action on each followed file).</action>
+			<action type="add">Right-click menu (contains essentially the same actions as the toolbar).</action>
+			<action type="update">Bigger toolbar buttons (a slight nod to Fitts' Law).</action>
+			<action type="update">Configurable tab placement (with the top of the main text area being the new default, rather than the bottom).</action>
+		</release>
+		<release date="2000-06-27" version="1.0.1">
+			<action type="fix">Stream opened on a followed file now properly closed when the "Close" action is performed.</action>
+		</release>
+		<release date="2000-06-15" version="1.0.0">
+			<action type="add">Initial release.</action>
+		</release>
+	</body>
+</document>

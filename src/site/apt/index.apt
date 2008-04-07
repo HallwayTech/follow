@@ -1,0 +1,17 @@
+${project.description}
+
+* Features
+	* Monitor ("follow") text files to which information is being appended asynchronously (e.g. log files)
+	* Jump quickly to the top or bottom of followed files
+	* Clear the contents of the text areas which display the contents of followed files (singly or all-at-once)
+	* Delete the contents of followed files (singly or all-at-once)
+	* Configure the buffering strategy & latency of the threads which follow files
+	* Open files using Drag-and-Drop
+	* Maintain session data across invocations of Follow (i.e. Follow remembers which files a user opens so it can re-open those files the next time it runs)
+	* Pause log files and replay where paused
+	* Highlight & search for text within a log file
+	* Restart a log while following
+
+*Screenshots
+	* Main application window
+	* Configuration dialog

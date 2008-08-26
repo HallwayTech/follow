@@ -345,7 +345,7 @@ public class FileFollower
 
 				// if the file size is bigger than the buffer size, skip to the
 				// end of the file if not performing a restart
-				if (!needsRestart_ && fileSize > bufferSize_)
+				if (fileSize > bufferSize_)
 				{
 					startingPoint_ = fileSize - bufferSize_;
 				}

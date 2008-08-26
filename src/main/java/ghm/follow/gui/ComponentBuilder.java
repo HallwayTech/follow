@@ -85,9 +85,10 @@ public class ComponentBuilder
 		Menu editMenu = new Menu(resources.getString("menu.Edit.name"), resources
 				.getString("menu.Edit.mnemonic"));
 		editMenu.addFollowAppAction(actions.get(Find.NAME));
-		editMenu.addSeparator();
 		editMenu.addFollowAppAction(actions.get(ClearHighlights.NAME));
 		editMenu.addFollowAppAction(actions.get(ClearAllHighlights.NAME));
+		editMenu.addSeparator();
+		editMenu.addFollowAppAction(actions.get(Configure.NAME));
 		return editMenu;
 	}
 
@@ -104,7 +105,6 @@ public class ComponentBuilder
 		toolsMenu.addFollowAppAction(actions.get(Delete.NAME));
 		toolsMenu.addFollowAppAction(actions.get(DeleteAll.NAME));
 		toolsMenu.addSeparator();
-		toolsMenu.addFollowAppAction(actions.get(Configure.NAME));
 		toolsMenu.addFollowAppAction(actions.get(Edit.NAME));
 		return toolsMenu;
 	}

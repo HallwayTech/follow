@@ -29,8 +29,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JScrollPane;
 import javax.swing.text.BadLocationException;
@@ -44,7 +44,7 @@ import javax.swing.text.Document;
  */
 public class FileFollowingPane extends JScrollPane
 {
-	private Logger log = LoggerFactory.getLogger(FileFollowingPane.class);
+	private Logger log = Logger.getLogger(FileFollowingPane.class.getName());
 	/** FileFollower used to print to this component */
 	protected FileFollower _fileFollower;
 
@@ -213,7 +213,7 @@ public class FileFollowingPane extends JScrollPane
 			catch (InterruptedException interruptedException)
 			{
 				// Handle this better later
-				log.error("InterrupedException in FileFollowingPane", interruptedException);
+				log.log(Level.SEVERE, "InterrupedException in FileFollowingPane", interruptedException);
 			}
 
 			// This has the effect of clearing the contents of the followed file
@@ -230,7 +230,7 @@ public class FileFollowingPane extends JScrollPane
 			catch (BadLocationException e)
 			{
 				// Handle this better later
-				log.warn("BadLocationException in FileFolloingPane", e);
+				log.log(Level.WARNING, "BadLocationException in FileFolloingPane", e);
 			}
 
 			_fileFollower.start();

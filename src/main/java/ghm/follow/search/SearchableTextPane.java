@@ -5,8 +5,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JTextArea;
 import javax.swing.plaf.ComponentUI;
@@ -18,7 +18,7 @@ import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
 public class SearchableTextPane extends JTextArea
 {
-	private Logger log = LoggerFactory.getLogger(SearchableTextPane.class.getName());
+	private Logger log = Logger.getLogger(SearchableTextPane.class.getName());
 	private int lastSearchPos = -1;
 	private String lastSearchTerm;
 	private final DefaultHighlightPainter wordPainter = new DefaultHighlightPainter(Color.YELLOW);
@@ -82,7 +82,7 @@ public class SearchableTextPane extends JTextArea
 			}
 			catch (BadLocationException e)
 			{
-				log.error("BadLocationException in SearchableTextPane", e);
+				log.log(Level.SEVERE, "BadLocationException in SearchableTextPane", e);
 				lineResults = new ArrayList<LineResult>();
 			}
 		}
@@ -180,7 +180,7 @@ public class SearchableTextPane extends JTextArea
 		catch (BadLocationException e)
 		{
 			// just return -1;
-			log.warn("BadLocationException in SearchableTextPane", e);
+			log.log(Level.WARNING, "BadLocationException in SearchableTextPane", e);
 			pos = -1;
 		}
 		return pos;

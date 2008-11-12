@@ -27,13 +27,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Instances of this class 'follow' a particular text file, assmebling that file's characters into
- * Strings and sending them to instances of {@link OutputDestination}. The name and behavior of
- * this class are inspired by the '-f' (follow) flag of the UNIX command 'tail'.
+ * Instances of this class 'follow' a particular text file, assmebling that
+ * file's characters into Strings and sending them to instances of
+ * {@link OutputDestination}. The name and behavior of this class are inspired
+ * by the '-f' (follow) flag of the UNIX command 'tail'.
  * 
  * @see OutputDestination
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
@@ -42,31 +43,33 @@ public class FileFollower
 {
 
 	/**
-	 * Constructs a new FileFollower; invoking this constructor does <em>not</em> cause the new
-	 * object to begin following the supplied file. In order to begin following, one must call
-	 * {@link #start()}.
+	 * Constructs a new FileFollower; invoking this constructor does
+	 * <em>not</em> cause the new object to begin following the supplied file.
+	 * In order to begin following, one must call {@link #start()}.
 	 * 
 	 * @param file
 	 *            file to be followed
 	 * @param bufferSize
 	 *            number of chars to be read each time the file is accessed
 	 * @param latency
-	 *            each time a FileFollower's running thread encounters the end of the file in its
-	 *            stream, it will rest for this many milliseconds before checking to see if there
-	 *            are any more bytes in the file
+	 *            each time a FileFollower's running thread encounters the end
+	 *            of the file in its stream, it will rest for this many
+	 *            milliseconds before checking to see if there are any more
+	 *            bytes in the file
 	 * @param initialOutputDestinations
-	 *            an initial array of OutputDestinations which will be used when printing the
-	 *            contents of the file (this array may be <tt>null</tt>)
+	 *            an initial array of OutputDestinations which will be used when
+	 *            printing the contents of the file (this array may be
+	 *            <tt>null</tt>)
 	 */
 	public FileFollower(File file, int bufferSize, int latency,
-			OutputDestination[] initialOutputDestinations)
+	        OutputDestination[] initialOutputDestinations)
 	{
 		file_ = file;
 		bufferSize_ = bufferSize;
 		latency_ = latency;
 
 		int initOutputDestsSize = (initialOutputDestinations != null) ? initialOutputDestinations.length
-				: 0;
+		        : 0;
 		outputDestinations_ = new ArrayList<OutputDestination>(initOutputDestsSize);
 		for (int i = 0; i < initOutputDestsSize; i++)
 		{
@@ -75,8 +78,9 @@ public class FileFollower
 	}
 
 	/**
-	 * Identical to {@link #FileFollower(File, int, int, OutputDestination[])}, except that a
-	 * default buffer size (32,768 characters) and latency (1000 milliseconds) are used.
+	 * Identical to {@link #FileFollower(File, int, int, OutputDestination[])},
+	 * except that a default buffer size (32,768 characters) and latency (1000
+	 * milliseconds) are used.
 	 * 
 	 * @see #FileFollower(File, int, int, OutputDestination[])
 	 */
@@ -85,15 +89,17 @@ public class FileFollower
 		// Initial buffer size pilfered from org.gjt.sp.jedit.Buffer. I'm not
 		// sure whether this is a truly optimal buffer size.
 		this(file, 32768, // Don't change without updating docs!
-				1000, // Don't change without updating docs!
-				initialOutputDestinations);
+		        1000, // Don't change without updating docs!
+		        initialOutputDestinations);
 	}
 
 	/**
-	 * Cause this FileFollower to spawn a thread which will follow the file supplied in the
-	 * constructor and send its contents to all of the FileFollower's OutputDestinations.<br>
+	 * Cause this FileFollower to spawn a thread which will follow the file
+	 * supplied in the constructor and send its contents to all of the
+	 * FileFollower's OutputDestinations.<br>
 	 * <br>
-	 * If this FileFollower is running but paused, this method equates to calling unpause().
+	 * If this FileFollower is running but paused, this method equates to
+	 * calling unpause().
 	 */
 	public synchronized void start()
 	{
@@ -127,8 +133,9 @@ public class FileFollower
 	}
 
 	/**
-	 * Cause this FileFollower to stop following the file supplied in the constructor after it
-	 * flushes the characters it's currently reading to all its OutputDestinations.
+	 * Cause this FileFollower to stop following the file supplied in the
+	 * constructor after it flushes the characters it's currently reading to all
+	 * its OutputDestinations.
 	 */
 	public synchronized void stop()
 	{
@@ -137,8 +144,9 @@ public class FileFollower
 	}
 
 	/**
-	 * Like {@link #stop()}, but this method will not exit until the thread which is following the
-	 * file has finished executing (i.e., stop synchronously).
+	 * Like {@link #stop()}, but this method will not exit until the thread
+	 * which is following the file has finished executing (i.e., stop
+	 * synchronously).
 	 */
 	public synchronized void stopAndWait() throws InterruptedException
 	{
@@ -174,7 +182,8 @@ public class FileFollower
 	}
 
 	/**
-	 * Add another OutputDestination to which the followed file's contents should be printed.
+	 * Add another OutputDestination to which the followed file's contents
+	 * should be printed.
 	 * 
 	 * @param outputDestination
 	 *            OutputDestination to be added
@@ -185,8 +194,8 @@ public class FileFollower
 	}
 
 	/**
-	 * Remove the supplied OutputDestination from the list of OutputDestinations to which the
-	 * followed file's contents should be printed.
+	 * Remove the supplied OutputDestination from the list of OutputDestinations
+	 * to which the followed file's contents should be printed.
 	 * 
 	 * @param outputDestination
 	 *            OutputDestination to be removed
@@ -197,7 +206,8 @@ public class FileFollower
 	}
 
 	/**
-	 * Returns the List which maintains all OutputDestinations for this FileFollower.
+	 * Returns the List which maintains all OutputDestinations for this
+	 * FileFollower.
 	 * 
 	 * @return contains all OutputDestinations for this FileFollower
 	 */
@@ -237,8 +247,8 @@ public class FileFollower
 	}
 
 	/**
-	 * Returns the size of the character buffer used to read characters from the followed file. Each
-	 * time the file is accessed, this buffer is filled.
+	 * Returns the size of the character buffer used to read characters from the
+	 * followed file. Each time the file is accessed, this buffer is filled.
 	 * 
 	 * @return size of the character buffer
 	 */
@@ -248,12 +258,13 @@ public class FileFollower
 	}
 
 	/**
-	 * Sets the size of the character buffer used to read characters from the followed file.
-	 * Increasing buffer size will improve efficiency but increase the amount of memory used by the
-	 * FileFollower.<br>
-	 * <em>NOTE:</em> Setting this value will <em>not</em> cause a running FileFollower to
-	 * immediately begin reading characters into a buffer of the newly specified size. You must stop &
-	 * restart the FileFollower in order for changes to take effect.
+	 * Sets the size of the character buffer used to read characters from the
+	 * followed file. Increasing buffer size will improve efficiency but
+	 * increase the amount of memory used by the FileFollower.<br>
+	 * <em>NOTE:</em> Setting this value will <em>not</em> cause a running
+	 * FileFollower to immediately begin reading characters into a buffer of the
+	 * newly specified size. You must stop & restart the FileFollower in order
+	 * for changes to take effect.
 	 * 
 	 * @param bufferSize
 	 *            size of the character buffer
@@ -264,8 +275,8 @@ public class FileFollower
 	}
 
 	/**
-	 * Returns the time (in milliseconds) which a FileFollower spends sleeping each time it
-	 * encounters the end of the followed file.
+	 * Returns the time (in milliseconds) which a FileFollower spends sleeping
+	 * each time it encounters the end of the followed file.
 	 * 
 	 * @return latency, in milliseconds
 	 */
@@ -275,10 +286,11 @@ public class FileFollower
 	}
 
 	/**
-	 * Sets the time (in milliseconds) which a FileFollower spends sleeping each time it encounters
-	 * the end of the followed file. Note that extremely low latency values may cause thrashing
-	 * between the FileFollower's running thread and other threads in an application. A change in
-	 * this value will be reflected the next time the FileFollower's running thread sleeps.
+	 * Sets the time (in milliseconds) which a FileFollower spends sleeping each
+	 * time it encounters the end of the followed file. Note that extremely low
+	 * latency values may cause thrashing between the FileFollower's running
+	 * thread and other threads in an application. A change in this value will
+	 * be reflected the next time the FileFollower's running thread sleeps.
 	 * 
 	 * @param latency
 	 *            latency, in milliseconds
@@ -305,25 +317,26 @@ public class FileFollower
 	protected boolean paused_;
 
 	/**
-	 * Instances of this class are used to run a thread which follows a FileFollower's file and
-	 * sends prints its contents to OutputDestinations. This class should only handle the gathering
-	 * of data from the followed file. Actually writing to the output destinations is handled by the
-	 * outer class (FileFollower).
+	 * Instances of this class are used to run a thread which follows a
+	 * FileFollower's file and sends prints its contents to OutputDestinations.
+	 * This class should only handle the gathering of data from the followed
+	 * file. Actually writing to the output destinations is handled by the outer
+	 * class (FileFollower).
 	 */
 	class Runner implements Runnable
 	{
-		private Logger log = LoggerFactory.getLogger(Runner.class.getName());
+		private Logger log = Logger.getLogger(Runner.class.getName());
 
 		public void run()
 		{
-			log.debug("entering FileFollower.run()");
+			log.finer("entering FileFollower.run()");
 
 			while (continueRunning_)
 			{
 				runAction();
 			}
 
-			log.debug("exiting FileFollower.run()");
+			log.finer("exiting FileFollower.run()");
 		}
 
 		protected void runAction()
@@ -352,8 +365,8 @@ public class FileFollower
 				// reset the restart flag
 				needsRestart_ = false;
 
-				log.debug("Starting point: {}; Last activity: {}", startingPoint_,
-						lastActivityTime);
+				log.finer("Starting point: " + startingPoint_ + "; Last activity: "
+				        + lastActivityTime);
 
 				bis.skip(startingPoint_);
 
@@ -367,8 +380,9 @@ public class FileFollower
 
 						boolean dataWasFound = (numBytesRead > 0);
 
-						log.debug("Bytes read: {}; dataWasFound: {}", numBytesRead,
-								dataWasFound);
+						log
+						        .finer("Bytes read: " + numBytesRead + "; dataWasFound: "
+						                + dataWasFound);
 
 						// if data was found, print it and log activity time
 						if (dataWasFound)
@@ -384,15 +398,16 @@ public class FileFollower
 							// check if the file handle has become stale (file
 							// was modified, but no data was read).
 							boolean fileExists = file_.exists();
-							// removed check for 0 length because a file could change by
+							// removed check for 0 length because a file could
+							// change by
 							// being cleared out
 							// && (file_.length() > 0);
 							boolean fileHasChanged = file_.lastModified() > lastActivityTime;
 
 							if (fileExists && fileHasChanged)
 							{
-								log.debug("Needs restart [fileExists={}; fileHasChanged={}]",
-										fileExists, fileHasChanged);
+								log.finer("Needs restart [fileExists=" + fileExists
+								        + "; fileHasChanged=" + fileHasChanged + "]");
 								needsRestart_ = true;
 							}
 						}
@@ -401,25 +416,25 @@ public class FileFollower
 
 						if (allDataRead && !needsRestart_)
 						{
-							log.debug("Sleeping for {}ms [allDataRead:{}; needsRestart:{}]",
-									new Object[] { latency_, allDataRead, needsRestart_ });
+							log.finer("Sleeping for " + latency_ + "ms [allDataRead:" + allDataRead
+							        + "; needsRestart:" + needsRestart_ + "]");
 							sleep();
 						}
 					}
 					else
 					{
-						log.debug("Runner paused.");
+						log.finer("Runner paused.");
 						sleep();
 					}
 				}
-				log.debug("exiting Runner.runAction [continueRunning_={}; needsRestart_={}]",
-						continueRunning_, needsRestart_);
+				log.finer("exiting Runner.runAction [continueRunning_=" + continueRunning_
+				        + "; needsRestart_=" + needsRestart_ + "]");
 				bis.close();
 				fis.close();
 			}
 			catch (IOException e)
 			{
-				log.error("IOException while following file", e);
+				log.log(Level.SEVERE, "IOException while following file", e);
 			}
 		}
 
@@ -432,7 +447,7 @@ public class FileFollower
 			catch (InterruptedException e)
 			{
 				// Interrupt may be thrown manually by stop()
-				log.debug("DIED IN MY SLEEP");
+				log.finer("DIED IN MY SLEEP");
 			}
 		}
 	}

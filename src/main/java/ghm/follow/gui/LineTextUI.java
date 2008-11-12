@@ -1,8 +1,8 @@
 package ghm.follow.gui;
 
 import java.awt.Rectangle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.event.CaretEvent;
@@ -21,7 +21,7 @@ import javax.swing.text.View;
  */
 public class LineTextUI extends BasicTextAreaUI
 {
-	private transient Logger log = LoggerFactory.getLogger(LineTextUI.class);
+	private transient Logger log = Logger.getLogger(LineTextUI.class.getName());
 	int selectedIndex = -1;
 	private JTextComponent comp;
 
@@ -62,7 +62,7 @@ public class LineTextUI extends BasicTextAreaUI
 					}
 					catch (BadLocationException e1)
 					{
-						log.error("BadLocationException in LineTextUI", e1);
+						log.log(Level.SEVERE, "BadLocationException in LineTextUI", e1);
 					}
 				}
 				if (comp.getSelectionStart() == comp.getSelectionEnd())

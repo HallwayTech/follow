@@ -87,8 +87,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class' main() method is the entry point into the Follow application.
@@ -98,7 +98,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FollowApp
 {
-	private static Logger log = LoggerFactory.getLogger(FollowApp.class);
+	private static Logger log = Logger.getLogger(FollowApp.class.getName());
 	private int currentCursor_ = Cursor.DEFAULT_CURSOR;
 	private Cursor defaultCursor_;
 	private Cursor waitCursor_;
@@ -350,7 +350,7 @@ public class FollowApp
 		}
 		catch (MissingResourceException mre)
 		{
-			log.warn(mre.getMessage());
+			log.warning(mre.getMessage());
 		}
 		return value;
 	}
@@ -370,14 +370,14 @@ public class FollowApp
 	{
 		String filename = getResourceString(iconNameKey);
 		URL url = clazz.getResource(filename);
-		log.debug("Class: {}, iconNameKey: {}", clazz, iconNameKey);
-		log.debug("filename: {}", filename);
-		log.debug("url: {}", url);
+		log.finer("Class: " + clazz + ", iconNameKey: " + iconNameKey);
+		log.finer("filename: " + filename);
+		log.finer("url: " + url);
 		ImageIcon icon = null;
 		if (url != null)
 		{
 			icon = new ImageIcon(url);
-			log.debug("errored: {}", (java.awt.MediaTracker.ERRORED == icon.getImageLoadStatus()));
+			log.finer("errored: " + (java.awt.MediaTracker.ERRORED == icon.getImageLoadStatus()));
 		}
 		return icon;
 	}
@@ -719,7 +719,7 @@ public class FollowApp
 		}
 		catch (Throwable t)
 		{
-			log.error("Unhandled exception", t);
+			log.log(Level.SEVERE, "Unhandled exception", t);
 			System.exit(-1);
 		}
 	}

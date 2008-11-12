@@ -23,8 +23,8 @@ import ghm.follow.FollowApp;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -36,7 +36,7 @@ import javax.swing.JOptionPane;
 public class Delete extends FollowAppAction
 {
 	public static final String NAME = "delete";
-	private Logger log = LoggerFactory.getLogger(Delete.class);
+	private Logger log = Logger.getLogger(Delete.class.getName());
 
 	public Delete(FollowApp app) throws IOException
 	{
@@ -84,7 +84,7 @@ public class Delete extends FollowAppAction
 		}
 		catch (IOException ioe)
 		{
-			log.error("IOException in Delete", ioe);
+			log.log(Level.SEVERE, "IOException in Delete", ioe);
 			getApp().setCursor(Cursor.DEFAULT_CURSOR);
 			JOptionPane.showMessageDialog(getApp().getFrame(),
 					FollowApp.getResourceString("message.unableToDelete.text"),

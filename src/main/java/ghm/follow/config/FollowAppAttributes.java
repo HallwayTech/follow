@@ -36,15 +36,14 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class FollowAppAttributes
 {
-	private static Logger log = LoggerFactory.getLogger(FollowAppAttributes.class);
+	private static Logger log = Logger.getLogger(FollowAppAttributes.class.getName());
 	EnumeratedProperties properties_;
 	private EnumeratedProperties defaultProperties_;
 	private FollowAppAttributes defaultAttributes_;

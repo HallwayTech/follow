@@ -19,8 +19,8 @@
 
 package ghm.follow.io;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -34,7 +34,7 @@ import javax.swing.text.BadLocationException;
  */
 public class JTextPaneDestination implements OutputDestination
 {
-	private Logger log = LoggerFactory.getLogger(JTextPaneDestination.class.getName());
+	private Logger log = Logger.getLogger(JTextPaneDestination.class.getName());
 
 	protected JTextPane jTextPane_;
 
@@ -118,7 +118,7 @@ public class JTextPaneDestination implements OutputDestination
 		catch (BadLocationException e)
 		{
 			// just ignore, nothing we can do
-			log.error("BadLocationException in JTextPaneDestination", e);
+			log.log(Level.SEVERE, "BadLocationException in JTextPaneDestination", e);
 		}
 	}
 

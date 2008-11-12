@@ -24,8 +24,8 @@ import ghm.follow.InvalidVkException;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -45,7 +45,7 @@ public abstract class FollowAppAction extends AbstractAction
 		MULTI_FILE, SINGLE_FILE, APP;
 	}
 
-	private static Logger log = LoggerFactory.getLogger(FollowAppAction.class);
+	private static Logger log = Logger.getLogger(FollowAppAction.class.getName());
 
 	private FollowApp app_;
 	private int mnemonic_;
@@ -81,7 +81,7 @@ public abstract class FollowAppAction extends AbstractAction
 		}
 		catch (InvalidVkException e)
 		{
-			log.warn("Invalid mnemonic", e);
+			log.log(Level.WARNING, "Invalid mnemonic", e);
 		}
 		try
 		{
@@ -89,7 +89,7 @@ public abstract class FollowAppAction extends AbstractAction
 		}
 		catch (InvalidVkException e)
 		{
-			log.warn("Invalid accelerator", e);
+			log.log(Level.WARNING, "Invalid accelerator", e);
 		}
 	}
 

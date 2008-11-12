@@ -28,8 +28,8 @@ import java.io.IOException;
 
 import javax.swing.JTabbedPane;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Will write window position/size to the supplied FollowAppAttributes object. The supplied keys
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WindowTracker extends WindowAdapter
 {
-	private Logger log = LoggerFactory.getLogger(WindowTracker.class);
+	private Logger log = Logger.getLogger(WindowTracker.class.getName());
 	protected FollowAppAttributes attributes;
 	protected JTabbedPane tabbedPane;
 	protected SystemInterface systemInterface;
@@ -90,7 +90,7 @@ public class WindowTracker extends WindowAdapter
 		}
 		catch (IOException ioe)
 		{
-			log.error("Error encountered while storing properties...", ioe);
+			log.log(Level.SEVERE, "Error encountered while storing properties...", ioe);
 		}
 		finally
 		{

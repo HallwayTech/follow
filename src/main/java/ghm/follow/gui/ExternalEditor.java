@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Action which closes the currently followed file.
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ExternalEditor extends Object
 {
-	private Logger log = LoggerFactory.getLogger(ExternalEditor.class);
+	private Logger log = Logger.getLogger(ExternalEditor.class.getName());
 	// ------------------------------------------------------------
 	// - Constructor
 
@@ -153,7 +153,7 @@ public class ExternalEditor extends Object
 		catch (IOException ioe)
 		{
 			String errmsg = "Could not exec [" + getCmdString() + "] with [" + fullPath + "].";
-			log.error(errmsg, ioe);
+			log.log(Level.SEVERE, errmsg, ioe);
 		}
 	}
 }

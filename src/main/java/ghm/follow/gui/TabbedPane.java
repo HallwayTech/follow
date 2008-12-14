@@ -34,12 +34,12 @@ import javax.swing.JTabbedPane;
 public class TabbedPane extends JTabbedPane
 {
 
-	private FollowAppAttributes attributes_ = null;
+	private FollowAppAttributes attributes = null;
 
 	public TabbedPane(FollowAppAttributes attributes)
 	{
 		super(attributes.getTabPlacement());
-		attributes_ = attributes;
+		this.attributes = attributes;
 	}
 
 	/** sqrrrl's fix */
@@ -99,7 +99,7 @@ public class TabbedPane extends JTabbedPane
 		if (pane != null)
 		{
 			File parent = pane.getFollowedFile().getParentFile();
-			attributes_.setLastFileChooserDirectory(parent);
+			attributes.setLastFileChooserDirectory(parent);
 		}
 	}
 }

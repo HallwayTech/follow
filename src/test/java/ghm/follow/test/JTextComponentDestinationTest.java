@@ -18,37 +18,37 @@ public class JTextComponentDestinationTest extends BaseTestCase
 	public void setUp() throws Exception
 	{
 		super.setUp();
-		jTextArea_ = new JTextArea();
+		jTextArea = new JTextArea();
 	}
 
 	@Test
 	public void testNoAutoscroll() throws Exception
 	{
-		validateTextContentAndCaretPos(new JTextComponentDestination(jTextArea_, false));
+		validateTextContentAndCaretPos(new JTextComponentDestination(jTextArea, false));
 	}
 
 	@Test
 	public void testAutoscroll() throws Exception
 	{
-		validateTextContentAndCaretPos(new JTextComponentDestination(jTextArea_, true));
+		validateTextContentAndCaretPos(new JTextComponentDestination(jTextArea, true));
 	}
 
 	private void validateTextContentAndCaretPos(JTextComponentDestination destination)
 			throws Exception
 	{
-		follower_ = new FileFollower(followedFile_, new OutputDestination[] { destination });
-		follower_.start();
+		follower = new FileFollower(followedFile, new OutputDestination[] { destination });
+		follower.start();
 		String control = "control";
 		writeToFollowedFileAndWait(control);
-		assertEquals(control, jTextArea_.getText());
+		assertEquals(control, jTextArea.getText());
 		validateCaretPosition(destination);
 		String control2 = "control2";
 		writeToFollowedFileAndWait(control2);
-		assertEquals(control + control2, jTextArea_.getText());
+		assertEquals(control + control2, jTextArea.getText());
 		validateCaretPosition(destination);
 		String control3 = "\n\n230usadlkfjasd;lkfjas\nl;kasdjf;lkajsdf\n\n";
 		writeToFollowedFileAndWait(control3);
-		assertEquals(control + control2 + control3, jTextArea_.getText());
+		assertEquals(control + control2 + control3, jTextArea.getText());
 		validateCaretPosition(destination);
 	}
 
@@ -65,5 +65,5 @@ public class JTextComponentDestinationTest extends BaseTestCase
 		}
 	}
 
-	private JTextArea jTextArea_;
+	private JTextArea jTextArea;
 }

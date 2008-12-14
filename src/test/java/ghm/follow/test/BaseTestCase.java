@@ -14,38 +14,38 @@ import org.junit.Before;
 
 public abstract class BaseTestCase
 {
-	protected FileFollower follower_;
-	protected File followedFile_;
-	protected Writer followedFileWriter_;
+	protected FileFollower follower;
+	protected File followedFile;
+	protected Writer followedFileWriter;
 
 	@Before
 	public void setUp() throws Exception
 	{
-		followedFile_ = createTempFile();
-		followedFile_.deleteOnExit();
-		followedFileWriter_ = new BufferedWriter(new FileWriter(followedFile_));
-		follower_ = new FileFollower(followedFile_, new OutputDestination[0]);
+		followedFile = createTempFile();
+		followedFile.deleteOnExit();
+		followedFileWriter = new BufferedWriter(new FileWriter(followedFile));
+		follower = new FileFollower(followedFile, new OutputDestination[0]);
 	}
 
 	@After
 	public void tearDown() throws Exception
 	{
-		follower_.stopAndWait();
-		followedFileWriter_.flush();
-		followedFileWriter_.close();
+		follower.stopAndWait();
+		followedFileWriter.flush();
+		followedFileWriter.close();
 	}
 
 	protected void writeToFollowedFileAndWait(String string) throws Exception
 	{
-		followedFileWriter_.write(string);
-		followedFileWriter_.flush();
-		Thread.sleep(follower_.getLatency() + 100);
+		followedFileWriter.write(string);
+		followedFileWriter.flush();
+		Thread.sleep(follower.getLatency() + 100);
 	}
 
 	protected void clearFollowedFile() throws Exception
 	{
-		followedFileWriter_.close();
-		new FileWriter(followedFile_, false).write("");
+		followedFileWriter.close();
+		new FileWriter(followedFile, false).write("");
 	}
 
 	protected File createTempFile() throws IOException

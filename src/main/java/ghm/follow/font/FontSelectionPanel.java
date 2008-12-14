@@ -116,75 +116,75 @@ public class FontSelectionPanel extends JPanel
 		}
 
 		// Font family
-		fontFamilyList_ = new JList(availableFontFamilyNames);
-		fontFamilyList_.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		fontFamilyList_.setVisibleRowCount(8);
+		fontFamilyList = new JList(availableFontFamilyNames);
+		fontFamilyList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		fontFamilyList.setVisibleRowCount(8);
 		ListSelectionListener phraseCanvasUpdater = new ListSelectionListener()
 		{
 			public void valueChanged(ListSelectionEvent e)
 			{
 				if (!e.getValueIsAdjusting())
 				{
-					observable_.setChanged();
-					observable_.notifyObservers();
+					observable.setChanged();
+					observable.notifyObservers();
 				}
 			}
 		};
-		fontFamilyList_.addListSelectionListener(phraseCanvasUpdater);
+		fontFamilyList.addListSelectionListener(phraseCanvasUpdater);
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridheight = 2;
-		this.add(new JScrollPane(fontFamilyList_), gbc);
+		this.add(new JScrollPane(fontFamilyList), gbc);
 
 		// Font style
-		fontStyleList_ = new FontStyleList(styleDisplayNames);
-		fontStyleList_.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		fontStyleList_.setVisibleRowCount(4);
-		fontStyleList_.addListSelectionListener(phraseCanvasUpdater);
+		fontStyleList = new FontStyleList(styleDisplayNames);
+		fontStyleList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		fontStyleList.setVisibleRowCount(4);
+		fontStyleList.addListSelectionListener(phraseCanvasUpdater);
 		gbc.gridx = 1;
 		gbc.insets = new Insets(0, 10, 0, 0);
 		// fontStyleList_ is put into a JScrollPane only because it puts a nice
 		// border around it which is consistent with the border around
 		// fontFamilyList_
-		this.add(new JScrollPane(fontStyleList_), gbc);
+		this.add(new JScrollPane(fontStyleList), gbc);
 
 		// Font size
-		fontSize_ = new JTextField();
-		fontSize_.setHorizontalAlignment(JTextField.RIGHT);
-		fontSize_.setColumns(4);
+		fontSize = new JTextField();
+		fontSize.setHorizontalAlignment(JTextField.RIGHT);
+		fontSize.setColumns(4);
 		gbc.gridx = 2;
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		this.add(fontSize_, gbc);
-		fontSizeList_ = new JList(validateAndConvertPredefinedSizes(predefinedSizes));
-		fontSizeList_.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.add(fontSize, gbc);
+		fontSizeList = new JList(validateAndConvertPredefinedSizes(predefinedSizes));
+		fontSizeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		// Will be able to see more than 1 row because gbc.fill set to BOTH
-		fontSizeList_.setVisibleRowCount(1);
-		fontSizeList_.setCellRenderer(new ListCellRenderer());
+		fontSizeList.setVisibleRowCount(1);
+		fontSizeList.setCellRenderer(new ListCellRenderer());
 		gbc.gridy = 1;
 		gbc.insets = new Insets(10, 10, 0, 0);
 		gbc.fill = GridBagConstraints.BOTH;
-		this.add(new JScrollPane(fontSizeList_), gbc);
+		this.add(new JScrollPane(fontSizeList), gbc);
 
 		// Phrase Canvas (displays current font selection)
-		phraseCanvas_ = new PhraseCanvas(initialFont.getFamily(), initialFont, Color.black);
+		phraseCanvas = new PhraseCanvas(initialFont.getFamily(), initialFont, Color.black);
 		addObserver(new Observer()
 		{
 			public void update(Observable o, Object arg)
 			{
 				try
 				{
-					phraseCanvas_.setPhrase((String) fontFamilyList_.getSelectedValue());
-					phraseCanvas_.setFont(FontSelectionPanel.this.getSelectedFont());
+					phraseCanvas.setPhrase((String) fontFamilyList.getSelectedValue());
+					phraseCanvas.setFont(FontSelectionPanel.this.getSelectedFont());
 				}
 				catch (InvalidFontException e)
 				{
-					phraseCanvas_.setPhrase("");
+					phraseCanvas.setPhrase("");
 				}
-				phraseCanvas_.invalidate();
-				phraseCanvas_.repaint();
+				phraseCanvas.invalidate();
+				phraseCanvas.repaint();
 			}
 		});
-		phraseCanvas_.setSize((int) this.getPreferredSize().getWidth(), 100);
+		phraseCanvas.setSize((int) this.getPreferredSize().getWidth(), 100);
 		gbc.gridy = 2;
 		gbc.gridx = 0;
 		gbc.gridwidth = 3;
@@ -192,32 +192,32 @@ public class FontSelectionPanel extends JPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		// put into JScrollPane for formatting purposes (no scrolling ever
 		// occurs)
-		this.add(new JScrollPane(phraseCanvas_), gbc);
+		this.add(new JScrollPane(phraseCanvas), gbc);
 
 		// Use FontSizeSynchronizer to ensure consistency between text field &
 		// list for font size
-		FontSizeSynchronizer fontSizeSynchronizer = new FontSizeSynchronizer(fontSizeList_,
-				fontSize_);
-		fontSizeList_.addListSelectionListener(fontSizeSynchronizer);
-		fontSize_.getDocument().addDocumentListener(fontSizeSynchronizer);
+		FontSizeSynchronizer fontSizeSynchronizer = new FontSizeSynchronizer(fontSizeList,
+				fontSize);
+		fontSizeList.addListSelectionListener(fontSizeSynchronizer);
+		fontSize.getDocument().addDocumentListener(fontSizeSynchronizer);
 
 		// Set initial widget values here at the end of the constructor to
 		// ensure that all listeners have been added beforehand
-		fontFamilyList_.setSelectedValue(initialFont.getFamily(), true);
-		fontStyleList_.setSelectedStyle(initialFont.getStyle());
-		fontSize_.setText(String.valueOf(initialFont.getSize()));
+		fontFamilyList.setSelectedValue(initialFont.getFamily(), true);
+		fontStyleList.setSelectedStyle(initialFont.getStyle());
+		fontSize.setText(String.valueOf(initialFont.getSize()));
 	}
 
 	/** JList for font family */
-	protected JList fontFamilyList_;
+	protected JList fontFamilyList;
 	/** FontStlyeList (subclass of JList) for font style */
-	protected FontStyleList fontStyleList_;
+	protected FontStyleList fontStyleList;
 	/** JTextField for font size */
-	protected JTextField fontSize_;
+	protected JTextField fontSize;
 	/** JList for font size */
-	protected JList fontSizeList_;
+	protected JList fontSizeList;
 	/** PhraseCanvas in which font samples are displayed */
-	protected PhraseCanvas phraseCanvas_;
+	protected PhraseCanvas phraseCanvas;
 
 	/**
 	 * @exception IllegalArgumentException
@@ -262,7 +262,7 @@ public class FontSelectionPanel extends JPanel
 	 */
 	public void addObserver(Observer o)
 	{
-		observable_.addObserver(o);
+		observable.addObserver(o);
 	}
 
 	/**
@@ -274,11 +274,11 @@ public class FontSelectionPanel extends JPanel
 	 */
 	public void deleteObserver(Observer o)
 	{
-		observable_.deleteObserver(o);
+		observable.deleteObserver(o);
 	}
 
 	/** Observable used for registering/notifying Observers */
-	protected PublicChangeObservable observable_ = new PublicChangeObservable();
+	protected PublicChangeObservable observable = new PublicChangeObservable();
 
 	/**
 	 * Returns the currently selected font family
@@ -289,7 +289,7 @@ public class FontSelectionPanel extends JPanel
 	 */
 	public String getSelectedFontFamily() throws NoFontFamilySelectedException
 	{
-		String fontFamily = (String) fontFamilyList_.getSelectedValue();
+		String fontFamily = (String) fontFamilyList.getSelectedValue();
 		if (fontFamily == null)
 		{
 			throw new NoFontFamilySelectedException("No font family is currently selected");
@@ -307,7 +307,7 @@ public class FontSelectionPanel extends JPanel
 	 */
 	public int getSelectedFontStyle() throws NoFontStyleSelectedException
 	{
-		return fontStyleList_.getSelectedStyle();
+		return fontStyleList.getSelectedStyle();
 	}
 
 	/**
@@ -321,23 +321,23 @@ public class FontSelectionPanel extends JPanel
 	 */
 	public int getSelectedFontSize() throws NoFontSizeSpecifiedException, InvalidFontSizeException
 	{
-		String fontSize = fontSize_.getText();
+		String fontSizeText = fontSize.getText();
 		if ((fontSize == null) || (fontSize.equals("")))
 		{
 			throw new NoFontSizeSpecifiedException("No font size specified");
 		}
-		if (fontSize.length() > maxNumCharsInFontSize_)
+		if (fontSizeText.length() > maxNumCharsInFontSize_)
 		{
 			throw new InvalidFontSizeException("Too many characters in font size");
 		}
 		try
 		{
-			return Integer.parseInt(fontSize);
+			return Integer.parseInt(fontSizeText);
 		}
 		catch (NumberFormatException e)
 		{
 			throw new InvalidFontSizeException("The number specified in the font size text field ("
-					+ fontSize_.getText() + ") is not a valid integer.");
+					+ fontSize.getText() + ") is not a valid integer.");
 		}
 	}
 
@@ -384,13 +384,13 @@ public class FontSelectionPanel extends JPanel
 	 */
 	public void setSelectedFontFamily(String family)
 	{
-		ListModel familyListModel = fontFamilyList_.getModel();
+		ListModel familyListModel = fontFamilyList.getModel();
 		for (int i = 0; i < familyListModel.getSize(); i++)
 		{
 			String listEntry = String.valueOf(familyListModel.getElementAt(i));
 			if (listEntry.equalsIgnoreCase(family))
 			{
-				fontFamilyList_.setSelectedValue(listEntry, true);
+				fontFamilyList.setSelectedValue(listEntry, true);
 				return;
 			}
 		}
@@ -409,7 +409,7 @@ public class FontSelectionPanel extends JPanel
 	 */
 	public void setSelectedFontStyle(int style)
 	{
-		fontStyleList_.setSelectedStyle(style);
+		fontStyleList.setSelectedStyle(style);
 	}
 
 	/**
@@ -420,7 +420,7 @@ public class FontSelectionPanel extends JPanel
 	 */
 	public void setSelectedFontSize(int size)
 	{
-		fontSize_.setText(String.valueOf(size));
+		fontSize.setText(String.valueOf(size));
 	}
 
 	/** Maximum number of characters permissibile in a valid font size */
@@ -459,8 +459,8 @@ public class FontSelectionPanel extends JPanel
 				{
 					textField_.setText(selectedValue.toString());
 				}
-				observable_.setChanged();
-				observable_.notifyObservers();
+				observable.setChanged();
+				observable.notifyObservers();
 			}
 			updating_ = false;
 		}
@@ -515,8 +515,8 @@ public class FontSelectionPanel extends JPanel
 			{
 				list_.clearSelection();
 			}
-			observable_.setChanged();
-			observable_.notifyObservers();
+			observable.setChanged();
+			observable.notifyObservers();
 			updating_ = false;
 		}
 

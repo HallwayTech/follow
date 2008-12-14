@@ -9,7 +9,7 @@ public class Find extends FollowAppAction
 {
 	public static final String NAME = "find";
 
-	private FindDialog _dialog;
+	private FindDialog dialog;
 
 	public Find(FollowApp app)
 	{
@@ -23,15 +23,15 @@ public class Find extends FollowAppAction
 	public void actionPerformed(ActionEvent e)
 	{
 		getApp().setCursor(Cursor.WAIT_CURSOR);
-		if (_dialog == null)
+		if (dialog == null)
 		{
-			_dialog = new FindDialog(this);
-			_dialog.setLocationRelativeTo(getApp().getFrame());
-			_dialog.setLocation(100, 100);
-			_dialog.pack();
+			dialog = new FindDialog(this);
+			dialog.setLocationRelativeTo(getApp().getFrame());
+			dialog.setLocation(100, 100);
+			dialog.pack();
 		}
-		_dialog.initFocus();
-		_dialog.setVisible(true);
+		dialog.initFocus();
+		dialog.setVisible(true);
 		getApp().setCursor(Cursor.DEFAULT_CURSOR);
 	}
 }

@@ -34,9 +34,9 @@ import javax.swing.text.JTextComponent;
  */
 public class JTextComponentDestination extends FilterableOutputDestination
 {
-	private Logger log = Logger.getLogger(JTextComponentDestination.class.getName());
-	protected JTextComponent _comp;
-	protected boolean autoPositionCaret_;
+	private static final Logger LOG = Logger.getLogger(JTextComponentDestination.class.getName());
+	protected JTextComponent comp;
+	protected boolean autoPositionCaret;
 
 	/**
 	 * Construct a new JTextCompnentDestination.
@@ -47,20 +47,20 @@ public class JTextComponentDestination extends FilterableOutputDestination
 	 *            if true, caret will be automatically moved to the bottom of the text area when
 	 *            text is appended
 	 */
-	public JTextComponentDestination(JTextComponent jTextComponent, boolean autoPositionCaret)
+	public JTextComponentDestination(JTextComponent comp, boolean autoPositionCaret)
 	{
-		_comp = jTextComponent;
-		autoPositionCaret_ = autoPositionCaret;
+		this.comp = comp;
+		this.autoPositionCaret = autoPositionCaret;
 	}
 
 	public JTextComponent getJTextComponent()
 	{
-		return _comp;
+		return comp;
 	}
 
 	public void setJTextComponent(JTextComponent comp)
 	{
-		_comp = comp;
+		this.comp = comp;
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class JTextComponentDestination extends FilterableOutputDestination
 	 */
 	public boolean autoPositionCaret()
 	{
-		return autoPositionCaret_;
+		return autoPositionCaret;
 	}
 
 	/**
@@ -100,32 +100,32 @@ public class JTextComponentDestination extends FilterableOutputDestination
 	 */
 	public void setAutoPositionCaret(boolean autoPositionCaret)
 	{
-		autoPositionCaret_ = autoPositionCaret;
+		this.autoPositionCaret = autoPositionCaret;
 	}
 
 	public void handlePrint(String s)
 	{
 		try
 		{
-			_comp.getDocument().insertString(_comp.getDocument().getLength(), s, null);
-			if (autoPositionCaret_)
+			comp.getDocument().insertString(comp.getDocument().getLength(), s, null);
+			if (autoPositionCaret)
 			{
-				_comp.setCaretPosition(_comp.getDocument().getLength());
+				comp.setCaretPosition(comp.getDocument().getLength());
 			}
 		}
 		catch (BadLocationException e)
 		{
 			// just ignore, nothing we can do
-			log.log(Level.SEVERE, "BadLocationException in JTextComponentDestination", e);
+			LOG.log(Level.SEVERE, "BadLocationException in JTextComponentDestination", e);
 		}
 	}
 
 	public void clear()
 	{
-		_comp.setText("");
-		if (autoPositionCaret_)
+		comp.setText("");
+		if (autoPositionCaret)
 		{
-			_comp.setCaretPosition(0);
+			comp.setCaretPosition(0);
 		}
 	}
 }

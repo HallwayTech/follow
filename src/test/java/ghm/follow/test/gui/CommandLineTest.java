@@ -20,7 +20,7 @@ public class CommandLineTest extends AppLaunchingTestCase
 		doPostLaunch();
 		// should be no file as we're opening a new instance (no history) with
 		// no arguments (no requested files)
-		assertEquals(true, _app.getAttributes().getFollowedFiles().size() == 0);
+		assertEquals(true, app.getAttributes().getFollowedFiles().size() == 0);
 	}
 
 	@Test
@@ -31,7 +31,7 @@ public class CommandLineTest extends AppLaunchingTestCase
 		args = appendPropFileArg(args);
 		FollowApp.main(args);
 		doPostLaunch();
-		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
+		List<File> followedFiles = app.getAttributes().getFollowedFiles();
 		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles
 				.size() == 1);
 		File followedFile = followedFiles.get(0);
@@ -46,20 +46,20 @@ public class CommandLineTest extends AppLaunchingTestCase
 		args = appendPropFileArg(args);
 		FollowApp.main(args);
 		doPostLaunch();
-		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
+		List<File> followedFiles = app.getAttributes().getFollowedFiles();
 		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles
 				.size() == 1);
 		File followedFile = followedFiles.get(0);
 		assertEquals("File found doesn't match expected file", temp, followedFile);
-		invokeAction(_app.getAction(Exit.NAME));
-		while (!_systemInterface.exitCalled())
+		invokeAction(app.getAction(Exit.NAME));
+		while (!systemInterface.exitCalled())
 		{
 			Thread.sleep(250);
 		}
 		// reopen app with same file as argument
 		FollowApp.main(args);
 		doPostLaunch();
-		followedFiles = _app.getAttributes().getFollowedFiles();
+		followedFiles = app.getAttributes().getFollowedFiles();
 		// should still be one because Follow shouldn't open the same file twice
 		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles
 				.size() == 1);
@@ -76,20 +76,20 @@ public class CommandLineTest extends AppLaunchingTestCase
 		args = appendPropFileArg(args);
 		FollowApp.main(args);
 		doPostLaunch();
-		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
+		List<File> followedFiles = app.getAttributes().getFollowedFiles();
 		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles
 				.size() == 1);
 		File followedFile = followedFiles.get(0);
 		assertEquals("File found doesn't match expected file", temp, followedFile);
-		invokeAction(_app.getAction(Exit.NAME));
-		while (!_systemInterface.exitCalled())
+		invokeAction(app.getAction(Exit.NAME));
+		while (!systemInterface.exitCalled())
 		{
 			Thread.sleep(250);
 		}
 		// reopen app with same file as argument
 		FollowApp.main(new String[0]);
 		doPostLaunch();
-		followedFiles = _app.getAttributes().getFollowedFiles();
+		followedFiles = app.getAttributes().getFollowedFiles();
 		// should still be one because Follow shouldn't open the same file twice
 		assertTrue("Expecting 1 file to be followed.  Found " + followedFiles.size(), followedFiles
 				.size() == 1);
@@ -108,7 +108,7 @@ public class CommandLineTest extends AppLaunchingTestCase
 		args = appendPropFileArg(args);
 		FollowApp.main(args);
 		doPostLaunch();
-		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
+		List<File> followedFiles = app.getAttributes().getFollowedFiles();
 		assertEquals(true, followedFiles.size() == 2);
 		assertEquals(temp[0], followedFiles.get(0));
 		assertEquals(temp[1], followedFiles.get(1));
@@ -123,7 +123,7 @@ public class CommandLineTest extends AppLaunchingTestCase
 		args = appendPropFileArg(args);
 		FollowApp.main(args);
 		doPostLaunch();
-		List<File> followedFiles = _app.getAttributes().getFollowedFiles();
+		List<File> followedFiles = app.getAttributes().getFollowedFiles();
 		assertEquals(temp, followedFiles.get(0));
 		assertEquals(true, followedFiles.size() == 2);
 	}

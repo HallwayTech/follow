@@ -16,15 +16,15 @@ public class DefaultSystemInterface implements SystemInterface
 
 	public DefaultSystemInterface(FollowApp app)
 	{
-		app_ = app;
+		this.app = app;
 	}
 
 	public File getFileFromUser()
 	{
-		app_.setCursor(Cursor.WAIT_CURSOR);
-		JFileChooser chooser = new JFileChooser(app_.getAttributes().getLastFileChooserDirectory());
-		app_.setCursor(Cursor.DEFAULT_CURSOR);
-		int returnVal = chooser.showOpenDialog(app_.getFrame());
+		app.setCursor(Cursor.WAIT_CURSOR);
+		JFileChooser chooser = new JFileChooser(app.getAttributes().getLastFileChooserDirectory());
+		app.setCursor(Cursor.DEFAULT_CURSOR);
+		int returnVal = chooser.showOpenDialog(app.getFrame());
 		if (returnVal == JFileChooser.APPROVE_OPTION)
 		{
 			return chooser.getSelectedFile();
@@ -37,5 +37,5 @@ public class DefaultSystemInterface implements SystemInterface
 		System.exit(code);
 	}
 
-	protected FollowApp app_;
+	protected FollowApp app;
 }

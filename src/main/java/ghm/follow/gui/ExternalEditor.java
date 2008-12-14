@@ -40,20 +40,20 @@ public class ExternalEditor extends Object
 
 	public ExternalEditor(String string)
 	{
-		_cmdString = string;
+		cmdString = string;
 	}
 
 	// ------------------------------------------------------------
 	// - Member Variables
 
-	private String _cmdString = "";
+	private String cmdString = "";
 
 	// ------------------------------------------------------------
 	// - Accessors
 
 	protected String getCmdString()
 	{
-		return (_cmdString);
+		return (cmdString);
 	}
 
 	// ------------------------------------------------------------

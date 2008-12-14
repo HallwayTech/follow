@@ -16,9 +16,9 @@ import org.junit.Before;
 public abstract class AppLaunchingTestCase extends BaseTestCase
 {
 
-	protected FollowApp _app;
-	protected TestSystemInterface _systemInterface;
-	protected String _propertyFileName;
+	protected FollowApp app;
+	protected TestSystemInterface systemInterface;
+	protected String propertyFileName;
 
 	@Before
 	public void setUp() throws Exception
@@ -30,20 +30,20 @@ public abstract class AppLaunchingTestCase extends BaseTestCase
 
 	protected void doPostLaunch() throws Exception
 	{
-		_app = FollowApp.getInstance();
-		_systemInterface = new TestSystemInterface();
-		_app.setSystemInterface(_systemInterface);
+		app = FollowApp.getInstance();
+		systemInterface = new TestSystemInterface();
+		app.setSystemInterface(systemInterface);
 	}
 
 	@After
 	public void tearDown() throws Exception
 	{
-		invokeAction(_app.getAction(Exit.NAME));
-		while (!_systemInterface.exitCalled())
+		invokeAction(app.getAction(Exit.NAME));
+		while (!systemInterface.exitCalled())
 		{
 			Thread.sleep(250);
 		}
-		File propFile = new File(_propertyFileName);
+		File propFile = new File(propertyFileName);
 		propFile.delete();
 	}
 
@@ -72,7 +72,7 @@ public abstract class AppLaunchingTestCase extends BaseTestCase
 
 	protected String[] appendPropFileArg(String[] argv)
 	{
-		_propertyFileName = System.getProperty("java.io.tmpdir")
+		propertyFileName = System.getProperty("java.io.tmpdir")
 				+ System.getProperty("file.separator") + FollowAppAttributes.PROPERTY_FILE_NAME;
 		int length = ((argv != null) ? argv.length : 0) + 2;
 		String[] args = new String[length];
@@ -81,7 +81,7 @@ public abstract class AppLaunchingTestCase extends BaseTestCase
 			args[i] = argv[i];
 		}
 		args[length - 2] = "-propFile";
-		args[length - 1] = _propertyFileName;
+		args[length - 1] = propertyFileName;
 		return args;
 	}
 }

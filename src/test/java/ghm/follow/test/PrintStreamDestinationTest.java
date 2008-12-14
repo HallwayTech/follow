@@ -19,8 +19,8 @@ public class PrintStreamDestinationTest extends BaseTestCase
 	{
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		PrintStreamDestination dest = new PrintStreamDestination(new PrintStream(byteStream));
-		follower_ = new FileFollower(followedFile_, new OutputDestination[] { dest });
-		follower_.start();
+		follower = new FileFollower(followedFile, new OutputDestination[] { dest });
+		follower.start();
 		String control = "control";
 		writeToFollowedFileAndWait(control);
 		assertEquals(control, new String(byteStream.toByteArray()));

@@ -68,7 +68,7 @@ public class DisableableConfirm extends JDialog
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				confirmed_ = true;
+				confirmed = true;
 				DisableableConfirm.this.dispose();
 			}
 		});
@@ -78,16 +78,16 @@ public class DisableableConfirm extends JDialog
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				confirmed_ = false;
+				confirmed = false;
 				DisableableConfirm.this.dispose();
 			}
 		});
 		buttonPanel.add(doNotConfirmButton);
 		controlPanel.add(buttonPanel, gbc);
 
-		disabledCheckBox_ = new JCheckBox(disableText);
+		disabledCheckBox = new JCheckBox(disableText);
 		gbc.gridy = 1;
-		controlPanel.add(disabledCheckBox_, gbc);
+		controlPanel.add(disabledCheckBox, gbc);
 
 		JPanel contentPane = new JPanel(new BorderLayout(0, 10));
 		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
@@ -97,17 +97,17 @@ public class DisableableConfirm extends JDialog
 		FollowApp.centerWindowInScreen(this);
 	}
 
-	private JCheckBox disabledCheckBox_;
-	private boolean confirmed_;
+	private JCheckBox disabledCheckBox;
+	private boolean confirmed;
 
 	boolean markedDisabled()
 	{
-		return disabledCheckBox_.isSelected();
+		return disabledCheckBox.isSelected();
 	}
 
 	boolean markedConfirmed()
 	{
-		return confirmed_;
+		return confirmed;
 	}
 
 }

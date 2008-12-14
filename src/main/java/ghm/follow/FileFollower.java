@@ -64,16 +64,16 @@ public class FileFollower
 	public FileFollower(File file, int bufferSize, int latency,
 	        OutputDestination[] initialOutputDestinations)
 	{
-		file_ = file;
-		bufferSize_ = bufferSize;
-		latency_ = latency;
+		this.file = file;
+		this.bufferSize = bufferSize;
+		this.latency = latency;
 
 		int initOutputDestsSize = (initialOutputDestinations != null) ? initialOutputDestinations.length
 		        : 0;
-		outputDestinations_ = new ArrayList<OutputDestination>(initOutputDestsSize);
+		outputDestinations = new ArrayList<OutputDestination>(initOutputDestsSize);
 		for (int i = 0; i < initOutputDestsSize; i++)
 		{
-			outputDestinations_.add(initialOutputDestinations[i]);
+			outputDestinations.add(initialOutputDestinations[i]);
 		}
 	}
 
@@ -103,33 +103,33 @@ public class FileFollower
 	 */
 	public synchronized void start()
 	{
-		if (continueRunning_ && paused_)
+		if (continueRunning && paused)
 		{
 			unpause();
 		}
 		else
 		{
-			continueRunning_ = true;
-			paused_ = false;
-			runnerThread_ = new Thread(new Runner(), getFollowedFile().getName());
-			runnerThread_.start();
+			continueRunning = true;
+			paused = false;
+			runnerThread = new Thread(new Runner(), getFollowedFile().getName());
+			runnerThread.start();
 		}
 	}
 
 	public synchronized void pause()
 	{
-		paused_ = true;
+		paused = true;
 	}
 
 	public synchronized void unpause()
 	{
-		paused_ = false;
+		paused = false;
 	}
 
 	public synchronized void restart()
 	{
-		needsRestart_ = true;
-		runnerThread_.interrupt();
+		needsRestart = true;
+		runnerThread.interrupt();
 	}
 
 	/**
@@ -139,8 +139,8 @@ public class FileFollower
 	 */
 	public synchronized void stop()
 	{
-		continueRunning_ = false;
-		runnerThread_.interrupt();
+		continueRunning = false;
+		runnerThread.interrupt();
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class FileFollower
 	public synchronized void stopAndWait() throws InterruptedException
 	{
 		stop();
-		while (runnerThread_.isAlive())
+		while (runnerThread.isAlive())
 		{
 			Thread.yield();
 		}
@@ -164,7 +164,7 @@ public class FileFollower
 	 */
 	private synchronized void print(String s)
 	{
-		for (OutputDestination out : outputDestinations_)
+		for (OutputDestination out : outputDestinations)
 		{
 			out.print(s);
 		}
@@ -175,7 +175,7 @@ public class FileFollower
 	 */
 	private synchronized void clear()
 	{
-		for (OutputDestination out : outputDestinations_)
+		for (OutputDestination out : outputDestinations)
 		{
 			out.clear();
 		}
@@ -190,7 +190,7 @@ public class FileFollower
 	 */
 	public boolean addOutputDestination(OutputDestination outputDestination)
 	{
-		return outputDestinations_.add(outputDestination);
+		return outputDestinations.add(outputDestination);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class FileFollower
 	 */
 	public boolean removeOutputDestination(OutputDestination outputDestination)
 	{
-		return outputDestinations_.remove(outputDestination);
+		return outputDestinations.remove(outputDestination);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class FileFollower
 	 */
 	public List<OutputDestination> getOutputDestinations()
 	{
-		return outputDestinations_;
+		return outputDestinations;
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class FileFollower
 	 */
 	public File getFollowedFile()
 	{
-		return file_;
+		return file;
 	}
 
 	/**
@@ -233,7 +233,7 @@ public class FileFollower
 	 */
 	public boolean isBeingFollowed()
 	{
-		return continueRunning_;
+		return continueRunning;
 	}
 
 	/**
@@ -243,7 +243,7 @@ public class FileFollower
 	 */
 	public boolean isPaused()
 	{
-		return paused_;
+		return paused;
 	}
 
 	/**
@@ -254,7 +254,7 @@ public class FileFollower
 	 */
 	public int getBufferSize()
 	{
-		return bufferSize_;
+		return bufferSize;
 	}
 
 	/**
@@ -271,7 +271,7 @@ public class FileFollower
 	 */
 	public void setBufferSize(int bufferSize)
 	{
-		bufferSize_ = bufferSize;
+		this.bufferSize = bufferSize;
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class FileFollower
 	 */
 	public int getLatency()
 	{
-		return latency_;
+		return latency;
 	}
 
 	/**
@@ -297,24 +297,24 @@ public class FileFollower
 	 */
 	public void setLatency(int latency)
 	{
-		latency_ = latency;
+		this.latency = latency;
 	}
 
-	protected int bufferSize_;
+	protected int bufferSize;
 
-	protected int latency_;
+	protected int latency;
 
-	protected File file_;
+	protected File file;
 
-	protected List<OutputDestination> outputDestinations_;
+	protected List<OutputDestination> outputDestinations;
 
-	protected boolean continueRunning_;
+	protected boolean continueRunning;
 
-	protected boolean needsRestart_;
+	protected boolean needsRestart;
 
-	protected Thread runnerThread_;
+	protected Thread runnerThread;
 
-	protected boolean paused_;
+	protected boolean paused;
 
 	/**
 	 * Instances of this class are used to run a thread which follows a
@@ -331,7 +331,7 @@ public class FileFollower
 		{
 			log.finer("entering FileFollower.run()");
 
-			while (continueRunning_)
+			while (continueRunning)
 			{
 				runAction();
 			}
@@ -344,35 +344,35 @@ public class FileFollower
 			try
 			{
 				clear();
-				long fileSize = file_.length();
-				byte[] byteArray = new byte[bufferSize_];
+				long fileSize = file.length();
+				byte[] byteArray = new byte[bufferSize];
 				int numBytesRead;
-				long lastActivityTime = file_.lastModified();
+				long lastActivityTime = file.lastModified();
 
 				// create some stream readers to handle the file
-				FileInputStream fis = new FileInputStream(file_);
+				FileInputStream fis = new FileInputStream(file);
 				BufferedInputStream bis = new BufferedInputStream(fis);
 
 				// start at the beginning of the file
-				long startingPoint_ = 0;
+				long startingPoint = 0;
 
 				// if the file size is bigger than the buffer size, skip to the
 				// end of the file if not performing a restart
-				if (fileSize > bufferSize_)
+				if (fileSize > bufferSize)
 				{
-					startingPoint_ = fileSize - bufferSize_;
+					startingPoint = fileSize - bufferSize;
 				}
 				// reset the restart flag
-				needsRestart_ = false;
+				needsRestart = false;
 
-				log.finer("Starting point: " + startingPoint_ + "; Last activity: "
+				log.finer("Starting point: " + startingPoint + "; Last activity: "
 				        + lastActivityTime);
 
-				bis.skip(startingPoint_);
+				bis.skip(startingPoint);
 
-				while (continueRunning_ && !needsRestart_)
+				while (continueRunning && !needsRestart)
 				{
-					if (!paused_)
+					if (!paused)
 					{
 						lastActivityTime = System.currentTimeMillis();
 
@@ -397,27 +397,26 @@ public class FileFollower
 						{
 							// check if the file handle has become stale (file
 							// was modified, but no data was read).
-							boolean fileExists = file_.exists();
+							boolean fileExists = file.exists();
 							// removed check for 0 length because a file could
-							// change by
-							// being cleared out
+							// change by being cleared out
 							// && (file_.length() > 0);
-							boolean fileHasChanged = file_.lastModified() > lastActivityTime;
+							boolean fileHasChanged = file.lastModified() > lastActivityTime;
 
 							if (fileExists && fileHasChanged)
 							{
 								log.finer("Needs restart [fileExists=" + fileExists
 								        + "; fileHasChanged=" + fileHasChanged + "]");
-								needsRestart_ = true;
+								needsRestart = true;
 							}
 						}
 
 						boolean allDataRead = (numBytesRead < byteArray.length);
 
-						if (allDataRead && !needsRestart_)
+						if (allDataRead && !needsRestart)
 						{
-							log.finer("Sleeping for " + latency_ + "ms [allDataRead:" + allDataRead
-							        + "; needsRestart:" + needsRestart_ + "]");
+							log.finer("Sleeping for " + latency + "ms [allDataRead:" + allDataRead
+							        + "; needsRestart:" + needsRestart + "]");
 							sleep();
 						}
 					}
@@ -427,8 +426,8 @@ public class FileFollower
 						sleep();
 					}
 				}
-				log.finer("exiting Runner.runAction [continueRunning_=" + continueRunning_
-				        + "; needsRestart_=" + needsRestart_ + "]");
+				log.finer("exiting Runner.runAction [continueRunning=" + continueRunning
+				        + "; needsRestart=" + needsRestart + "]");
 				bis.close();
 				fis.close();
 			}
@@ -442,7 +441,7 @@ public class FileFollower
 		{
 			try
 			{
-				Thread.sleep(latency_);
+				Thread.sleep(latency);
 			}
 			catch (InterruptedException e)
 			{

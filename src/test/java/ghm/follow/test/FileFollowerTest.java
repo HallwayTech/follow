@@ -20,60 +20,60 @@ public class FileFollowerTest extends BaseTestCase
 	public void setUp() throws Exception
 	{
 		super.setUp();
-		testination_ = new Testination();
-		follower_.addOutputDestination(testination_);
+		testination = new Testination();
+		follower.addOutputDestination(testination);
 	}
 
 	@Test
 	public void textShouldMatchInputWhenAddingAfterStart() throws Exception
 	{
-		follower_.start();
+		follower.start();
 		String control = "control";
 		writeToFollowedFileAndWait(control);
-		assertEquals(control, testination_.strBuf_.toString());
+		assertEquals(control, testination.strBuf.toString());
 		String control2 = "control2";
 		writeToFollowedFileAndWait(control2);
-		assertEquals(control + control2, testination_.strBuf_.toString());
+		assertEquals(control + control2, testination.strBuf.toString());
 	}
 
 	@Test
 	public void testShouldMatchInputWhenLatencyIsShort() throws Exception
 	{
-		follower_.setLatency(100);
-		follower_.start();
+		follower.setLatency(100);
+		follower.start();
 		String control = "control";
 		writeToFollowedFileAndWait(control);
-		assertEquals(control, testination_.strBuf_.toString());
+		assertEquals(control, testination.strBuf.toString());
 	}
 
 	@Test
 	public void textShouldMatchInputWhenBufferSizeIsSmall() throws Exception
 	{
 		int bufferSize = 10;
-		follower_.setBufferSize(bufferSize);
-		follower_.start();
+		follower.setBufferSize(bufferSize);
+		follower.start();
 		String control = "32098jaspfj234-08uewrfiojsad;lfkjqw4poiru2340ruwefkjasd;lkjq2po43iu123-4r098uasdfl;asdclkjasdfasdf9834roaerf";
 		String subcontrol = control.substring(control.length() - bufferSize);
 		// initial read of the 'file' will only contain as many characters as
 		// the buffer size
 		writeToFollowedFileAndWait(control);
-		assertEquals(subcontrol, testination_.strBuf_.toString());
+		assertEquals(subcontrol, testination.strBuf.toString());
 		// subsequent reads of the 'file' will contain all previous characters
 		// and any newly added ones
 		writeToFollowedFileAndWait(control);
-		assertEquals(subcontrol + control, testination_.strBuf_.toString());
+		assertEquals(subcontrol + control, testination.strBuf.toString());
 	}
 
 	@Test
 	public void textInMultipleDestinationsShouldMatch() throws Exception
 	{
 		Testination testination2 = new Testination();
-		follower_.addOutputDestination(testination2);
-		follower_.start();
+		follower.addOutputDestination(testination2);
+		follower.start();
 		String control = "control";
 		writeToFollowedFileAndWait(control);
-		assertEquals(control, testination_.strBuf_.toString());
-		assertEquals(control, testination2.strBuf_.toString());
+		assertEquals(control, testination.strBuf.toString());
+		assertEquals(control, testination2.strBuf.toString());
 	}
 
 	@Test
@@ -81,8 +81,8 @@ public class FileFollowerTest extends BaseTestCase
 	{
 		JTextPane textPane = new JTextPane();
 		JTextComponentDestination dest = new JTextComponentDestination(textPane, true);
-		follower_.addOutputDestination(dest);
-		follower_.start();
+		follower.addOutputDestination(dest);
+		follower.start();
 		Date start = new Date();
 		long end = start.getTime() + (2 * 1000 * 60);
 		Random rand = new Random();
@@ -109,21 +109,21 @@ public class FileFollowerTest extends BaseTestCase
 		}
 	}
 
-	private Testination testination_;
+	private Testination testination;
 
 	class Testination implements OutputDestination
 	{
 		public void print(String s)
 		{
-			strBuf_.append(s);
+			strBuf.append(s);
 		}
 
 		public void clear()
 		{
-			strBuf_.delete(0, strBuf_.length());
+			strBuf.delete(0, strBuf.length());
 		}
 
-		StringBuffer strBuf_ = new StringBuffer();
+		StringBuffer strBuf = new StringBuffer();
 	}
 
 }

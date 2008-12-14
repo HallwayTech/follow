@@ -47,10 +47,10 @@ public abstract class FollowAppAction extends AbstractAction
 
 	private static Logger log = Logger.getLogger(FollowAppAction.class.getName());
 
-	private FollowApp app_;
-	private int mnemonic_;
-	private KeyStroke accelerator_;
-	private ActionContext context_;
+	private FollowApp app;
+	private int mnemonic;
+	private KeyStroke accelerator;
+	private ActionContext context;
 
 	public FollowAppAction(FollowApp app, String name, String mnemonic, String accelerator,
 			ActionContext type)
@@ -68,13 +68,13 @@ public abstract class FollowAppAction extends AbstractAction
 
 	public FollowApp getApp()
 	{
-		return app_;
+		return app;
 	}
 
 	private void init(FollowApp app, String mnemonic, String accelerator, ActionContext type)
 	{
-		app_ = app;
-		context_ = type;
+		this.app = app;
+		context = type;
 		try
 		{
 			setMnemonic(mnemonic);
@@ -110,12 +110,12 @@ public abstract class FollowAppAction extends AbstractAction
 
 	int getMnemonic()
 	{
-		return mnemonic_;
+		return mnemonic;
 	}
 
 	void setMnemonic(int mnemonic)
 	{
-		mnemonic_ = mnemonic;
+		this.mnemonic = mnemonic;
 	}
 
 	void setMnemonic(String mnemonic) throws InvalidVkException
@@ -128,17 +128,17 @@ public abstract class FollowAppAction extends AbstractAction
 
 	public ActionContext getContext()
 	{
-		return context_;
+		return context;
 	}
 
 	KeyStroke getAccelerator()
 	{
-		return accelerator_;
+		return accelerator;
 	}
 
 	void setAccelerator(KeyStroke accelerator)
 	{
-		accelerator_ = accelerator;
+		this.accelerator = accelerator;
 	}
 
 	void setAccelerator(String accelerator) throws InvalidVkException

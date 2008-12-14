@@ -43,7 +43,7 @@ public class DndFileOpener implements DropTargetListener
 
 	public DndFileOpener(FollowApp app)
 	{
-		app_ = app;
+		this.app = app;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class DndFileOpener implements DropTargetListener
 					List<File> fileList = (List<File>) transferable.getTransferData(flavors[i]);
 					for (File file : fileList)
 					{
-						app_.openFile(file);
+						app.openFile(file);
 					}
 					dropCompleted = true;
 				}
@@ -116,6 +116,6 @@ public class DndFileOpener implements DropTargetListener
 	{
 	}
 
-	FollowApp app_;
+	FollowApp app;
 
 }

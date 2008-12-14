@@ -40,19 +40,19 @@ public class StartupStatus extends JWindow
 	public StartupStatus(ResourceBundle resourceBundle)
 	{
 		LOAD_SYSTEM_FONTS = new Task(2, resourceBundle.getString("startupStatus.loadSystemFonts"));
-		allTasks_.add(LOAD_SYSTEM_FONTS);
+		allTasks.add(LOAD_SYSTEM_FONTS);
 
 		CREATE_WIDGETS = new Task(2, resourceBundle.getString("startupStatus.createWidgets"));
-		allTasks_.add(CREATE_WIDGETS);
+		allTasks.add(CREATE_WIDGETS);
 
 		int taskWeightSummation = 0;
-		for (Task task : allTasks_)
+		for (Task task : allTasks)
 		{
-			taskWeightSummation += task.weight_;
+			taskWeightSummation += task.weight;
 		}
-		progressBar_ = new JProgressBar(0, taskWeightSummation);
-		progressBar_.setStringPainted(true);
-		progressBar_.setString(allTasks_.get(0).inProgressMessage_);
+		progressBar = new JProgressBar(0, taskWeightSummation);
+		progressBar.setStringPainted(true);
+		progressBar.setString(allTasks.get(0).inProgressMessage);
 
 		BorderLayout borderLayout = new BorderLayout();
 		borderLayout.setVgap(6);
@@ -61,32 +61,32 @@ public class StartupStatus extends JWindow
 		JLabel label = new JLabel(resourceBundle.getString("startupStatus.label"));
 		label.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(label, BorderLayout.NORTH);
-		panel.add(progressBar_, BorderLayout.SOUTH);
+		panel.add(progressBar, BorderLayout.SOUTH);
 		this.getContentPane().add(panel);
 	}
 
-	private int currentTask_;
+	private int currentTask;
 
 	public void markDone(final Task task)
 	{
-		if (allTasks_.indexOf(task) != currentTask_)
+		if (allTasks.indexOf(task) != currentTask)
 		{
 			throw new RuntimeException(
 					"Programmatic error: tasks should be marked done sequentially");
 		}
-		progressBar_.setValue(progressBar_.getValue() + task.weight_);
-		currentTask_++;
-		if (currentTask_ < allTasks_.size())
+		progressBar.setValue(progressBar.getValue() + task.weight);
+		currentTask++;
+		if (currentTask < allTasks.size())
 		{
-			progressBar_.setString(((Task) allTasks_.get(currentTask_)).inProgressMessage_);
+			progressBar.setString(((Task) allTasks.get(currentTask)).inProgressMessage);
 		}
 	}
 
-	private JProgressBar progressBar_ = new JProgressBar();
+	private JProgressBar progressBar = new JProgressBar();
 
 	// Must be final to force clients to use the Tasks declared 'final' when
 	// marking Tasks as done
-	private final List<Task> allTasks_ = new ArrayList<Task>();
+	private final List<Task> allTasks = new ArrayList<Task>();
 
 	// Complete set of Tasks which need to be completed to start the Follow app
 	public final Task LOAD_SYSTEM_FONTS;
@@ -101,13 +101,13 @@ public class StartupStatus extends JWindow
 		// private to prevent instantiation by clients
 		private Task(int weight, String inProgressMessage)
 		{
-			weight_ = weight;
-			inProgressMessage_ = inProgressMessage;
+			this.weight = weight;
+			this.inProgressMessage = inProgressMessage;
 		}
 
 		// final to prevent modification by clients
-		final private int weight_;
-		final private String inProgressMessage_;
+		final private int weight;
+		final private String inProgressMessage;
 	}
 
 }

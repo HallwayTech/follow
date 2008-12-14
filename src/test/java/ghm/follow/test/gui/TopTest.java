@@ -12,6 +12,6 @@ public class TopTest extends AppLaunchingTestCase
 	@Test
 	public void testTop()
 	{
-		assertEquals(false, _app.getAction(Top.NAME).isEnabled());
+		assertEquals(false, app.getAction(Top.NAME).isEnabled());
 	}
 }

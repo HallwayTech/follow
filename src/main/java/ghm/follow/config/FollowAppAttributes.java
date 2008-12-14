@@ -44,14 +44,14 @@ import java.util.logging.Logger;
 public class FollowAppAttributes
 {
 	private static Logger log = Logger.getLogger(FollowAppAttributes.class.getName());
-	EnumeratedProperties properties_;
-	private EnumeratedProperties defaultProperties_;
-	private FollowAppAttributes defaultAttributes_;
+	EnumeratedProperties properties;
+	private EnumeratedProperties defaultProperties;
+	private FollowAppAttributes defaultAttributes;
 	static final String userHome = System.getProperty("user.home");
 	public static final String PROPERTY_FILE_NAME = ".followApp.properties";
 	static final String defaultPropertyFileName = userHome + FollowApp.FILE_SEPARATOR
 			+ PROPERTY_FILE_NAME;
-	private File _propertyFile;
+	private File propertyFile;
 	public static final String PROPERTY_PROTOTYPE_FILE_NAME = "followApp.properties.prototype";
 	public static final int BUFFER_SIZE = 32768;
 
@@ -95,32 +95,32 @@ public class FollowAppAttributes
 		this((File) null);
 	}
 
-	public FollowAppAttributes(File propertyFile) throws IOException
+	public FollowAppAttributes(File exitingPropertyFile) throws IOException
 	{
-		if (propertyFile != null)
+		if (exitingPropertyFile != null)
 		{
-			_propertyFile = propertyFile;
+			propertyFile = exitingPropertyFile;
 		}
 		else
 		{
-			_propertyFile = new File(defaultPropertyFileName);
+			propertyFile = new File(defaultPropertyFileName);
 		}
 
-		if (!(_propertyFile.exists()))
+		if (!(propertyFile.exists()))
 		{
 			// If the property file doesn't exist, we create a default property
 			// file using a prototype property file stored somewhere on the
 			// classpath
 			log.info("No property file for the Follow application is present; creating "
-					+ _propertyFile.getAbsolutePath() + " (with default values) ...");
-			properties_ = (EnumeratedProperties) getDefaultProperties().clone();
+					+ propertyFile.getAbsolutePath() + " (with default values) ...");
+			properties = (EnumeratedProperties) getDefaultProperties().clone();
 			log.info("... property file created successfully.");
 		}
 		else
 		{
-			properties_ = new EnumeratedProperties();
-			FileInputStream fis = new FileInputStream(_propertyFile);
-			properties_.load(fis);
+			properties = new EnumeratedProperties();
+			FileInputStream fis = new FileInputStream(propertyFile);
+			properties.load(fis);
 			switch (getAttributesVersion())
 			{
 				case UNVERSIONED:
@@ -173,7 +173,7 @@ public class FollowAppAttributes
 
 	private FollowAppAttributes(EnumeratedProperties props) throws IOException
 	{
-		properties_ = props;
+		properties = props;
 	}
 
 	public int getHeight()
@@ -364,7 +364,7 @@ public class FollowAppAttributes
 
 	public File getLastFileChooserDirectory()
 	{
-		return new File(properties_.getProperty(LAST_FILE_CHOOSER_DIR_KEY, userHome));
+		return new File(properties.getProperty(LAST_FILE_CHOOSER_DIR_KEY, userHome));
 	}
 
 	public void setLastFileChooserDirectory(File file)
@@ -404,7 +404,7 @@ public class FollowAppAttributes
 
 	public int getAttributesVersion()
 	{
-		if (properties_.get(ATTRIBUTES_VERSION_KEY) == null)
+		if (properties.get(ATTRIBUTES_VERSION_KEY) == null)
 		{
 			// Supporting v1.0 & v1.0.1, which had no notion of attributes
 			// version
@@ -544,14 +544,14 @@ public class FollowAppAttributes
 
 	public File getPropertyFile()
 	{
-		return _propertyFile;
+		return propertyFile;
 	}
 
 	public void store() throws IOException
 	{
 		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(
 				defaultPropertyFileName));
-		properties_.store(bos, null);
+		properties.store(bos, null);
 		// close this stream.  no need to flush it since Properties.store(..) does that
 		bos.close();
 	}
@@ -579,12 +579,12 @@ public class FollowAppAttributes
 
 	public FollowAppAttributes getDefaultAttributes() throws IOException
 	{
-		if (defaultAttributes_ == null)
+		if (defaultAttributes == null)
 		{
-			defaultAttributes_ = new FollowAppAttributes(getDefaultProperties());
+			defaultAttributes = new FollowAppAttributes(getDefaultProperties());
 			// Check for the unlikely possibility that the default font is
 			// unavailable
-			Font defaultFont = defaultAttributes_.getFont();
+			Font defaultFont = defaultAttributes.getFont();
 			String[] availableFontFamilyNames = GraphicsEnvironment.getLocalGraphicsEnvironment()
 					.getAvailableFontFamilyNames();
 			boolean defaultFontIsAvailable = false;
@@ -600,11 +600,11 @@ public class FollowAppAttributes
 			{
 				log.info("Font family " + defaultFont.getFamily() + " is unavailable; using "
 						+ availableFontFamilyNames[0] + " instead.");
-				defaultAttributes_.setFont(new Font(availableFontFamilyNames[0], defaultFont
+				defaultAttributes.setFont(new Font(availableFontFamilyNames[0], defaultFont
 						.getStyle(), defaultFont.getSize()));
 			}
 		}
-		return defaultAttributes_;
+		return defaultAttributes;
 	}
 
 	/**
@@ -629,7 +629,7 @@ public class FollowAppAttributes
 	private void setInt(String key, int value)
 	{
 		int oldValue = getInt(key);
-		properties_.setProperty(key, String.valueOf(value));
+		properties.setProperty(key, String.valueOf(value));
 		pcs.firePropertyChange(key, oldValue, value);
 	}
 
@@ -641,41 +641,41 @@ public class FollowAppAttributes
 	private void setBoolean(String key, boolean value)
 	{
 		boolean oldValue = getBoolean(key);
-		properties_.setProperty(key, String.valueOf(value));
+		properties.setProperty(key, String.valueOf(value));
 		pcs.firePropertyChange(key, oldValue, value);
 	}
 
 	private String getString(String key)
 	{
-		return properties_.getProperty(key);
+		return properties.getProperty(key);
 	}
 
 	private void setString(String key, String value)
 	{
 		String oldValue = getString(key);
-		properties_.setProperty(key, value);
+		properties.setProperty(key, value);
 		pcs.firePropertyChange(key, oldValue, value);
 	}
 
 	private List<String> getEnumeratedProperty(String key)
 	{
-		return properties_.getEnumeratedProperty(key);
+		return properties.getEnumeratedProperty(key);
 	}
 
 	private void setEnumeratedProperty(String key, List<String> values)
 	{
 		List<String> oldValue = getEnumeratedProperty(key);
-		properties_.setEnumeratedProperty(key, values);
+		properties.setEnumeratedProperty(key, values);
 		pcs.firePropertyChange(key, oldValue, values);
 	}
 
 	private EnumeratedProperties getDefaultProperties() throws IOException
 	{
-		if (defaultProperties_ == null)
+		if (defaultProperties == null)
 		{
 			InputStream in = this.getClass().getResourceAsStream(PROPERTY_PROTOTYPE_FILE_NAME);
 			BufferedInputStream bis = new BufferedInputStream(in);
-			FileOutputStream fos = new FileOutputStream(_propertyFile);
+			FileOutputStream fos = new FileOutputStream(propertyFile);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			byte[] byteArray = new byte[BUFFER_SIZE];
 			int len;
@@ -686,9 +686,9 @@ public class FollowAppAttributes
 			bos.flush();
 			bos.close();
 			bis.close();
-			defaultProperties_ = new EnumeratedProperties();
-			defaultProperties_.load(new BufferedInputStream(new FileInputStream(_propertyFile)));
+			defaultProperties = new EnumeratedProperties();
+			defaultProperties.load(new BufferedInputStream(new FileInputStream(propertyFile)));
 		}
-		return defaultProperties_;
+		return defaultProperties;
 	}
 }

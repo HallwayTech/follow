@@ -36,9 +36,9 @@ public class JTextPaneDestination implements OutputDestination
 {
 	private Logger log = Logger.getLogger(JTextPaneDestination.class.getName());
 
-	protected JTextPane jTextPane_;
+	protected JTextPane jTextPane;
 
-	protected boolean autoPositionCaret_;
+	protected boolean autoPositionCaret;
 
 	/**
 	 * Construct a new JTextPaneDestination.
@@ -51,18 +51,18 @@ public class JTextPaneDestination implements OutputDestination
 	 */
 	public JTextPaneDestination(JTextPane jTextPane, boolean autoPositionCaret)
 	{
-		jTextPane_ = jTextPane;
-		autoPositionCaret_ = autoPositionCaret;
+		this.jTextPane = jTextPane;
+		this.autoPositionCaret = autoPositionCaret;
 	}
 
 	public JTextPane getJTextPane()
 	{
-		return jTextPane_;
+		return jTextPane;
 	}
 
 	public void setJTextArea(JTextPane jTextPane)
 	{
-		jTextPane_ = jTextPane;
+		this.jTextPane = jTextPane;
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class JTextPaneDestination implements OutputDestination
 	 */
 	public boolean autoPositionCaret()
 	{
-		return autoPositionCaret_;
+		return autoPositionCaret;
 	}
 
 	/**
@@ -102,17 +102,17 @@ public class JTextPaneDestination implements OutputDestination
 	 */
 	public void setAutoPositionCaret(boolean autoPositionCaret)
 	{
-		autoPositionCaret_ = autoPositionCaret;
+		this.autoPositionCaret = autoPositionCaret;
 	}
 
 	public void print(String s)
 	{
 		try
 		{
-			jTextPane_.getDocument().insertString(jTextPane_.getDocument().getLength(), s, null);
-			if (autoPositionCaret_)
+			jTextPane.getDocument().insertString(jTextPane.getDocument().getLength(), s, null);
+			if (autoPositionCaret)
 			{
-				jTextPane_.setCaretPosition(jTextPane_.getDocument().getLength());
+				jTextPane.setCaretPosition(jTextPane.getDocument().getLength());
 			}
 		}
 		catch (BadLocationException e)
@@ -124,10 +124,10 @@ public class JTextPaneDestination implements OutputDestination
 
 	public void clear()
 	{
-		jTextPane_.setText("");
-		if (autoPositionCaret_)
+		jTextPane.setText("");
+		if (autoPositionCaret)
 		{
-			jTextPane_.setCaretPosition(0);
+			jTextPane.setCaretPosition(0);
 		}
 	}
 }

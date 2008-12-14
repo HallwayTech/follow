@@ -30,22 +30,22 @@ import java.io.PrintStream;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class PrintStreamDestination implements OutputDestination {
-	protected PrintStream _printStream;
+	protected PrintStream printStream;
 
 	public PrintStreamDestination(PrintStream printStream) {
-		_printStream = printStream;
+		this.printStream = printStream;
 	}
 
 	public PrintStream getPrintStream() {
-		return _printStream;
+		return printStream;
 	}
 
 	public void setPrintStream(PrintStream printStream) {
-		_printStream = printStream;
+		this.printStream = printStream;
 	}
 
 	public void print(String s) {
-		_printStream.print(s);
+		printStream.print(s);
 	}
 
 	public void clear() {

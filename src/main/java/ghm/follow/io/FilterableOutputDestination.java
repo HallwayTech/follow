@@ -3,10 +3,10 @@ package ghm.follow.io;
 import java.util.ArrayList;
 
 public abstract class FilterableOutputDestination implements OutputDestination {
-	private ArrayList<OutputDestination> _views;
+	private ArrayList<OutputDestination> views;
 	
 	public FilterableOutputDestination() {
-		_views = new ArrayList<OutputDestination>();
+		views = new ArrayList<OutputDestination>();
 	}
 
 	/**
@@ -14,20 +14,20 @@ public abstract class FilterableOutputDestination implements OutputDestination {
 	 * standard output or a {@link FilteredDestination}
 	 */
 	public void addView(OutputDestination dest) {
-		_views.add(dest);
+		views.add(dest);
 	}
 
 	/**
 	 * Remove a view that filters printed text
 	 */
 	public void removeView(OutputDestination dest) {
-		if (!_views.isEmpty() && _views.contains(dest)) {
-			_views.remove(dest);
+		if (!views.isEmpty() && views.contains(dest)) {
+			views.remove(dest);
 		}
 	}
 
 	protected void notifyViews(String s) {
-		for (OutputDestination view : _views) {
+		for (OutputDestination view : views) {
 			view.print(s);
 		}
 	}

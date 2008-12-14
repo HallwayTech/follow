@@ -49,6 +49,12 @@
 			<archive></archive>
 		</mailingList>
 	</mailingLists>
+	<licenses>
+		<license>
+			<name>GNU General Public License, version 2</name>
+			<url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+		</license>
+	</licenses>
 	<scm>
 		<connection>scm:svn:https://follow.svn.sourceforge.net/svnroot/follow</connection>
 		<developerConnection>scm:svn:https://follow.svn.sourceforge.net/svnroot/follow</developerConnection>
@@ -80,26 +86,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-			</plugin>
-			<!-- check for potential problems -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<configuration>
-					<targetjdk>1.5</targetjdk>
-					<rulesets>
-						<ruleset>/rulesets/basic.xml</ruleset>
-						<ruleset>/rulesets/controversial.xml</ruleset>
-					</rulesets>
-					<format>xml</format>
-					<linkXref>true</linkXref>
-					<sourceEncoding>utf-8</sourceEncoding>
-					<minimumTokens>100</minimumTokens>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

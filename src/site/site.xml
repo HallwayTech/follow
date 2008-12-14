@@ -1,32 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project>
-  <bannerLeft>
-    <name>Follow</name>
-    <src>http://maven.apache.org/images/apache-maven-project.png</src>
-    <href>http://follow.sf.net</href>
-  </bannerLeft>
-  <bannerRight>
-    <src>http://maven.apache.org/images/maven-small.gif</src>
-  </bannerRight>
-  <body>
-    <links>
-      <item name="Maven" href="http://maven.apache.org/"/>
-      <item name="Apache" href="http://www.apache.org/"/>
-    </links>
+	<bannerLeft>
+		<name>Follow</name>
+		<src>images/follow.png</src>
+		<href>http://follow.sourceforge.net</href>
+	</bannerLeft>
+	<bannerRight>
+		<src>http://maven.apache.org/images/maven-small.gif</src>
+	</bannerRight>
+	<body>
+		<links>
+			<item name="Maven" href="http://maven.apache.org/" />
+			<item name="Apache" href="http://www.apache.org/" />
+		</links>
 
-
-    <menu name="Follow">
-			<item name="Features"/>
-			<item name="Screenshots"/>
-      <item name="Download"/>
-			<item name="Install/Uninstall" href="/install.html"/>
-			<item name="Version History"/>
-			<item name="Acknowledgements"/>
-			<item name="Javadocs"/>
-			<item name="SourceForge Project Page" href="http://sourceforge.net/projects/follow"/>
-			<item name="Feedback"/>
-    </menu>
-    <menu ref="reports" />
-    <menu ref="modules" />
-  </body>
+		<menu name="Follow">
+			<item name="Download" href="http://sourceforge.net/project/platformdownload.php?group_id&#61;11206&amp;sel_platform&#61;1217" />
+			<item name="Install/Uninstall" href="install.html" />
+			<item name="Version History" href="changes-report.html" />
+			<item name="Javadocs" href="apidocs/index.html" />
+			<item name="SourceForge Project Page" href="http://sourceforge.net/projects/follow" />
+		</menu>
+		<menu ref="reports" />
+		<menu ref="modules" />
+	</body>
 </project>

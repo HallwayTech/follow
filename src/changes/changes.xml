@@ -5,6 +5,11 @@
 		<author email="carl.hall@gmail.com">Carl Hall</author>
 	</properties>
 	<body>
+		<release date="2008-12-14" version="1.7.4">
+			<action type="cleanup">Cleaned up the code for consistency.</action>
+			<action type="update">Updated the application icons to use Silk Icons.</action>
+			<action type="update">Changed logging to use java.util.logging to reduce dependencies and download size.</action>
+		</release>
 		<release date="2007-04-07" version="1.7.1">
 			<action type="update">Updated text area and search results to include a line indicator.</action>
 			<action type="revert">Changed use of JTextPane back to JTextArea.</action>

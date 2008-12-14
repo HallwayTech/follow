@@ -6,7 +6,9 @@
 		<href>http://follow.sourceforge.net</href>
 	</bannerLeft>
 	<bannerRight>
-		<src>http://maven.apache.org/images/maven-small.gif</src>
+		<name>SourceForge</name>
+		<src>http://sflogo.sourceforge.net/sflogo.php?group_id=11206&amp;type=2</src>
+		<href>http://sourceforge.net</href>
 	</bannerRight>
 	<body>
 		<links>

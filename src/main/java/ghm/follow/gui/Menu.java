@@ -24,33 +24,29 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 /**
- * This class exists as a kludge to get around problems I was having with menu items being
- * configured by JMenu in a way that was not to my liking.
+ * This class exists as a kludge to get around problems I was having with menu
+ * items being configured by JMenu in a way that was not to my liking.
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class Menu extends JMenu
-{
+public class Menu extends JMenu {
 
-	public Menu(String name, String mnemonic)
-	{
-		super(name);
-		setMnemonic(mnemonic.charAt(0));
-	}
+    public Menu(String name, String mnemonic) {
+	super(name);
+	setMnemonic(mnemonic.charAt(0));
+    }
 
-	public Menu(String name, String mnemonic, Icon icon)
-	{
-		super(name);
-		setMnemonic(mnemonic.charAt(0));
-		setIcon(icon);
-	}
+    public Menu(String name, String mnemonic, Icon icon) {
+	super(name);
+	setMnemonic(mnemonic.charAt(0));
+	setIcon(icon);
+    }
 
-	public void addFollowAppAction(FollowAppAction a)
-	{
-		this.add(a);
-		JMenuItem menuItem = this.getItem(this.getItemCount() - 1);
-		menuItem.setMnemonic(a.getMnemonic());
-		menuItem.setAccelerator(a.getAccelerator());
-	}
+    public void addFollowAppAction(FollowAppAction a) {
+	this.add(a);
+	JMenuItem menuItem = this.getItem(this.getItemCount() - 1);
+	menuItem.setMnemonic(a.getMnemonic());
+	menuItem.setAccelerator(a.getAccelerator());
+    }
 
 }

@@ -26,108 +26,96 @@ import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 
 /**
- * Implementation of {@link OutputDestination} which appends Strings to a {@link JTextPane}.
+ * Implementation of {@link OutputDestination} which appends Strings to a
+ * {@link JTextPane}.
  * 
  * @see OutputDestination
  * @see JTextPane
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class JTextPaneDestination implements OutputDestination
-{
-	private Logger log = Logger.getLogger(JTextPaneDestination.class.getName());
+public class JTextPaneDestination implements OutputDestination {
+    private Logger log = Logger.getLogger(JTextPaneDestination.class.getName());
 
-	protected JTextPane jTextPane;
+    protected JTextPane jTextPane;
 
-	protected boolean autoPositionCaret;
+    protected boolean autoPositionCaret;
 
-	/**
-	 * Construct a new JTextPaneDestination.
-	 * 
-	 * @param jTextPane
-	 *            text will be appended to this text area
-	 * @param autoPositionCaret
-	 *            if true, caret will be automatically moved to the bottom of the text area when
-	 *            text is appended
-	 */
-	public JTextPaneDestination(JTextPane jTextPane, boolean autoPositionCaret)
-	{
-		this.jTextPane = jTextPane;
-		this.autoPositionCaret = autoPositionCaret;
+    /**
+     * Construct a new JTextPaneDestination.
+     * 
+     * @param jTextPane
+     *            text will be appended to this text area
+     * @param autoPositionCaret
+     *            if true, caret will be automatically moved to the bottom of
+     *            the text area when text is appended
+     */
+    public JTextPaneDestination(JTextPane jTextPane, boolean autoPositionCaret) {
+	this.jTextPane = jTextPane;
+	this.autoPositionCaret = autoPositionCaret;
+    }
+
+    public JTextPane getJTextPane() {
+	return jTextPane;
+    }
+
+    public void setJTextArea(JTextPane jTextPane) {
+	this.jTextPane = jTextPane;
+    }
+
+    /**
+     * Add a filtered view to this destination. Filtered views show only a
+     * subset of the total output based on filter conditions.
+     * 
+     * @since 1.8.0
+     */
+    public void addFilteredView() {
+
+    }
+
+    /**
+     * Remove a filtered view
+     * 
+     * @since 1.8.0
+     */
+    public void removeFilteredView() {
+
+    }
+
+    /**
+     * @return whether caret will be automatically moved to the bottom of the
+     *         text area when text is appended
+     */
+    public boolean autoPositionCaret() {
+	return autoPositionCaret;
+    }
+
+    /**
+     * @param autoPositionCaret
+     *            if true, caret will be automatically moved to the bottom of
+     *            the text area when text is appended
+     */
+    public void setAutoPositionCaret(boolean autoPositionCaret) {
+	this.autoPositionCaret = autoPositionCaret;
+    }
+
+    public void print(String s) {
+	try {
+	    jTextPane.getDocument().insertString(
+		    jTextPane.getDocument().getLength(), s, null);
+	    if (autoPositionCaret) {
+		jTextPane.setCaretPosition(jTextPane.getDocument().getLength());
+	    }
+	} catch (BadLocationException e) {
+	    // just ignore, nothing we can do
+	    log.log(Level.SEVERE,
+		    "BadLocationException in JTextPaneDestination", e);
 	}
+    }
 
-	public JTextPane getJTextPane()
-	{
-		return jTextPane;
+    public void clear() {
+	jTextPane.setText("");
+	if (autoPositionCaret) {
+	    jTextPane.setCaretPosition(0);
 	}
-
-	public void setJTextArea(JTextPane jTextPane)
-	{
-		this.jTextPane = jTextPane;
-	}
-
-	/**
-	 * Add a filtered view to this destination. Filtered views show only a subset of the total
-	 * output based on filter conditions.
-	 * 
-	 * @since 1.8.0
-	 */
-	public void addFilteredView()
-	{
-
-	}
-
-	/**
-	 * Remove a filtered view
-	 * 
-	 * @since 1.8.0
-	 */
-	public void removeFilteredView()
-	{
-
-	}
-
-	/**
-	 * @return whether caret will be automatically moved to the bottom of the text area when text is
-	 *         appended
-	 */
-	public boolean autoPositionCaret()
-	{
-		return autoPositionCaret;
-	}
-
-	/**
-	 * @param autoPositionCaret
-	 *            if true, caret will be automatically moved to the bottom of the text area when
-	 *            text is appended
-	 */
-	public void setAutoPositionCaret(boolean autoPositionCaret)
-	{
-		this.autoPositionCaret = autoPositionCaret;
-	}
-
-	public void print(String s)
-	{
-		try
-		{
-			jTextPane.getDocument().insertString(jTextPane.getDocument().getLength(), s, null);
-			if (autoPositionCaret)
-			{
-				jTextPane.setCaretPosition(jTextPane.getDocument().getLength());
-			}
-		}
-		catch (BadLocationException e)
-		{
-			// just ignore, nothing we can do
-			log.log(Level.SEVERE, "BadLocationException in JTextPaneDestination", e);
-		}
-	}
-
-	public void clear()
-	{
-		jTextPane.setText("");
-		if (autoPositionCaret)
-		{
-			jTextPane.setCaretPosition(0);
-		}
-	}
+    }
 }

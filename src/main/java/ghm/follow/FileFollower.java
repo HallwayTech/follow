@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  * file's characters into Strings and sending them to instances of
  * {@link OutputDestination}. The name and behavior of this class are inspired
  * by the '-f' (follow) flag of the UNIX command 'tail'.
- *
+ * 
  * @see OutputDestination
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
@@ -43,7 +43,7 @@ public class FileFollower {
      * Constructs a new FileFollower; invoking this constructor does
      * <em>not</em> cause the new object to begin following the supplied file.
      * In order to begin following, one must call {@link #start()}.
-     *
+     * 
      * @param file
      *            file to be followed
      * @param bufferSize
@@ -77,7 +77,7 @@ public class FileFollower {
      * Identical to {@link #FileFollower(File, int, int, OutputDestination[])},
      * except that a default buffer size (32,768 characters) and latency (1000
      * milliseconds) are used.
-     *
+     * 
      * @see #FileFollower(File, int, int, OutputDestination[])
      */
     public FileFollower(File file, OutputDestination[] initialOutputDestinations) {
@@ -150,7 +150,7 @@ public class FileFollower {
 
     /**
      * Send the supplied string to all OutputDestinations
-     *
+     * 
      * @param s
      */
     private synchronized void print(String s) {
@@ -171,7 +171,7 @@ public class FileFollower {
     /**
      * Add another OutputDestination to which the followed file's contents
      * should be printed.
-     *
+     * 
      * @param outputDestination
      *            OutputDestination to be added
      */
@@ -182,7 +182,7 @@ public class FileFollower {
     /**
      * Remove the supplied OutputDestination from the list of OutputDestinations
      * to which the followed file's contents should be printed.
-     *
+     * 
      * @param outputDestination
      *            OutputDestination to be removed
      */
@@ -193,7 +193,7 @@ public class FileFollower {
     /**
      * Returns the List which maintains all OutputDestinations for this
      * FileFollower.
-     *
+     * 
      * @return contains all OutputDestinations for this FileFollower
      */
     public List<OutputDestination> getOutputDestinations() {
@@ -202,7 +202,7 @@ public class FileFollower {
 
     /**
      * Returns the file which is being followed by this FileFollower
-     *
+     * 
      * @return file being followed
      */
     public File getFollowedFile() {
@@ -211,7 +211,7 @@ public class FileFollower {
 
     /**
      * Returns the following state of a file
-     *
+     * 
      * @return true if being followed, false if not being followed
      */
     public boolean isBeingFollowed() {
@@ -220,7 +220,7 @@ public class FileFollower {
 
     /**
      * Returns the pause state of the follower.
-     *
+     * 
      * @return true if paused, false otherwise
      */
     public boolean isPaused() {
@@ -230,7 +230,7 @@ public class FileFollower {
     /**
      * Returns the size of the character buffer used to read characters from the
      * followed file. Each time the file is accessed, this buffer is filled.
-     *
+     * 
      * @return size of the character buffer
      */
     public int getBufferSize() {
@@ -245,7 +245,7 @@ public class FileFollower {
      * FileFollower to immediately begin reading characters into a buffer of the
      * newly specified size. You must stop & restart the FileFollower in order
      * for changes to take effect.
-     *
+     * 
      * @param bufferSize
      *            size of the character buffer
      */
@@ -256,7 +256,7 @@ public class FileFollower {
     /**
      * Returns the time (in milliseconds) which a FileFollower spends sleeping
      * each time it encounters the end of the followed file.
-     *
+     * 
      * @return latency, in milliseconds
      */
     public int getLatency() {
@@ -269,7 +269,7 @@ public class FileFollower {
      * latency values may cause thrashing between the FileFollower's running
      * thread and other threads in an application. A change in this value will
      * be reflected the next time the FileFollower's running thread sleeps.
-     *
+     * 
      * @param latency
      *            latency, in milliseconds
      */

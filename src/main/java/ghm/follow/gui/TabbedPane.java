@@ -28,78 +28,65 @@ import javax.swing.JTabbedPane;
 
 /**
  * Derived from a workaround proposed by sqrrrl for bug <a
- * href="http://developer.java.sun.com/developer/bugParade/bugs/4193463.html" >4193463</a>. This
- * bug was causing drag-and-drop to behave incorrectly for all but the first tab.
+ * href="http://developer.java.sun.com/developer/bugParade/bugs/4193463.html"
+ * >4193463</a>. This bug was causing drag-and-drop to behave incorrectly for
+ * all but the first tab.
  */
-public class TabbedPane extends JTabbedPane
-{
+public class TabbedPane extends JTabbedPane {
 
-	private FollowAppAttributes attributes = null;
+    private FollowAppAttributes attributes = null;
 
-	public TabbedPane(FollowAppAttributes attributes)
-	{
-		super(attributes.getTabPlacement());
-		this.attributes = attributes;
+    public TabbedPane(FollowAppAttributes attributes) {
+	super(attributes.getTabPlacement());
+	this.attributes = attributes;
+    }
+
+    /** sqrrrl's fix */
+    public Component findComponentAt(int x, int y) {
+	if (!contains(x, y)) {
+	    return null;
 	}
-
-	/** sqrrrl's fix */
-	public Component findComponentAt(int x, int y)
-	{
-		if (!contains(x, y))
-		{
-			return null;
+	int ncomponents = getComponentCount();
+	for (int i = 0; i < ncomponents; i++) {
+	    Component comp = getComponentAt(i);
+	    if (comp != null) {
+		if (comp instanceof Container) {
+		    if (comp.isVisible()) {
+			comp = ((Container) comp).findComponentAt(x
+				- comp.getX(), y - comp.getY());
+		    }
+		} else {
+		    comp = comp
+			    .getComponentAt(x - comp.getX(), y - comp.getY());
 		}
-		int ncomponents = getComponentCount();
-		for (int i = 0; i < ncomponents; i++)
-		{
-			Component comp = getComponentAt(i);
-			if (comp != null)
-			{
-				if (comp instanceof Container)
-				{
-					if (comp.isVisible())
-					{
-						comp = ((Container) comp).findComponentAt(x - comp.getX(), y - comp.getY());
-					}
-				}
-				else
-				{
-					comp = comp.getComponentAt(x - comp.getX(), y - comp.getY());
-				}
-				if (comp != null && comp.isVisible())
-				{
-					return comp;
-				}
-			}
+		if (comp != null && comp.isVisible()) {
+		    return comp;
 		}
-		return this;
+	    }
 	}
+	return this;
+    }
 
-	public void setSelectedIndex(int index)
-	{
-		super.setSelectedIndex(index);
-		handleSelectedFile();
-	}
+    public void setSelectedIndex(int index) {
+	super.setSelectedIndex(index);
+	handleSelectedFile();
+    }
 
-	public void setSelectedComponent(FileFollowingPane pane)
-	{
-		super.setSelectedComponent(pane);
-		handleSelectedFile();
-	}
+    public void setSelectedComponent(FileFollowingPane pane) {
+	super.setSelectedComponent(pane);
+	handleSelectedFile();
+    }
 
-	public void removeTabAt(int index)
-	{
-		super.removeTabAt(index);
-		handleSelectedFile();
-	}
+    public void removeTabAt(int index) {
+	super.removeTabAt(index);
+	handleSelectedFile();
+    }
 
-	private void handleSelectedFile()
-	{
-		FileFollowingPane pane = (FileFollowingPane) getSelectedComponent();
-		if (pane != null)
-		{
-			File parent = pane.getFollowedFile().getParentFile();
-			attributes.setLastFileChooserDirectory(parent);
-		}
+    private void handleSelectedFile() {
+	FileFollowingPane pane = (FileFollowingPane) getSelectedComponent();
+	if (pane != null) {
+	    File parent = pane.getFollowedFile().getParentFile();
+	    attributes.setLastFileChooserDirectory(parent);
 	}
+    }
 }

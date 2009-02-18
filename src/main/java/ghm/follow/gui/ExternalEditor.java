@@ -32,128 +32,99 @@ import java.util.logging.Logger;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  * @author <a href="mailto:murali_ca_us@hotmail.com">Murali Krishnan</a>
  */
-public class ExternalEditor extends Object
-{
-	private Logger log = Logger.getLogger(ExternalEditor.class.getName());
-	// ------------------------------------------------------------
-	// - Constructor
+public class ExternalEditor extends Object {
+    private Logger log = Logger.getLogger(ExternalEditor.class.getName());
 
-	public ExternalEditor(String string)
-	{
-		cmdString = string;
-	}
+    // ------------------------------------------------------------
+    // - Constructor
 
-	// ------------------------------------------------------------
-	// - Member Variables
+    public ExternalEditor(String string) {
+	cmdString = string;
+    }
 
-	private String cmdString = "";
+    // ------------------------------------------------------------
+    // - Member Variables
 
-	// ------------------------------------------------------------
-	// - Accessors
+    private String cmdString = "";
 
-	protected String getCmdString()
-	{
-		return (cmdString);
-	}
+    // ------------------------------------------------------------
+    // - Accessors
 
-	// ------------------------------------------------------------
-	// - Internal Utilities.
+    protected String getCmdString() {
+	return (cmdString);
+    }
 
-	public String[] toCmdArray(String file)
-	{
-		String string = (getCmdString() == null) ? "" : getCmdString().trim();
-		String[] result = new String[0]; // Pessimistic.
+    // ------------------------------------------------------------
+    // - Internal Utilities.
 
-		if (!string.equals(""))
-		{
-			string = string + " "; // space terminate the last part.
-			List<String> list = new ArrayList<String>();
-			boolean inQuoteSingle = false;
-			boolean inQuoteDouble = false;
-			boolean inWhitespace = false;
-			StringBuffer buffer = new StringBuffer();
-			char[] chArray = string.toCharArray();
-			for (int i = 0; i < chArray.length; i++)
-			{
-				char ch = chArray[i];
-				if (inQuoteSingle)
-				{
-					if (ch == '\'')
-					{
-						inQuoteSingle = false;
-					}
-					else
-					{
-						buffer.append(ch);
-					}
-				}
-				else if (inQuoteDouble)
-				{
-					if (ch == '"')
-					{
-						inQuoteDouble = false;
-					}
-					else
-					{
-						buffer.append(ch);
-					}
-				}
-				else if (inWhitespace)
-				{
-					if (!Character.isWhitespace(ch))
-					{
-						inWhitespace = false;
-						--i; // Re-process this character.
-					}
-				}
-				else
-				{
-					if (ch == '\'')
-					{
-						inQuoteSingle = true;
-					}
-					else if (ch == '"')
-					{
-						inQuoteDouble = true;
-					}
-					else if (Character.isWhitespace(ch))
-					{
-						inWhitespace = true;
-						list.add(buffer.toString());
-						buffer = new StringBuffer();
-					}
-					else
-					{
-						buffer.append(ch);
-					}
-				}
-			}
+    public String[] toCmdArray(String file) {
+	String string = (getCmdString() == null) ? "" : getCmdString().trim();
+	String[] result = new String[0]; // Pessimistic.
 
-			list.add(file);
-
-			result = (String[]) list.toArray(result);
+	if (!string.equals("")) {
+	    string = string + " "; // space terminate the last part.
+	    List<String> list = new ArrayList<String>();
+	    boolean inQuoteSingle = false;
+	    boolean inQuoteDouble = false;
+	    boolean inWhitespace = false;
+	    StringBuffer buffer = new StringBuffer();
+	    char[] chArray = string.toCharArray();
+	    for (int i = 0; i < chArray.length; i++) {
+		char ch = chArray[i];
+		if (inQuoteSingle) {
+		    if (ch == '\'') {
+			inQuoteSingle = false;
+		    } else {
+			buffer.append(ch);
+		    }
+		} else if (inQuoteDouble) {
+		    if (ch == '"') {
+			inQuoteDouble = false;
+		    } else {
+			buffer.append(ch);
+		    }
+		} else if (inWhitespace) {
+		    if (!Character.isWhitespace(ch)) {
+			inWhitespace = false;
+			--i; // Re-process this character.
+		    }
+		} else {
+		    if (ch == '\'') {
+			inQuoteSingle = true;
+		    } else if (ch == '"') {
+			inQuoteDouble = true;
+		    } else if (Character.isWhitespace(ch)) {
+			inWhitespace = true;
+			list.add(buffer.toString());
+			buffer = new StringBuffer();
+		    } else {
+			buffer.append(ch);
+		    }
 		}
+	    }
 
-		return (result);
+	    list.add(file);
+
+	    result = (String[]) list.toArray(result);
 	}
 
-	// ------------------------------------------------------------
-	// - Public API
+	return (result);
+    }
 
-	public void exec(File file)
-	{
-		String fullPath = file.getAbsolutePath();
-		String[] cmd = toCmdArray(fullPath);
-		log.info("Exec'ing " + Arrays.asList(cmd) + ".");
+    // ------------------------------------------------------------
+    // - Public API
 
-		try
-		{
-			Runtime.getRuntime().exec(cmd);
-		}
-		catch (IOException ioe)
-		{
-			String errmsg = "Could not exec [" + getCmdString() + "] with [" + fullPath + "].";
-			log.log(Level.SEVERE, errmsg, ioe);
-		}
+    public void exec(File file) {
+	String fullPath = file.getAbsolutePath();
+	String[] cmd = toCmdArray(fullPath);
+	log.info("Exec'ing " + Arrays.asList(cmd) + ".");
+
+	try {
+	    Runtime.getRuntime().exec(cmd);
+	} catch (IOException ioe) {
+	    String errmsg = "Could not exec [" + getCmdString() + "] with ["
+		    + fullPath + "].";
+	    log.log(Level.SEVERE, errmsg, ioe);
 	}
+    }
 }

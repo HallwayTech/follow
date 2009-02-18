@@ -22,7 +22,6 @@ public abstract class BaseTestCase {
     }
 
     public void tearDown() throws Exception {
-
 	follower.stopAndWait();
 	followedFileWriter.flush();
 	followedFileWriter.close();

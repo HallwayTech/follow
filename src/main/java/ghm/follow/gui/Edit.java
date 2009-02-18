@@ -27,28 +27,25 @@ import java.awt.event.ActionEvent;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class Edit extends FollowAppAction
-{
-	public static final String NAME = "edit";
+public class Edit extends FollowAppAction {
+    public static final String NAME = "edit";
 
-	public Edit(FollowApp app)
-	{
-		super(app, FollowApp.getResourceString("action.Edit.name"),
-				FollowApp.getResourceString("action.Edit.mnemonic"),
-				FollowApp.getResourceString("action.Edit.accelerator"),
-				FollowApp.getIcon(Edit.class, "action.Edit.icon"),
-				ActionContext.SINGLE_FILE);
+    public Edit(FollowApp app) {
+	super(app, FollowApp.getResourceString("action.Edit.name"), FollowApp
+		.getResourceString("action.Edit.mnemonic"), FollowApp
+		.getResourceString("action.Edit.accelerator"), FollowApp
+		.getIcon(Edit.class, "action.Edit.icon"),
+		ActionContext.SINGLE_FILE);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+	FileFollowingPane fileFollowingPane = getApp()
+		.getSelectedFileFollowingPane();
+
+	String config = getApp().getAttributes().getEditor();
+	if (!config.equals("")) {
+	    ExternalEditor editor = new ExternalEditor(config);
+	    editor.exec(fileFollowingPane.getFollowedFile());
 	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		FileFollowingPane fileFollowingPane = getApp().getSelectedFileFollowingPane();
-
-		String config = getApp().getAttributes().getEditor();
-		if (!config.equals(""))
-		{
-			ExternalEditor editor = new ExternalEditor(config);
-			editor.exec(fileFollowingPane.getFollowedFile());
-		}
-	}
+    }
 }

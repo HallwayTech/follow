@@ -11,9 +11,15 @@ import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class BottomT extends AppLaunchingTestCase {
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+	AppLaunchingTestCase.launch(null);
+    }
+
     @Override
     @Before
     public void setUp() throws Exception {
@@ -27,8 +33,8 @@ public class BottomT extends AppLaunchingTestCase {
     }
 
     @AfterClass
-    public static void afterClass() {
-	AppLaunchingTestCase.afterClass();
+    public static void afterClass() throws Exception {
+	AppLaunchingTestCase.shutdown();
     }
 
     @Test

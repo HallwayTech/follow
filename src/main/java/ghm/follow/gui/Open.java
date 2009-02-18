@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 
 /**
  * Action which opens a new file in the Follow application.
- *
+ * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */

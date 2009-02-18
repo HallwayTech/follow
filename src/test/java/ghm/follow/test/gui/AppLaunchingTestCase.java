@@ -13,12 +13,11 @@ import javax.swing.SwingUtilities;
 
 public abstract class AppLaunchingTestCase extends BaseTestCase {
 
-    protected FollowApp app;
-    protected MockSystemInterface systemInterface;
-    protected String propertyFileName;
-    protected boolean manageApp = true;
+    protected static FollowApp app;
+    protected static MockSystemInterface systemInterface;
+    protected static String propertyFileName;
 
-    public static void beforeClass() {
+    public static void denyExit() {
 	SecurityManager securityManager = new SecurityManager() {
 	    @Override
 	    public void checkPermission(Permission permission) {
@@ -32,41 +31,28 @@ public abstract class AppLaunchingTestCase extends BaseTestCase {
 	System.setSecurityManager(securityManager);
     }
 
-    public static void afterClass() {
-	FollowApp instance = FollowApp.getInstance();
-	instance.getFrame().dispose();
+    public static void launch(String[] argv) throws Exception {
+	String[] args = appendPropFileArg(argv);
+	FollowApp.main(args);
+	doPostLaunch();
     }
 
-    @Override
-    public void setUp() throws Exception {
-	super.setUp();
-	if (manageApp) {
-	    String[] args = appendPropFileArg(null);
-	    FollowApp.main(args);
-	    doPostLaunch();
-	}
-    }
-
-    protected void doPostLaunch() throws Exception {
+    protected static void doPostLaunch() throws Exception {
 	app = FollowApp.getInstance();
 	systemInterface = new MockSystemInterface();
 	app.setSystemInterface(systemInterface);
     }
 
-    @Override
-    public void tearDown() throws Exception {
-	if (manageApp) {
-	    invokeAction(app.getAction(Exit.NAME));
-	    while (!systemInterface.exitCalled()) {
-		Thread.sleep(250);
-	    }
-	    File propFile = new File(propertyFileName);
-	    propFile.delete();
+    public static void shutdown() throws Exception {
+	invokeAction(app.getAction(Exit.NAME));
+	while (!systemInterface.exitCalled()) {
+	    Thread.sleep(250);
 	}
-	super.tearDown();
+	File propFile = new File(propertyFileName);
+	propFile.delete();
     }
 
-    protected void invokeAndWait(Runnable runnable) {
+    protected static void invokeAndWait(Runnable runnable) {
 	try {
 	    SwingUtilities.invokeAndWait(runnable);
 	} catch (Exception e) {
@@ -74,7 +60,7 @@ public abstract class AppLaunchingTestCase extends BaseTestCase {
 	}
     }
 
-    protected void invokeAction(final Action action) {
+    protected static void invokeAction(final Action action) {
 	invokeAndWait(new Runnable() {
 	    public void run() {
 		action.actionPerformed(null);
@@ -82,7 +68,7 @@ public abstract class AppLaunchingTestCase extends BaseTestCase {
 	});
     }
 
-    protected String[] appendPropFileArg(String[] argv) {
+    protected static String[] appendPropFileArg(String[] argv) {
 	propertyFileName = System.getProperty("java.io.tmpdir")
 		+ System.getProperty("file.separator")
 		+ FollowAppAttributes.PROPERTY_FILE_NAME;

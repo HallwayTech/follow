@@ -91,7 +91,7 @@ import javax.swing.SwingUtilities;
 
 /**
  * This class' main() method is the entry point into the Follow application.
- *
+ * 
  * @see #main(String[])
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
@@ -226,8 +226,9 @@ public class FollowApp {
 	}
 
 	// track window close events. WindowTracker handles the close operation
-	frame.addWindowListener(new WindowTracker(attributes, tabbedPane,
-		systemInterface));
+	frame.addWindowListener(new WindowTracker(this));
+	// attributes, tabbedPane,
+	// systemInterface));
 	enableDragAndDrop(frame);
 
 	// Open files from attributes; this is done after the frame is complete
@@ -311,7 +312,7 @@ public class FollowApp {
     /**
      * Get a string from the resource bundle. Convenience method to shorten and
      * centralize this common call
-     *
+     * 
      * @param key
      * @return The value of key in the resource bundle. null if the key is not
      *         found.
@@ -328,7 +329,7 @@ public class FollowApp {
 
     /**
      * Gets an image icon from the resource path.
-     *
+     * 
      * @param clazz
      *            The class to use as an entry point to the resource path. Image
      *            path should be relative to this class.
@@ -355,7 +356,7 @@ public class FollowApp {
 
     /**
      * Loads the actions used in the application
-     *
+     * 
      * @throws IOException
      */
     private void loadActions() throws IOException {
@@ -404,7 +405,7 @@ public class FollowApp {
 
     /**
      * Get all actions associated to the application
-     *
+     * 
      * @return
      */
     public HashMap<String, FollowAppAction> getActions() {
@@ -413,7 +414,7 @@ public class FollowApp {
 
     /**
      * Set an action to the action map of the application.
-     *
+     * 
      * @param name
      *            The key to set the action to.
      * @param action
@@ -508,7 +509,7 @@ public class FollowApp {
     /**
      * Warning: This method should be called only from the event dispatching
      * thread.
-     *
+     * 
      * @param cursorType
      *            may be Cursor.DEFAULT_CURSOR or Cursor.WAIT_CURSOR
      */
@@ -620,7 +621,7 @@ public class FollowApp {
      * Invoke this method to start the Follow application. If any command-line
      * arguments are passed in, they are assume to be filenames and are opened
      * in the Follow application
-     *
+     * 
      * @param args
      *            files to be opened
      */

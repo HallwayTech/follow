@@ -29,24 +29,24 @@ import java.awt.event.ActionEvent;
  * 
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class ClearHighlights extends FollowAppAction
-{
-	public static final String NAME = "clearHighlights";
+public class ClearHighlights extends FollowAppAction {
+    public static final String NAME = "clearHighlights";
 
-	public ClearHighlights(FollowApp app)
-	{
-		super(app, FollowApp.getResourceString("action.ClearHighlights.name"),
-				FollowApp.getResourceString("action.ClearHighlights.mnemonic"),
-				FollowApp.getResourceString("action.ClearHighlights.accelerator"),
-				ActionContext.SINGLE_FILE);
-	}
+    public ClearHighlights(FollowApp app) {
+	super(
+		app,
+		FollowApp.getResourceString("action.ClearHighlights.name"),
+		FollowApp.getResourceString("action.ClearHighlights.mnemonic"),
+		FollowApp
+			.getResourceString("action.ClearHighlights.accelerator"),
+		ActionContext.SINGLE_FILE);
+    }
 
-	public void actionPerformed(ActionEvent e)
-	{
-		// get the current selected tab
-		FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
-		// search the tab with the given text
-		SearchableTextPane textArea = pane.getTextPane();
-		textArea.removeHighlights();
-	}
+    public void actionPerformed(ActionEvent e) {
+	// get the current selected tab
+	FileFollowingPane pane = getApp().getSelectedFileFollowingPane();
+	// search the tab with the given text
+	SearchableTextPane textArea = pane.getTextPane();
+	textArea.removeHighlights();
+    }
 }

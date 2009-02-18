@@ -25,7 +25,7 @@ import java.awt.event.WindowEvent;
 
 /**
  * Action which exits the Follow application.
- *
+ * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class Exit extends FollowAppAction {

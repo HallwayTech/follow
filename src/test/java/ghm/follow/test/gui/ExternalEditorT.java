@@ -26,12 +26,12 @@ import junit.framework.JUnit4TestAdapter;
 
 import static org.junit.Assert.*;
 
-public class ExternalEditorTest
+public class ExternalEditorT
 {
 
 	public static junit.framework.Test suite()
 	{
-		return new JUnit4TestAdapter(ExternalEditorTest.class);
+		return new JUnit4TestAdapter(ExternalEditorT.class);
 	}
 
 	@Test
@@ -122,7 +122,7 @@ public class ExternalEditorTest
 
 	public static void main(String[] args)
 	{
-		String[] testCaseName = { ExternalEditorTest.class.getName() };
+		String[] testCaseName = { ExternalEditorT.class.getName() };
 		junit.textui.TestRunner.main(testCaseName);
 	}
 }

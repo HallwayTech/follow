@@ -43,10 +43,10 @@
 	<mailingLists>
 		<mailingList>
 			<name>Follow Users</name>
-			<subscribe>follow-users@lists.sourceforge.net</subscribe>
-			<unsubscribe>follow-users@lists.sourceforge.net</unsubscribe>
+			<subscribe>https://lists.sourceforge.net/lists/listinfo/follow-users</subscribe>
+			<unsubscribe>https://lists.sourceforge.net/lists/listinfo/follow-users</unsubscribe>
 			<post>follow-users@sourceforge.net</post>
-			<archive></archive>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=follow-users</archive>
 		</mailingList>
 	</mailingLists>
 	<licenses>

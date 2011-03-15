@@ -15,36 +15,36 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class BottomT extends AppLaunchingTestCase {
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-	AppLaunchingTestCase.launch(null);
-    }
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		AppLaunchingTestCase.launch(null);
+	}
 
-    @Override
-    @Before
-    public void setUp() throws Exception {
-	super.setUp();
-    }
+	@Override
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+	}
 
-    @Override
-    @After
-    public void tearDown() throws Exception {
-	super.tearDown();
-    }
+	@Override
+	@After
+	public void tearDown() throws Exception {
+		super.tearDown();
+	}
 
-    @AfterClass
-    public static void afterClass() throws Exception {
-	AppLaunchingTestCase.shutdown();
-    }
+	@AfterClass
+	public static void afterClass() throws Exception {
+		AppLaunchingTestCase.shutdown();
+	}
 
-    @Test
-    public void testEnabled() throws Exception {
-	assertFalse(app.getAction(Bottom.NAME).isEnabled());
-	File file = createTempFile();
-	systemInterface.setFileFromUser(file);
-	invokeAction(app.getAction(Open.NAME));
-	assertTrue(app.getAction(Bottom.NAME).isEnabled());
-	invokeAction(app.getAction(Close.NAME));
-	assertFalse(app.getAction(Bottom.NAME).isEnabled());
-    }
+	@Test
+	public void testEnabled() throws Exception {
+		assertFalse(app.getAction(Bottom.NAME).isEnabled());
+		File file = createTempFile();
+		systemInterface.setFileFromUser(file);
+		invokeAction(app.getAction(Open.NAME));
+		assertTrue(app.getAction(Bottom.NAME).isEnabled());
+		invokeAction(app.getAction(Close.NAME));
+		assertFalse(app.getAction(Bottom.NAME).isEnabled());
+	}
 }

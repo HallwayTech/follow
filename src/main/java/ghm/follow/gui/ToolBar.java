@@ -32,11 +32,11 @@ import javax.swing.JToolBar;
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public class ToolBar extends JToolBar {
-    void addFollowAppAction(FollowAppAction a) {
-	this.add(a);
-	JButton toolBarItem = (JButton) this.getComponent(this
-		.getComponentCount() - 1);
-	toolBarItem.setText(null);
-	toolBarItem.setToolTipText((String) a.getValue(Action.NAME));
-    }
+	void addFollowAppAction(FollowAppAction a) {
+		this.add(a);
+		JButton toolBarItem = (JButton) this.getComponent(this
+				.getComponentCount() - 1);
+		toolBarItem.setText(null);
+		toolBarItem.setToolTipText((String) a.getValue(Action.NAME));
+	}
 }

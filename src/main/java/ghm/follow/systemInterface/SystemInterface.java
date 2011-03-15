@@ -13,21 +13,21 @@ import java.io.File;
  */
 public interface SystemInterface {
 
-    /**
-     * Normally, this method should delegate to a file chooser or other
-     * appropriate file selection mechanism. However, it can be overriden by
-     * tests to return temporary files.
-     * 
-     * @return the File selected by the user
-     */
-    public File getFileFromUser();
+	/**
+	 * Normally, this method should delegate to a file chooser or other
+	 * appropriate file selection mechanism. However, it can be overriden by
+	 * tests to return temporary files.
+	 * 
+	 * @return the File selected by the user
+	 */
+	public File getFileFromUser();
 
-    /**
-     * Used in lieu of System.exit();
-     * 
-     * @param code
-     *            exit status code
-     */
-    public void exit(int code);
+	/**
+	 * Used in lieu of System.exit();
+	 * 
+	 * @param code
+	 *            exit status code
+	 */
+	public void exit(int code);
 
 }

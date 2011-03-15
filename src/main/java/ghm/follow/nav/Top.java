@@ -32,22 +32,22 @@ import javax.swing.JViewport;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class Top extends FollowAppAction {
-    public static final String NAME = "top";
+	public static final String NAME = "top";
 
-    public Top(FollowApp app) {
-	super(app, FollowApp.getResourceString("action.Top.name"), FollowApp
-		.getResourceString("action.Top.mnemonic"), FollowApp
-		.getResourceString("action.Top.accelerator"), FollowApp
-		.getIcon(Top.class, "action.Top.icon"),
-		ActionContext.SINGLE_FILE);
-    }
+	public Top(FollowApp app) {
+		super(app, FollowApp.getResourceString("action.Top.name"), FollowApp
+				.getResourceString("action.Top.mnemonic"), FollowApp
+				.getResourceString("action.Top.accelerator"), FollowApp
+				.getIcon(Top.class, "action.Top.icon"),
+				ActionContext.SINGLE_FILE);
+	}
 
-    public void actionPerformed(ActionEvent e) {
-	FileFollowingPane fileFollowingPane = getApp()
-		.getSelectedFileFollowingPane();
-	fileFollowingPane.getTextPane().setCaretPosition(0);
-	JViewport viewport = fileFollowingPane.getViewport();
-	viewport.setViewPosition(new Point(0, 0));
-	viewport.revalidate();
-    }
+	public void actionPerformed(ActionEvent e) {
+		FileFollowingPane fileFollowingPane = getApp()
+				.getSelectedFileFollowingPane();
+		fileFollowingPane.getTextPane().setCaretPosition(0);
+		JViewport viewport = fileFollowingPane.getViewport();
+		viewport.setViewPosition(new Point(0, 0));
+		viewport.revalidate();
+	}
 }

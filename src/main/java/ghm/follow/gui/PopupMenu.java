@@ -29,10 +29,10 @@ import javax.swing.JMenuItem;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class PopupMenu extends JPopupMenu {
-    void addFollowAppAction(FollowAppAction a) {
-	JMenuItem menuItem = this.add(a);
-	menuItem.setIcon(null);
-	menuItem.setMnemonic(a.getMnemonic());
-	menuItem.setAccelerator(a.getAccelerator());
-    }
+	void addFollowAppAction(FollowAppAction a) {
+		JMenuItem menuItem = this.add(a);
+		menuItem.setIcon(null);
+		menuItem.setMnemonic(a.getMnemonic());
+		menuItem.setAccelerator(a.getAccelerator());
+	}
 }

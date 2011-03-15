@@ -29,19 +29,19 @@ import java.awt.event.WindowEvent;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class Exit extends FollowAppAction {
-    public static final String NAME = "exit";
+	public static final String NAME = "exit";
 
-    public Exit(FollowApp app) {
-	super(app, FollowApp.getResourceString("action.Exit.name"), FollowApp
-		.getResourceString("action.Exit.mnemonic"), FollowApp
-		.getResourceString("action.Exit.accelerator"), FollowApp
-		.getIcon(Exit.class, "action.Exit.icon"), ActionContext.APP);
-    }
+	public Exit(FollowApp app) {
+		super(app, FollowApp.getResourceString("action.Exit.name"), FollowApp
+				.getResourceString("action.Exit.mnemonic"), FollowApp
+				.getResourceString("action.Exit.accelerator"), FollowApp
+				.getIcon(Exit.class, "action.Exit.icon"), ActionContext.APP);
+	}
 
-    public void actionPerformed(ActionEvent e) {
-	getApp().getFrame()
-		.dispatchEvent(
-			new WindowEvent(getApp().getFrame(),
-				WindowEvent.WINDOW_CLOSING));
-    }
+	public void actionPerformed(ActionEvent e) {
+		getApp().getFrame()
+				.dispatchEvent(
+						new WindowEvent(getApp().getFrame(),
+								WindowEvent.WINDOW_CLOSING));
+	}
 }

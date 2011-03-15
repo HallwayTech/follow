@@ -28,16 +28,16 @@ import java.awt.event.ActionEvent;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class Close extends FollowAppAction {
-    public static final String NAME = "close";
+	public static final String NAME = "close";
 
-    public Close(FollowApp app) {
-	super(app, FollowApp.getResourceString("action.Close.name"), FollowApp
-		.getResourceString("action.Close.mnemonic"), FollowApp
-		.getResourceString("action.Close.accelerator"),
-		ActionContext.SINGLE_FILE);
-    }
+	public Close(FollowApp app) {
+		super(app, FollowApp.getResourceString("action.Close.name"), FollowApp
+				.getResourceString("action.Close.mnemonic"), FollowApp
+				.getResourceString("action.Close.accelerator"),
+				ActionContext.SINGLE_FILE);
+	}
 
-    public void actionPerformed(ActionEvent e) {
-	getApp().closeFile();
-    }
+	public void actionPerformed(ActionEvent e) {
+		getApp().closeFile();
+	}
 }

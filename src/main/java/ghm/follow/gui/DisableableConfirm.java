@@ -39,67 +39,67 @@ import javax.swing.JPanel;
  */
 public class DisableableConfirm extends JDialog {
 
-    public DisableableConfirm(Frame parent, String title, String message,
-	    String confirmButtonText, String doNotConfirmButtonText,
-	    String disableText) {
-	super(parent, title, true);
+	public DisableableConfirm(Frame parent, String title, String message,
+			String confirmButtonText, String doNotConfirmButtonText,
+			String disableText) {
+		super(parent, title, true);
 
-	// messagePanel will contain the string contents of the message
-	JPanel messagePanel = new JPanel(new GridBagLayout());
-	GridBagConstraints gbc = new GridBagConstraints();
-	gbc.anchor = GridBagConstraints.WEST;
-	StringTokenizer stknzr = new StringTokenizer(message, "\n\r");
-	gbc.gridy = 0;
-	while (stknzr.hasMoreTokens()) {
-	    messagePanel.add(new JLabel(stknzr.nextToken()), gbc);
-	    gbc.gridy++;
+		// messagePanel will contain the string contents of the message
+		JPanel messagePanel = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.WEST;
+		StringTokenizer stknzr = new StringTokenizer(message, "\n\r");
+		gbc.gridy = 0;
+		while (stknzr.hasMoreTokens()) {
+			messagePanel.add(new JLabel(stknzr.nextToken()), gbc);
+			gbc.gridy++;
+		}
+
+		// controlPanel will contain the confirm/doNotConfirm buttons and the
+		// disable checkbox
+		JPanel controlPanel = new JPanel(new GridBagLayout());
+		gbc = new GridBagConstraints();
+
+		JPanel buttonPanel = new JPanel();
+		JButton confirmButton = new JButton(confirmButtonText);
+		confirmButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				confirmed = true;
+				DisableableConfirm.this.dispose();
+			}
+		});
+		buttonPanel.add(confirmButton);
+		JButton doNotConfirmButton = new JButton(doNotConfirmButtonText);
+		doNotConfirmButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				confirmed = false;
+				DisableableConfirm.this.dispose();
+			}
+		});
+		buttonPanel.add(doNotConfirmButton);
+		controlPanel.add(buttonPanel, gbc);
+
+		disabledCheckBox = new JCheckBox(disableText);
+		gbc.gridy = 1;
+		controlPanel.add(disabledCheckBox, gbc);
+
+		JPanel contentPane = new JPanel(new BorderLayout(0, 10));
+		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		contentPane.add(messagePanel, BorderLayout.CENTER);
+		contentPane.add(controlPanel, BorderLayout.SOUTH);
+		this.setContentPane(contentPane);
+		FollowApp.centerWindowInScreen(this);
 	}
 
-	// controlPanel will contain the confirm/doNotConfirm buttons and the
-	// disable checkbox
-	JPanel controlPanel = new JPanel(new GridBagLayout());
-	gbc = new GridBagConstraints();
+	private JCheckBox disabledCheckBox;
+	private boolean confirmed;
 
-	JPanel buttonPanel = new JPanel();
-	JButton confirmButton = new JButton(confirmButtonText);
-	confirmButton.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		confirmed = true;
-		DisableableConfirm.this.dispose();
-	    }
-	});
-	buttonPanel.add(confirmButton);
-	JButton doNotConfirmButton = new JButton(doNotConfirmButtonText);
-	doNotConfirmButton.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		confirmed = false;
-		DisableableConfirm.this.dispose();
-	    }
-	});
-	buttonPanel.add(doNotConfirmButton);
-	controlPanel.add(buttonPanel, gbc);
+	boolean markedDisabled() {
+		return disabledCheckBox.isSelected();
+	}
 
-	disabledCheckBox = new JCheckBox(disableText);
-	gbc.gridy = 1;
-	controlPanel.add(disabledCheckBox, gbc);
-
-	JPanel contentPane = new JPanel(new BorderLayout(0, 10));
-	contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
-	contentPane.add(messagePanel, BorderLayout.CENTER);
-	contentPane.add(controlPanel, BorderLayout.SOUTH);
-	this.setContentPane(contentPane);
-	FollowApp.centerWindowInScreen(this);
-    }
-
-    private JCheckBox disabledCheckBox;
-    private boolean confirmed;
-
-    boolean markedDisabled() {
-	return disabledCheckBox.isSelected();
-    }
-
-    boolean markedConfirmed() {
-	return confirmed;
-    }
+	boolean markedConfirmed() {
+		return confirmed;
+	}
 
 }

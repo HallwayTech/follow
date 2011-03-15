@@ -12,22 +12,22 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class PrintStreamDestinationT extends BaseTestCase {
-    @Override
-    @Before
-    public void setUp() throws Exception {
-	super.setUp();
-    }
+	@Override
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+	}
 
-    @Test
-    public void testPrintCalled() throws Exception {
-	ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-	PrintStreamDestination dest = new PrintStreamDestination(
-		new PrintStream(byteStream));
-	follower = new FileFollower(followedFile,
-		new OutputDestination[] { dest });
-	follower.start();
-	String control = "control";
-	writeToFollowedFileAndWait(control);
-	assertEquals(control, new String(byteStream.toByteArray()));
-    }
+	@Test
+	public void testPrintCalled() throws Exception {
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		PrintStreamDestination dest = new PrintStreamDestination(
+				new PrintStream(byteStream));
+		follower = new FileFollower(followedFile,
+				new OutputDestination[] { dest });
+		follower.start();
+		String control = "control";
+		writeToFollowedFileAndWait(control);
+		assertEquals(control, new String(byteStream.toByteArray()));
+	}
 }

@@ -26,26 +26,26 @@ import java.awt.event.ActionEvent;
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public class NextTab extends FollowAppAction {
-    public static final String NAME = "nextTab";
+	public static final String NAME = "nextTab";
 
-    public NextTab(FollowApp app) {
-	super(app, FollowApp.getResourceString("action.NextFile.name"),
-		FollowApp.getResourceString("action.NextFile.mnemonic"),
-		FollowApp.getResourceString("action.NextFile.accelerator"),
-		FollowApp.getIcon(NextTab.class, "action.NextFile.icon"),
-		ActionContext.MULTI_FILE);
-    }
-
-    /**
-     * Moves to next tab if not at the last tab.
-     * 
-     * @param e
-     */
-    public void actionPerformed(ActionEvent e) {
-	int currentIndex = getApp().getTabbedPane().getSelectedIndex();
-
-	if (currentIndex < getApp().getTabbedPane().getTabCount() - 1) {
-	    getApp().getTabbedPane().setSelectedIndex(currentIndex + 1);
+	public NextTab(FollowApp app) {
+		super(app, FollowApp.getResourceString("action.NextFile.name"),
+				FollowApp.getResourceString("action.NextFile.mnemonic"),
+				FollowApp.getResourceString("action.NextFile.accelerator"),
+				FollowApp.getIcon(NextTab.class, "action.NextFile.icon"),
+				ActionContext.MULTI_FILE);
 	}
-    }
+
+	/**
+	 * Moves to next tab if not at the last tab.
+	 * 
+	 * @param e
+	 */
+	public void actionPerformed(ActionEvent e) {
+		int currentIndex = getApp().getTabbedPane().getSelectedIndex();
+
+		if (currentIndex < getApp().getTabbedPane().getTabCount() - 1) {
+			getApp().getTabbedPane().setSelectedIndex(currentIndex + 1);
+		}
+	}
 }

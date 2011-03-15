@@ -27,16 +27,16 @@ package ghm.follow.io;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public interface OutputDestination {
-    /**
-     * Print the supplied String.
-     * 
-     * @param s
-     *            String to be printed
-     */
-    public void print(String s);
+	/**
+	 * Print the supplied String.
+	 * 
+	 * @param s
+	 *            String to be printed
+	 */
+	public void print(String s);
 
-    /**
-     * Clear all previous text.
-     */
-    public void clear();
+	/**
+	 * Clear all previous text.
+	 */
+	public void clear();
 }

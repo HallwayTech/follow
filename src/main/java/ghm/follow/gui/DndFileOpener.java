@@ -40,66 +40,66 @@ import java.util.List;
  */
 public class DndFileOpener implements DropTargetListener {
 
-    public DndFileOpener(FollowApp app) {
-	this.app = app;
-    }
-
-    /**
-     * If the DropTargetDropEvent's DataFlavor is javaFileListFlavor, it opens
-     * the List of dropped files in the Follow application. No other DataFlavors
-     * are supported.
-     * 
-     * @param e
-     *            "drop" event
-     * @see java.awt.dnd.DropTargetListener#drop(DropTargetDropEvent)
-     */
-    public void drop(DropTargetDropEvent e) {
-	DataFlavor[] flavors = e.getCurrentDataFlavors();
-	int numFlavors = (flavors != null) ? flavors.length : 0;
-	for (int i = 0; i < numFlavors; i++) {
-	    // Ignore all flavors except javaFileListType
-	    if (flavors[i].isFlavorJavaFileListType()) {
-		e.acceptDrop(DnDConstants.ACTION_COPY);
-		boolean dropCompleted = false;
-		Transferable transferable = e.getTransferable();
-		try {
-		    List<File> fileList = (List<File>) transferable
-			    .getTransferData(flavors[i]);
-		    for (File file : fileList) {
-			app.openFile(file);
-		    }
-		    dropCompleted = true;
-		} catch (UnsupportedFlavorException ufException) {
-		    // do nothing
-		} catch (IOException ioException) {
-		    // do nothing
-		} finally {
-		    e.dropComplete(dropCompleted);
-		}
-	    }
+	public DndFileOpener(FollowApp app) {
+		this.app = app;
 	}
-    }
 
-    /** Does nothing. */
-    public void dragEnter(DropTargetDragEvent e) {
-    }
+	/**
+	 * If the DropTargetDropEvent's DataFlavor is javaFileListFlavor, it opens
+	 * the List of dropped files in the Follow application. No other DataFlavors
+	 * are supported.
+	 * 
+	 * @param e
+	 *            "drop" event
+	 * @see java.awt.dnd.DropTargetListener#drop(DropTargetDropEvent)
+	 */
+	public void drop(DropTargetDropEvent e) {
+		DataFlavor[] flavors = e.getCurrentDataFlavors();
+		int numFlavors = (flavors != null) ? flavors.length : 0;
+		for (int i = 0; i < numFlavors; i++) {
+			// Ignore all flavors except javaFileListType
+			if (flavors[i].isFlavorJavaFileListType()) {
+				e.acceptDrop(DnDConstants.ACTION_COPY);
+				boolean dropCompleted = false;
+				Transferable transferable = e.getTransferable();
+				try {
+					List<File> fileList = (List<File>) transferable
+							.getTransferData(flavors[i]);
+					for (File file : fileList) {
+						app.openFile(file);
+					}
+					dropCompleted = true;
+				} catch (UnsupportedFlavorException ufException) {
+					// do nothing
+				} catch (IOException ioException) {
+					// do nothing
+				} finally {
+					e.dropComplete(dropCompleted);
+				}
+			}
+		}
+	}
 
-    /** Does nothing. */
-    public void dragOver(DropTargetDragEvent e) {
-    }
+	/** Does nothing. */
+	public void dragEnter(DropTargetDragEvent e) {
+	}
 
-    /** Does nothing. */
-    public void dragExit(DropTargetEvent e) {
-    }
+	/** Does nothing. */
+	public void dragOver(DropTargetDragEvent e) {
+	}
 
-    /** Does nothing. */
-    public void dragScroll(DropTargetDragEvent e) {
-    }
+	/** Does nothing. */
+	public void dragExit(DropTargetEvent e) {
+	}
 
-    /** Does nothing. */
-    public void dropActionChanged(DropTargetDragEvent e) {
-    }
+	/** Does nothing. */
+	public void dragScroll(DropTargetDragEvent e) {
+	}
 
-    FollowApp app;
+	/** Does nothing. */
+	public void dropActionChanged(DropTargetDragEvent e) {
+	}
+
+	FollowApp app;
 
 }

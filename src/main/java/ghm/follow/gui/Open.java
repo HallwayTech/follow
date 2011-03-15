@@ -34,49 +34,49 @@ import javax.swing.JOptionPane;
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public class Open extends FollowAppAction {
-    public static final String NAME = "open";
+	public static final String NAME = "open";
 
-    private File recentFile;
+	private File recentFile;
 
-    public Open(FollowApp app) {
-	super(app, FollowApp.getResourceString("action.Open.name"), FollowApp
-		.getResourceString("action.Open.mnemonic"), FollowApp
-		.getResourceString("action.Open.accelerator"), FollowApp
-		.getIcon(Open.class, "action.Open.icon"), ActionContext.APP);
-    }
-
-    public Open(FollowApp app, File recentFile) {
-	super(app, recentFile.getAbsolutePath(), FollowApp
-		.getResourceString("action.Open.mnemonic"), FollowApp
-		.getResourceString("action.Open.accelerator"),
-		ActionContext.APP);
-	this.recentFile = recentFile;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-	File f = null;
-	try {
-	    if (recentFile != null) {
-		f = recentFile;
-		getApp().openFile(recentFile);
-	    } else {
-		f = getApp().getSystemInterface().getFileFromUser();
-		if (f != null) {
-		    getApp().openFile(f);
-		}
-	    }
-	} catch (FileNotFoundException ex) {
-	    String msg = MessageFormat.format(FollowApp
-		    .getResourceString("message.cmdLineFileNotFound.text"),
-		    new Object[] { f });
-	    JOptionPane
-		    .showMessageDialog(
-			    getApp().getFrame(),
-			    msg,
-			    FollowApp
-				    .getResourceString("message.filesDeletedSinceLastExecution.title"),
-			    JOptionPane.WARNING_MESSAGE);
+	public Open(FollowApp app) {
+		super(app, FollowApp.getResourceString("action.Open.name"), FollowApp
+				.getResourceString("action.Open.mnemonic"), FollowApp
+				.getResourceString("action.Open.accelerator"), FollowApp
+				.getIcon(Open.class, "action.Open.icon"), ActionContext.APP);
 	}
 
-    }
+	public Open(FollowApp app, File recentFile) {
+		super(app, recentFile.getAbsolutePath(), FollowApp
+				.getResourceString("action.Open.mnemonic"), FollowApp
+				.getResourceString("action.Open.accelerator"),
+				ActionContext.APP);
+		this.recentFile = recentFile;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		File f = null;
+		try {
+			if (recentFile != null) {
+				f = recentFile;
+				getApp().openFile(recentFile);
+			} else {
+				f = getApp().getSystemInterface().getFileFromUser();
+				if (f != null) {
+					getApp().openFile(f);
+				}
+			}
+		} catch (FileNotFoundException ex) {
+			String msg = MessageFormat.format(FollowApp
+					.getResourceString("message.cmdLineFileNotFound.text"),
+					new Object[] { f });
+			JOptionPane
+					.showMessageDialog(
+							getApp().getFrame(),
+							msg,
+							FollowApp
+									.getResourceString("message.filesDeletedSinceLastExecution.title"),
+							JOptionPane.WARNING_MESSAGE);
+		}
+
+	}
 }

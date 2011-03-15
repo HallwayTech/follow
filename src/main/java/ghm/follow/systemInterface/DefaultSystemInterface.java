@@ -13,25 +13,25 @@ import javax.swing.JFileChooser;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class DefaultSystemInterface implements SystemInterface {
-    protected FollowApp app;
+	protected FollowApp app;
 
-    public DefaultSystemInterface(FollowApp app) {
-	this.app = app;
-    }
-
-    public File getFileFromUser() {
-	app.setCursor(Cursor.WAIT_CURSOR);
-	JFileChooser chooser = new JFileChooser(app.getAttributes()
-		.getLastFileChooserDirectory());
-	app.setCursor(Cursor.DEFAULT_CURSOR);
-	int returnVal = chooser.showOpenDialog(app.getFrame());
-	if (returnVal == JFileChooser.APPROVE_OPTION) {
-	    return chooser.getSelectedFile();
+	public DefaultSystemInterface(FollowApp app) {
+		this.app = app;
 	}
-	return null;
-    }
 
-    public void exit(int code) {
-	System.exit(code);
-    }
+	public File getFileFromUser() {
+		app.setCursor(Cursor.WAIT_CURSOR);
+		JFileChooser chooser = new JFileChooser(app.getAttributes()
+				.getLastFileChooserDirectory());
+		app.setCursor(Cursor.DEFAULT_CURSOR);
+		int returnVal = chooser.showOpenDialog(app.getFrame());
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			return chooser.getSelectedFile();
+		}
+		return null;
+	}
+
+	public void exit(int code) {
+		System.exit(code);
+	}
 }

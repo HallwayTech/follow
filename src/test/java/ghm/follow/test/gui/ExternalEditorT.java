@@ -27,93 +27,93 @@ import org.junit.Test;
 
 public class ExternalEditorT {
 
-    public static junit.framework.Test suite() {
-	return new JUnit4TestAdapter(ExternalEditorT.class);
-    }
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(ExternalEditorT.class);
+	}
 
-    @Test
-    public void testSimple() {
-	String config = "C:\\WINNT\\notepad.exe";
-	String filename = "C:\\tmp\\test.txt";
+	@Test
+	public void testSimple() {
+		String config = "C:\\WINNT\\notepad.exe";
+		String filename = "C:\\tmp\\test.txt";
 
-	ExternalEditor editor = new ExternalEditor(config);
-	String[] cmd = editor.toCmdArray(filename);
+		ExternalEditor editor = new ExternalEditor(config);
+		String[] cmd = editor.toCmdArray(filename);
 
-	assertEquals(2, cmd.length);
-	assertEquals(config, cmd[0]);
-	assertEquals(filename, cmd[1]);
-    }
+		assertEquals(2, cmd.length);
+		assertEquals(config, cmd[0]);
+		assertEquals(filename, cmd[1]);
+	}
 
-    @Test
-    public void testExePlusArgs() {
-	String exe = "C:\\app\\TextPad4\\TextPad.exe";
-	String arg1 = "-somearg";
-	String arg2 = "/OtherArg";
-	String arg3 = "Another";
-	String config = exe + "  " + arg1 + " " + arg2 + "\t" + arg3;
-	String filename = "C:\\tmp\\test.txt";
+	@Test
+	public void testExePlusArgs() {
+		String exe = "C:\\app\\TextPad4\\TextPad.exe";
+		String arg1 = "-somearg";
+		String arg2 = "/OtherArg";
+		String arg3 = "Another";
+		String config = exe + "  " + arg1 + " " + arg2 + "\t" + arg3;
+		String filename = "C:\\tmp\\test.txt";
 
-	ExternalEditor editor = new ExternalEditor(config);
-	String[] cmd = editor.toCmdArray(filename);
+		ExternalEditor editor = new ExternalEditor(config);
+		String[] cmd = editor.toCmdArray(filename);
 
-	assertEquals(5, cmd.length);
-	assertEquals(exe, cmd[0]);
-	assertEquals(arg1, cmd[1]);
-	assertEquals(arg2, cmd[2]);
-	assertEquals(arg3, cmd[3]);
-	assertEquals(filename, cmd[4]);
-    }
+		assertEquals(5, cmd.length);
+		assertEquals(exe, cmd[0]);
+		assertEquals(arg1, cmd[1]);
+		assertEquals(arg2, cmd[2]);
+		assertEquals(arg3, cmd[3]);
+		assertEquals(filename, cmd[4]);
+	}
 
-    @Test
-    public void testExeWithSpaces() {
-	String exe = "C:\\Program Files\\Internet Explorer\\IEXPLORE.EXE";
-	String config = "'" + exe + "'";
-	String filename = "C:\\tmp\\test.txt";
+	@Test
+	public void testExeWithSpaces() {
+		String exe = "C:\\Program Files\\Internet Explorer\\IEXPLORE.EXE";
+		String config = "'" + exe + "'";
+		String filename = "C:\\tmp\\test.txt";
 
-	ExternalEditor editor = new ExternalEditor(config);
-	String[] cmd = editor.toCmdArray(filename);
+		ExternalEditor editor = new ExternalEditor(config);
+		String[] cmd = editor.toCmdArray(filename);
 
-	assertEquals(2, cmd.length);
-	assertEquals(exe, cmd[0]);
-	assertEquals(filename, cmd[1]);
-    }
+		assertEquals(2, cmd.length);
+		assertEquals(exe, cmd[0]);
+		assertEquals(filename, cmd[1]);
+	}
 
-    @Test
-    public void testArgsWithSpaces() {
-	String exe = "/usr/openwin/bin/textedit";
-	String arg1 = "Some Arg";
-	String arg2 = "another";
-	String config = exe + " '" + arg1 + "' " + arg2;
-	String filename = "C:\\tmp\\test.txt";
+	@Test
+	public void testArgsWithSpaces() {
+		String exe = "/usr/openwin/bin/textedit";
+		String arg1 = "Some Arg";
+		String arg2 = "another";
+		String config = exe + " '" + arg1 + "' " + arg2;
+		String filename = "C:\\tmp\\test.txt";
 
-	ExternalEditor editor = new ExternalEditor(config);
-	String[] cmd = editor.toCmdArray(filename);
+		ExternalEditor editor = new ExternalEditor(config);
+		String[] cmd = editor.toCmdArray(filename);
 
-	assertEquals(4, cmd.length);
-	assertEquals(exe, cmd[0]);
-	assertEquals(arg1, cmd[1]);
-	assertEquals(arg2, cmd[2]);
-	assertEquals(filename, cmd[3]);
-    }
+		assertEquals(4, cmd.length);
+		assertEquals(exe, cmd[0]);
+		assertEquals(arg1, cmd[1]);
+		assertEquals(arg2, cmd[2]);
+		assertEquals(filename, cmd[3]);
+	}
 
-    @Test
-    public void testExeAndArgsWithSpaces() {
-	String exe = "C:\\Program Files\\something.exe";
-	String arg = "Some Arg";
-	String config = "'" + exe + "' '" + arg + "' ";
-	String filename = "C:\\tmp\\test.txt";
+	@Test
+	public void testExeAndArgsWithSpaces() {
+		String exe = "C:\\Program Files\\something.exe";
+		String arg = "Some Arg";
+		String config = "'" + exe + "' '" + arg + "' ";
+		String filename = "C:\\tmp\\test.txt";
 
-	ExternalEditor editor = new ExternalEditor(config);
-	String[] cmd = editor.toCmdArray(filename);
+		ExternalEditor editor = new ExternalEditor(config);
+		String[] cmd = editor.toCmdArray(filename);
 
-	assertEquals(3, cmd.length);
-	assertEquals(exe, cmd[0]);
-	assertEquals(arg, cmd[1]);
-	assertEquals(filename, cmd[2]);
-    }
+		assertEquals(3, cmd.length);
+		assertEquals(exe, cmd[0]);
+		assertEquals(arg, cmd[1]);
+		assertEquals(filename, cmd[2]);
+	}
 
-    public static void main(String[] args) {
-	String[] testCaseName = { ExternalEditorT.class.getName() };
-	junit.textui.TestRunner.main(testCaseName);
-    }
+	public static void main(String[] args) {
+		String[] testCaseName = { ExternalEditorT.class.getName() };
+		junit.textui.TestRunner.main(testCaseName);
+	}
 }

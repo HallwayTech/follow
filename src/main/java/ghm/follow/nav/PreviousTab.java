@@ -26,28 +26,28 @@ import java.awt.event.ActionEvent;
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public class PreviousTab extends FollowAppAction {
-    public static final String NAME = "previousTab";
+	public static final String NAME = "previousTab";
 
-    public PreviousTab(FollowApp app) {
-	super(
-		app,
-		FollowApp.getResourceString("action.PreviousFile.name"),
-		FollowApp.getResourceString("action.PreviousFile.mnemonic"),
-		FollowApp.getResourceString("action.PreviousFile.accelerator"),
-		FollowApp
-			.getIcon(PreviousTab.class, "action.PreviousFile.icon"),
-		ActionContext.MULTI_FILE);
-    }
-
-    /**
-     * Moves to next tab if not at the last tab.
-     * 
-     * @param e
-     */
-    public void actionPerformed(ActionEvent e) {
-	int currentIndex = getApp().getTabbedPane().getSelectedIndex();
-	if (currentIndex > 0) {
-	    getApp().getTabbedPane().setSelectedIndex(currentIndex - 1);
+	public PreviousTab(FollowApp app) {
+		super(
+				app,
+				FollowApp.getResourceString("action.PreviousFile.name"),
+				FollowApp.getResourceString("action.PreviousFile.mnemonic"),
+				FollowApp.getResourceString("action.PreviousFile.accelerator"),
+				FollowApp
+						.getIcon(PreviousTab.class, "action.PreviousFile.icon"),
+				ActionContext.MULTI_FILE);
 	}
-    }
+
+	/**
+	 * Moves to next tab if not at the last tab.
+	 * 
+	 * @param e
+	 */
+	public void actionPerformed(ActionEvent e) {
+		int currentIndex = getApp().getTabbedPane().getSelectedIndex();
+		if (currentIndex > 0) {
+			getApp().getTabbedPane().setSelectedIndex(currentIndex - 1);
+		}
+	}
 }

@@ -34,59 +34,59 @@ import javax.swing.JTabbedPane;
  */
 public class TabbedPane extends JTabbedPane {
 
-    private FollowAppAttributes attributes = null;
+	private FollowAppAttributes attributes = null;
 
-    public TabbedPane(FollowAppAttributes attributes) {
-	super(attributes.getTabPlacement());
-	this.attributes = attributes;
-    }
-
-    /** sqrrrl's fix */
-    public Component findComponentAt(int x, int y) {
-	if (!contains(x, y)) {
-	    return null;
+	public TabbedPane(FollowAppAttributes attributes) {
+		super(attributes.getTabPlacement());
+		this.attributes = attributes;
 	}
-	int ncomponents = getComponentCount();
-	for (int i = 0; i < ncomponents; i++) {
-	    Component comp = getComponentAt(i);
-	    if (comp != null) {
-		if (comp instanceof Container) {
-		    if (comp.isVisible()) {
-			comp = ((Container) comp).findComponentAt(x
-				- comp.getX(), y - comp.getY());
-		    }
-		} else {
-		    comp = comp
-			    .getComponentAt(x - comp.getX(), y - comp.getY());
+
+	/** sqrrrl's fix */
+	public Component findComponentAt(int x, int y) {
+		if (!contains(x, y)) {
+			return null;
 		}
-		if (comp != null && comp.isVisible()) {
-		    return comp;
+		int ncomponents = getComponentCount();
+		for (int i = 0; i < ncomponents; i++) {
+			Component comp = getComponentAt(i);
+			if (comp != null) {
+				if (comp instanceof Container) {
+					if (comp.isVisible()) {
+						comp = ((Container) comp).findComponentAt(
+								x - comp.getX(), y - comp.getY());
+					}
+				} else {
+					comp = comp
+							.getComponentAt(x - comp.getX(), y - comp.getY());
+				}
+				if (comp != null && comp.isVisible()) {
+					return comp;
+				}
+			}
 		}
-	    }
+		return this;
 	}
-	return this;
-    }
 
-    public void setSelectedIndex(int index) {
-	super.setSelectedIndex(index);
-	handleSelectedFile();
-    }
-
-    public void setSelectedComponent(FileFollowingPane pane) {
-	super.setSelectedComponent(pane);
-	handleSelectedFile();
-    }
-
-    public void removeTabAt(int index) {
-	super.removeTabAt(index);
-	handleSelectedFile();
-    }
-
-    private void handleSelectedFile() {
-	FileFollowingPane pane = (FileFollowingPane) getSelectedComponent();
-	if (pane != null) {
-	    File parent = pane.getFollowedFile().getParentFile();
-	    attributes.setLastFileChooserDirectory(parent);
+	public void setSelectedIndex(int index) {
+		super.setSelectedIndex(index);
+		handleSelectedFile();
 	}
-    }
+
+	public void setSelectedComponent(FileFollowingPane pane) {
+		super.setSelectedComponent(pane);
+		handleSelectedFile();
+	}
+
+	public void removeTabAt(int index) {
+		super.removeTabAt(index);
+		handleSelectedFile();
+	}
+
+	private void handleSelectedFile() {
+		FileFollowingPane pane = (FileFollowingPane) getSelectedComponent();
+		if (pane != null) {
+			File parent = pane.getFollowedFile().getParentFile();
+			attributes.setLastFileChooserDirectory(parent);
+		}
+	}
 }

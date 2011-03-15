@@ -10,37 +10,37 @@ import java.io.IOException;
 import java.io.Writer;
 
 public abstract class BaseTestCase {
-    protected FileFollower follower;
-    protected File followedFile;
-    protected Writer followedFileWriter;
+	protected FileFollower follower;
+	protected File followedFile;
+	protected Writer followedFileWriter;
 
-    public void setUp() throws Exception {
-	followedFile = createTempFile();
-	followedFile.deleteOnExit();
-	followedFileWriter = new BufferedWriter(new FileWriter(followedFile));
-	follower = new FileFollower(followedFile, new OutputDestination[0]);
-    }
+	public void setUp() throws Exception {
+		followedFile = createTempFile();
+		followedFile.deleteOnExit();
+		followedFileWriter = new BufferedWriter(new FileWriter(followedFile));
+		follower = new FileFollower(followedFile, new OutputDestination[0]);
+	}
 
-    public void tearDown() throws Exception {
-	follower.stopAndWait();
-	followedFileWriter.flush();
-	followedFileWriter.close();
-    }
+	public void tearDown() throws Exception {
+		follower.stopAndWait();
+		followedFileWriter.flush();
+		followedFileWriter.close();
+	}
 
-    protected void writeToFollowedFileAndWait(String string) throws Exception {
-	followedFileWriter.write(string);
-	followedFileWriter.flush();
-	Thread.sleep(follower.getLatency() + 100);
-    }
+	protected void writeToFollowedFileAndWait(String string) throws Exception {
+		followedFileWriter.write(string);
+		followedFileWriter.flush();
+		Thread.sleep(follower.getLatency() + 100);
+	}
 
-    protected void clearFollowedFile() throws Exception {
-	followedFileWriter.close();
-	new FileWriter(followedFile, false).write("");
-    }
+	protected void clearFollowedFile() throws Exception {
+		followedFileWriter.close();
+		new FileWriter(followedFile, false).write("");
+	}
 
-    protected File createTempFile() throws IOException {
-	File file = File.createTempFile("followedFile", null);
-	file.deleteOnExit();
-	return file;
-    }
+	protected File createTempFile() throws IOException {
+		File file = File.createTempFile("followedFile", null);
+		file.deleteOnExit();
+		return file;
+	}
 }

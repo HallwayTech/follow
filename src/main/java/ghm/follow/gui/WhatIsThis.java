@@ -31,16 +31,16 @@ import javax.swing.JOptionPane;
  */
 public class WhatIsThis extends JButton {
 
-    public WhatIsThis(final FollowApp app, final String title, final String text) {
-	super(FollowApp.getIcon(WhatIsThis.class, "WhatIsThis.icon"));
-	setBorderPainted(false);
-	setToolTipText(title);
-	setMargin(new Insets(0, 0, 0, 0));
-	addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(app.getFrame(), text, title,
-			JOptionPane.INFORMATION_MESSAGE);
-	    }
-	});
-    }
+	public WhatIsThis(final FollowApp app, final String title, final String text) {
+		super(FollowApp.getIcon(WhatIsThis.class, "WhatIsThis.icon"));
+		setBorderPainted(false);
+		setToolTipText(title);
+		setMargin(new Insets(0, 0, 0, 0));
+		addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(app.getFrame(), text, title,
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+	}
 }

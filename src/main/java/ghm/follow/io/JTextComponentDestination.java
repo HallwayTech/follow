@@ -34,88 +34,88 @@ import javax.swing.text.JTextComponent;
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public class JTextComponentDestination extends FilterableOutputDestination {
-    private static final Logger LOG = Logger
-	    .getLogger(JTextComponentDestination.class.getName());
-    protected JTextComponent comp;
-    protected boolean autoPositionCaret;
+	private static final Logger LOG = Logger
+			.getLogger(JTextComponentDestination.class.getName());
+	protected JTextComponent comp;
+	protected boolean autoPositionCaret;
 
-    /**
-     * Construct a new JTextCompnentDestination.
-     * 
-     * @param jTextPane
-     *            text will be appended to this text area
-     * @param autoPositionCaret
-     *            if true, caret will be automatically moved to the bottom of
-     *            the text area when text is appended
-     */
-    public JTextComponentDestination(JTextComponent comp,
-	    boolean autoPositionCaret) {
-	this.comp = comp;
-	this.autoPositionCaret = autoPositionCaret;
-    }
-
-    public JTextComponent getJTextComponent() {
-	return comp;
-    }
-
-    public void setJTextComponent(JTextComponent comp) {
-	this.comp = comp;
-    }
-
-    /**
-     * Add a filtered view to this destination. Filtered views show only a
-     * subset of the total output based on filter conditions.
-     * 
-     * @since 1.8.0
-     */
-    public void addFilteredView() {
-
-    }
-
-    /**
-     * Remove a filtered view
-     * 
-     * @since 1.8.0
-     */
-    public void removeFilteredView() {
-
-    }
-
-    /**
-     * @return whether caret will be automatically moved to the bottom of the
-     *         text area when text is appended
-     */
-    public boolean autoPositionCaret() {
-	return autoPositionCaret;
-    }
-
-    /**
-     * @param autoPositionCaret
-     *            if true, caret will be automatically moved to the bottom of
-     *            the text area when text is appended
-     */
-    public void setAutoPositionCaret(boolean autoPositionCaret) {
-	this.autoPositionCaret = autoPositionCaret;
-    }
-
-    public void handlePrint(String s) {
-	try {
-	    comp.getDocument().insertString(comp.getDocument().getLength(), s,
-		    null);
-	    if (autoPositionCaret) {
-		comp.setCaretPosition(comp.getDocument().getLength());
-	    }
-	} catch (BadLocationException e) {
-	    // just ignore, nothing we can do
-	    LOG.log(Level.SEVERE,
-		    "BadLocationException in JTextComponentDestination", e);
+	/**
+	 * Construct a new JTextCompnentDestination.
+	 * 
+	 * @param jTextPane
+	 *            text will be appended to this text area
+	 * @param autoPositionCaret
+	 *            if true, caret will be automatically moved to the bottom of
+	 *            the text area when text is appended
+	 */
+	public JTextComponentDestination(JTextComponent comp,
+			boolean autoPositionCaret) {
+		this.comp = comp;
+		this.autoPositionCaret = autoPositionCaret;
 	}
-    }
 
-    public void clear() {
-	comp.setText("");
-	if (autoPositionCaret) {
-	    comp.setCaretPosition(0);
+	public JTextComponent getJTextComponent() {
+		return comp;
 	}
-    }
+
+	public void setJTextComponent(JTextComponent comp) {
+		this.comp = comp;
+	}
+
+	/**
+	 * Add a filtered view to this destination. Filtered views show only a
+	 * subset of the total output based on filter conditions.
+	 * 
+	 * @since 1.8.0
+	 */
+	public void addFilteredView() {
+
+	}
+
+	/**
+	 * Remove a filtered view
+	 * 
+	 * @since 1.8.0
+	 */
+	public void removeFilteredView() {
+
+	}
+
+	/**
+	 * @return whether caret will be automatically moved to the bottom of the
+	 *         text area when text is appended
+	 */
+	public boolean autoPositionCaret() {
+		return autoPositionCaret;
+	}
+
+	/**
+	 * @param autoPositionCaret
+	 *            if true, caret will be automatically moved to the bottom of
+	 *            the text area when text is appended
+	 */
+	public void setAutoPositionCaret(boolean autoPositionCaret) {
+		this.autoPositionCaret = autoPositionCaret;
+	}
+
+	public void handlePrint(String s) {
+		try {
+			comp.getDocument().insertString(comp.getDocument().getLength(), s,
+					null);
+			if (autoPositionCaret) {
+				comp.setCaretPosition(comp.getDocument().getLength());
+			}
+		} catch (BadLocationException e) {
+			// just ignore, nothing we can do
+			LOG.log(Level.SEVERE,
+					"BadLocationException in JTextComponentDestination", e);
+		}
+	}
+
+	public void clear() {
+		comp.setText("");
+		if (autoPositionCaret) {
+			comp.setCaretPosition(0);
+		}
+	}
 }

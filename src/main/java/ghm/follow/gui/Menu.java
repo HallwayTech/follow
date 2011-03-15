@@ -31,22 +31,22 @@ import javax.swing.JMenuItem;
  */
 public class Menu extends JMenu {
 
-    public Menu(String name, String mnemonic) {
-	super(name);
-	setMnemonic(mnemonic.charAt(0));
-    }
+	public Menu(String name, String mnemonic) {
+		super(name);
+		setMnemonic(mnemonic.charAt(0));
+	}
 
-    public Menu(String name, String mnemonic, Icon icon) {
-	super(name);
-	setMnemonic(mnemonic.charAt(0));
-	setIcon(icon);
-    }
+	public Menu(String name, String mnemonic, Icon icon) {
+		super(name);
+		setMnemonic(mnemonic.charAt(0));
+		setIcon(icon);
+	}
 
-    public void addFollowAppAction(FollowAppAction a) {
-	this.add(a);
-	JMenuItem menuItem = this.getItem(this.getItemCount() - 1);
-	menuItem.setMnemonic(a.getMnemonic());
-	menuItem.setAccelerator(a.getAccelerator());
-    }
+	public void addFollowAppAction(FollowAppAction a) {
+		this.add(a);
+		JMenuItem menuItem = this.getItem(this.getItemCount() - 1);
+		menuItem.setMnemonic(a.getMnemonic());
+		menuItem.setAccelerator(a.getAccelerator());
+	}
 
 }

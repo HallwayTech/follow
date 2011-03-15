@@ -29,19 +29,19 @@ import javax.swing.JOptionPane;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class About extends FollowAppAction {
-    public static final String NAME = "about";
+	public static final String NAME = "about";
 
-    public About(FollowApp app) {
-	super(app, FollowApp.getResourceString("action.About.name"), FollowApp
-		.getResourceString("action.About.mnemonic"), FollowApp
-		.getResourceString("action.About.accelerator"), FollowApp
-		.getIcon(About.class, "action.About.icon"), ActionContext.APP);
-    }
+	public About(FollowApp app) {
+		super(app, FollowApp.getResourceString("action.About.name"), FollowApp
+				.getResourceString("action.About.mnemonic"), FollowApp
+				.getResourceString("action.About.accelerator"), FollowApp
+				.getIcon(About.class, "action.About.icon"), ActionContext.APP);
+	}
 
-    public void actionPerformed(ActionEvent e) {
-	JOptionPane.showMessageDialog(getApp().getFrame(), FollowApp
-		.getResourceString("dialog.About.text"), FollowApp
-		.getResourceString("dialog.About.title"),
-		JOptionPane.INFORMATION_MESSAGE);
-    }
+	public void actionPerformed(ActionEvent e) {
+		JOptionPane.showMessageDialog(getApp().getFrame(),
+				FollowApp.getResourceString("dialog.About.text"),
+				FollowApp.getResourceString("dialog.About.title"),
+				JOptionPane.INFORMATION_MESSAGE);
+	}
 }

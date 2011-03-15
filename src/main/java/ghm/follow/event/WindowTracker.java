@@ -39,62 +39,62 @@ import javax.swing.JTabbedPane;
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
 public class WindowTracker extends WindowAdapter {
-    private final Logger log = Logger.getLogger(WindowTracker.class.getName());
-    protected FollowApp app;
+	private final Logger log = Logger.getLogger(WindowTracker.class.getName());
+	protected FollowApp app;
 
-    // protected FollowAppAttributes attributes;
-    // protected JTabbedPane tabbedPane;
-    // protected SystemInterface systemInterface;
+	// protected FollowAppAttributes attributes;
+	// protected JTabbedPane tabbedPane;
+	// protected SystemInterface systemInterface;
 
-    /**
-     * Construct a new WindowTracker which will write window position/size to
-     * the supplied FollowAppAttributes object. The supplied keys will be used
-     * when writing position/size values to the FollowAppAttributes object.
-     * 
-     * @param attributes
-     *            attributes object to which window size & position should be
-     *            written
-     */
-    public WindowTracker(FollowApp app) {
-	this.app = app;
-    }
-
-    // public WindowTracker(FollowAppAttributes attributes,
-    // JTabbedPane tabbedPane, SystemInterface systemInterface) {
-    // this.attributes = attributes;
-    // this.tabbedPane = tabbedPane;
-    // this.systemInterface = systemInterface;
-    // }
-
-    /**
-     * Each time this method is invoked, the position/size of the window which
-     * is closing will be written to the FollowAppAttributes object.
-     */
-    @Override
-    public void windowClosing(WindowEvent e) {
-	Window window = (Window) e.getSource();
-	FollowAppAttributes attributes = app.getAttributes();
-	attributes.setWidth(window.getWidth());
-	attributes.setHeight(window.getHeight());
-	attributes.setX(window.getX());
-	attributes.setY(window.getY());
-
-	JTabbedPane tabbedPane = app.getTabbedPane();
-	if (tabbedPane.getTabCount() > 0) {
-	    attributes.setSelectedTabIndex(tabbedPane.getSelectedIndex());
+	/**
+	 * Construct a new WindowTracker which will write window position/size to
+	 * the supplied FollowAppAttributes object. The supplied keys will be used
+	 * when writing position/size values to the FollowAppAttributes object.
+	 * 
+	 * @param attributes
+	 *            attributes object to which window size & position should be
+	 *            written
+	 */
+	public WindowTracker(FollowApp app) {
+		this.app = app;
 	}
-	((Window) e.getSource()).dispose();
-    }
 
-    @Override
-    public void windowClosed(WindowEvent e) {
-	try {
-	    app.getAttributes().store();
-	} catch (IOException ioe) {
-	    log.log(Level.SEVERE,
-		    "Error encountered while storing properties...", ioe);
-	} finally {
-	    app.getSystemInterface().exit(0);
+	// public WindowTracker(FollowAppAttributes attributes,
+	// JTabbedPane tabbedPane, SystemInterface systemInterface) {
+	// this.attributes = attributes;
+	// this.tabbedPane = tabbedPane;
+	// this.systemInterface = systemInterface;
+	// }
+
+	/**
+	 * Each time this method is invoked, the position/size of the window which
+	 * is closing will be written to the FollowAppAttributes object.
+	 */
+	@Override
+	public void windowClosing(WindowEvent e) {
+		Window window = (Window) e.getSource();
+		FollowAppAttributes attributes = app.getAttributes();
+		attributes.setWidth(window.getWidth());
+		attributes.setHeight(window.getHeight());
+		attributes.setX(window.getX());
+		attributes.setY(window.getY());
+
+		JTabbedPane tabbedPane = app.getTabbedPane();
+		if (tabbedPane.getTabCount() > 0) {
+			attributes.setSelectedTabIndex(tabbedPane.getSelectedIndex());
+		}
+		((Window) e.getSource()).dispose();
 	}
-    }
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		try {
+			app.getAttributes().store();
+		} catch (IOException ioe) {
+			log.log(Level.SEVERE,
+					"Error encountered while storing properties...", ioe);
+		} finally {
+			app.getSystemInterface().exit(0);
+		}
+	}
 }

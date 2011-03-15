@@ -33,26 +33,26 @@ import javax.swing.JViewport;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class Bottom extends FollowAppAction {
-    public static final String NAME = "bottom";
+	public static final String NAME = "bottom";
 
-    public Bottom(FollowApp app) {
-	super(app, FollowApp.getResourceString("action.Bottom.name"), FollowApp
-		.getResourceString("action.Bottom.mnemonic"), FollowApp
-		.getResourceString("action.Bottom.accelerator"), FollowApp
-		.getIcon(Bottom.class, "action.Bottom.icon"),
-		ActionContext.SINGLE_FILE);
-    }
+	public Bottom(FollowApp app) {
+		super(app, FollowApp.getResourceString("action.Bottom.name"), FollowApp
+				.getResourceString("action.Bottom.mnemonic"), FollowApp
+				.getResourceString("action.Bottom.accelerator"), FollowApp
+				.getIcon(Bottom.class, "action.Bottom.icon"),
+				ActionContext.SINGLE_FILE);
+	}
 
-    public void actionPerformed(ActionEvent e) {
-	FileFollowingPane fileFollowingPane = getApp()
-		.getSelectedFileFollowingPane();
-	SearchableTextPane textArea = fileFollowingPane.getTextPane();
-	textArea.setCaretPosition(textArea.getDocument().getLength());
-	JViewport viewport = fileFollowingPane.getViewport();
-	int y = (int) (viewport.getViewSize().getHeight() - viewport
-		.getExtentSize().getHeight());
-	Point bottomPosition = new Point(0, y);
-	viewport.setViewPosition(bottomPosition);
-	viewport.revalidate();
-    }
+	public void actionPerformed(ActionEvent e) {
+		FileFollowingPane fileFollowingPane = getApp()
+				.getSelectedFileFollowingPane();
+		SearchableTextPane textArea = fileFollowingPane.getTextPane();
+		textArea.setCaretPosition(textArea.getDocument().getLength());
+		JViewport viewport = fileFollowingPane.getViewport();
+		int y = (int) (viewport.getViewSize().getHeight() - viewport
+				.getExtentSize().getHeight());
+		Point bottomPosition = new Point(0, y);
+		viewport.setViewPosition(bottomPosition);
+		viewport.revalidate();
+	}
 }

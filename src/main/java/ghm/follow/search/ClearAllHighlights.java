@@ -29,26 +29,27 @@ import java.awt.event.ActionEvent;
  * 
  * @author <a href="mailto:carl.hall@gmail.com">Carl Hall</a>
  */
-public class ClearAllHighlights extends FollowAppAction
-{
-	public static final String NAME = "clearAllHighlights";
+public class ClearAllHighlights extends FollowAppAction {
+    public static final String NAME = "clearAllHighlights";
 
-	public ClearAllHighlights(FollowApp app)
-	{
-		super(app, FollowApp.getResourceString("action.ClearAllHighlights.name"),
-				FollowApp.getResourceString("action.ClearAllHighlights.mnemonic"),
-				FollowApp.getResourceString("action.ClearAllHighlights.accelerator"),
-				ActionContext.MULTI_FILE);
-	}
+    public ClearAllHighlights(FollowApp app) {
+	super(
+		app,
+		FollowApp.getResourceString("action.ClearAllHighlights.name"),
+		FollowApp
+			.getResourceString("action.ClearAllHighlights.mnemonic"),
+		FollowApp
+			.getResourceString("action.ClearAllHighlights.accelerator"),
+		ActionContext.MULTI_FILE);
+    }
 
-	public void actionPerformed(ActionEvent e)
-	{
-		for (FileFollowingPane pane : getApp().getFileToFollowingPaneMap().values())
-		{
-			// get the current selected tab
-			// search the tab with the given text
-			SearchableTextPane textArea = pane.getTextPane();
-			textArea.removeHighlights();
-		}
+    public void actionPerformed(ActionEvent e) {
+	for (FileFollowingPane pane : getApp().getFileToFollowingPaneMap()
+		.values()) {
+	    // get the current selected tab
+	    // search the tab with the given text
+	    SearchableTextPane textArea = pane.getTextPane();
+	    textArea.removeHighlights();
 	}
+    }
 }

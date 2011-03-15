@@ -6,7 +6,7 @@
 	<artifactId>follow</artifactId>
 	<name>Follow</name>
 	<packaging>jar</packaging>
-	<version>1.7.4</version>
+	<version>1.7.5-SNAPSHOT</version>
 	<url>http://follow.sf.net</url>
 	<description>Follow is a Java application which allows a user to monitor ("follow") several log files concurrently. The name and behavior of this application are inspired by the "f" (follow) flag of the UNIX command "tail".</description>
 	<issueManagement>
@@ -43,10 +43,10 @@
 	<mailingLists>
 		<mailingList>
 			<name>Follow Users</name>
-			<subscribe>follow-users@lists.sourceforge.net</subscribe>
-			<unsubscribe>follow-users@lists.sourceforge.net</unsubscribe>
+			<subscribe>https://lists.sourceforge.net/lists/listinfo/follow-users</subscribe>
+			<unsubscribe>https://lists.sourceforge.net/lists/listinfo/follow-users</unsubscribe>
 			<post>follow-users@sourceforge.net</post>
-			<archive></archive>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=follow-users</archive>
 		</mailingList>
 	</mailingLists>
 	<licenses>
@@ -77,9 +77,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<excludes>
-						<exclude>**/TestSystemInterface.java</exclude>
-					</excludes>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 				</configuration>
 			</plugin>
 			<!-- create web version of test reports -->
@@ -94,6 +92,20 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
+			</plugin>
+			<!-- generate report regarding the code style used by the developers -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<!--
+					below is the default configuration but is listed here for clarity
+					of options being used.
+				-->
+				<!--
+				<configuration>
+					<configLocation>config/sun_checks.xml</configLocation>
+				</configuration>
+				-->
 			</plugin>
 		</plugins>
 	</reporting>
@@ -129,6 +141,9 @@
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
+					<showDeprecation>true</showDeprecation>
+					<compilerArgument>-Xlint:unchecked,deprecation,fallthrough,finally</compilerArgument>
+					<fork>true</fork>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -30,25 +30,25 @@ import java.io.PrintStream;
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
 public class PrintStreamDestination implements OutputDestination {
-	protected PrintStream printStream;
+    protected PrintStream printStream;
 
-	public PrintStreamDestination(PrintStream printStream) {
-		this.printStream = printStream;
-	}
+    public PrintStreamDestination(PrintStream printStream) {
+	this.printStream = printStream;
+    }
 
-	public PrintStream getPrintStream() {
-		return printStream;
-	}
+    public PrintStream getPrintStream() {
+	return printStream;
+    }
 
-	public void setPrintStream(PrintStream printStream) {
-		this.printStream = printStream;
-	}
+    public void setPrintStream(PrintStream printStream) {
+	this.printStream = printStream;
+    }
 
-	public void print(String s) {
-		printStream.print(s);
-	}
+    public void print(String s) {
+	printStream.print(s);
+    }
 
-	public void clear() {
-		// No real 'clear' can be done for a stream.
-	}
+    public void clear() {
+	// No real 'clear' can be done for a stream.
+    }
 }

@@ -4,6 +4,7 @@ import ghm.follow.FollowApp;
 
 import java.awt.Cursor;
 import java.io.File;
+
 import javax.swing.JFileChooser;
 
 /**
@@ -11,31 +12,26 @@ import javax.swing.JFileChooser;
  * 
  * @author <a href="mailto:greghmerrill@yahoo.com">Greg Merrill</a>
  */
-public class DefaultSystemInterface implements SystemInterface
-{
+public class DefaultSystemInterface implements SystemInterface {
+    protected FollowApp app;
 
-	public DefaultSystemInterface(FollowApp app)
-	{
-		this.app = app;
+    public DefaultSystemInterface(FollowApp app) {
+	this.app = app;
+    }
+
+    public File getFileFromUser() {
+	app.setCursor(Cursor.WAIT_CURSOR);
+	JFileChooser chooser = new JFileChooser(app.getAttributes()
+		.getLastFileChooserDirectory());
+	app.setCursor(Cursor.DEFAULT_CURSOR);
+	int returnVal = chooser.showOpenDialog(app.getFrame());
+	if (returnVal == JFileChooser.APPROVE_OPTION) {
+	    return chooser.getSelectedFile();
 	}
+	return null;
+    }
 
-	public File getFileFromUser()
-	{
-		app.setCursor(Cursor.WAIT_CURSOR);
-		JFileChooser chooser = new JFileChooser(app.getAttributes().getLastFileChooserDirectory());
-		app.setCursor(Cursor.DEFAULT_CURSOR);
-		int returnVal = chooser.showOpenDialog(app.getFrame());
-		if (returnVal == JFileChooser.APPROVE_OPTION)
-		{
-			return chooser.getSelectedFile();
-		}
-		return null;
-	}
-
-	public void exit(int code)
-	{
-		System.exit(code);
-	}
-
-	protected FollowApp app;
+    public void exit(int code) {
+	System.exit(code);
+    }
 }

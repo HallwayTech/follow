@@ -102,8 +102,7 @@ public class FileFollower {
 		} else {
 			continueRunning = true;
 			paused = false;
-			runner = new Runner();
-			runnerThread = new Thread(runner, getFollowedFile().getName());
+			runnerThread = new Thread(new Runner(), getFollowedFile().getName());
 			runnerThread.start();
 		}
 	}
@@ -114,7 +113,9 @@ public class FileFollower {
 
 	public synchronized void unpause() {
 		paused = false;
-		runner.notifyAll();
+		synchronized (runnerThread) {
+			runnerThread.notifyAll();
+		}
 	}
 
 	public synchronized void restart() {
@@ -293,8 +294,6 @@ public class FileFollower {
 
 	protected Thread runnerThread;
 
-	protected Runner runner;
-
 	protected boolean paused;
 
 	/**
@@ -346,9 +345,11 @@ public class FileFollower {
 				bis.skip(startingPoint);
 
 				while (continueRunning && !needsRestart) {
-					if (paused) {
+					while (paused) {
 						try {
-							wait();
+							synchronized (runnerThread) {
+								runnerThread.wait();
+							}
 						} catch (InterruptedException e) {
 							// back to work
 						}

@@ -1,1 +1,1 @@
-java -jar /home/chall/src/follow/target/follow-1.7.4-SNAPSHOT.jar &
+java -jar `dirname $0`/target/follow-1.7.5-SNAPSHOT.jar &

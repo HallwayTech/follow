@@ -5,7 +5,7 @@ Follow is a simple Java application which allows a user to
 monitor several log files concurrently.  The name and behavior 
 of this application are inspired by the "f" (follow) flag of
 the UNIX command "tail".  For more information about Follow,
-please visit http://follow.sf.net
+please visit http://hallwaytech.github.com/follow/
 
 Copyright (C) 2000-2011
  Greg Merrill (greghmerrill@yahoo.com),

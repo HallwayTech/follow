@@ -34,6 +34,7 @@ import ghm.follow.gui.Edit;
 import ghm.follow.gui.Exit;
 import ghm.follow.gui.FileFollowingPane;
 import ghm.follow.gui.FollowAppAction;
+import ghm.follow.gui.FollowAppAction.ActionContext;
 import ghm.follow.gui.Menu;
 import ghm.follow.gui.Open;
 import ghm.follow.gui.Pause;
@@ -42,7 +43,6 @@ import ghm.follow.gui.Reset;
 import ghm.follow.gui.StartupStatus;
 import ghm.follow.gui.TabbedPane;
 import ghm.follow.gui.ToolBar;
-import ghm.follow.gui.FollowAppAction.ActionContext;
 import ghm.follow.nav.Bottom;
 import ghm.follow.nav.NextTab;
 import ghm.follow.nav.PreviousTab;
@@ -61,6 +61,8 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.awt.dnd.DropTarget;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -84,10 +86,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.TabbedPaneUI;
 
 /**
  * This class' main() method is the entry point into the Follow application.
@@ -213,6 +218,7 @@ public class FollowApp {
 		// initialization
 		tabbedPane = new TabbedPane(attributes);
 		enableDragAndDrop(tabbedPane);
+		closeOnMiddleClick(tabbedPane);
 
 		// initialize frame
 		initFrame(jMenuBar);
@@ -297,10 +303,17 @@ public class FollowApp {
 	 * Close the current tab
 	 */
 	public void closeFile() {
+		int tabIndex = tabbedPane.getSelectedIndex();
+		closeFile(tabIndex);
+	}
+
+	/**
+	 * Close a specific tab
+	 */
+	public void closeFile(int tabIndex) {
 		FileFollowingPane fileFollowingPane = getSelectedFileFollowingPane();
-		int tab = tabbedPane.getSelectedIndex();
-		if (tab >= 0) {
-			tabbedPane.removeTabAt(tab);
+		if (tabIndex >= 0) {
+			tabbedPane.removeTabAt(tabIndex);
 			disableDragAndDrop(fileFollowingPane.getTextPane());
 			attributes.removeFollowedFile(fileFollowingPane.getFollowedFile());
 			fileFollowingPane.stopFollowing();
@@ -466,6 +479,10 @@ public class FollowApp {
 			}
 			tabbedPane.addTab(file.getName(), null, fileFollowingPane,
 					file.getAbsolutePath());
+
+			// add close button and title to tab
+//			addTitleAndCloseButton(tabbedPane);
+
 			int tabCount = tabbedPane.getTabCount();
 			if (tabCount < 10) {
 				// KeyEvent.VK_1 through KeyEvent.VK_9 is represented by the
@@ -474,6 +491,7 @@ public class FollowApp {
 				tabbedPane.setMnemonicAt(index, index + ('1'));
 			}
 			tabbedPane.setSelectedIndex(tabCount - 1);
+
 			// add a listener to set the pause icon correctly
 			fileFollowingPane.addComponentListener(new ComponentAdapter() {
 				@Override
@@ -655,6 +673,48 @@ public class FollowApp {
 			LOG.log(Level.SEVERE, "Unhandled exception", t);
 			System.exit(-1);
 		}
+	}
+
+	private void closeOnMiddleClick(final JTabbedPane pane) {
+		pane.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				// found this little nugget by digging around in the JTabbedPane class
+				TabbedPaneUI ui = pane.getUI();
+				int index = ui.tabForCoordinate(pane, e.getX(), e.getY());
+
+	            if (index != -1 && e.getButton() == MouseEvent.BUTTON2) {
+					closeFile();
+				}
+			}
+		});
+	}
+
+	private void addTitleAndCloseButton(final JTabbedPane tabbedPane) {
+		int tabCount = tabbedPane.getTabCount();
+
+		JButton tabCloseButton = new JButton("X");
+		tabCloseButton.setActionCommand(Integer.toString(tabCount - 1));
+
+		tabCloseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				JButton btn = (JButton) ae.getSource();
+				String s1 = btn.getActionCommand();
+				for (int i = 1; i < tabbedPane.getTabCount(); i++) {
+					JPanel pnl = (JPanel) tabbedPane.getTabComponentAt(i);
+					btn = (JButton) pnl.getComponent(0);
+					String s2 = btn.getActionCommand();
+					if (s1.equals(s2)) {
+						closeFile(i);
+						break;
+					}
+				}
+			}
+		});
+
+		JPanel pnl = new JPanel();
+		pnl.setOpaque(false);
+		pnl.add(tabCloseButton);
+		tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, pnl);
 	}
 
 	private class RecentFileListener implements PropertyChangeListener {

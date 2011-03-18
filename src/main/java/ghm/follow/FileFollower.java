@@ -339,13 +339,13 @@ public class FileFollower {
 				// reset the restart flag
 				needsRestart = false;
 
-				log.finer("Starting point: " + startingPoint
-						+ "; Last activity: " + lastActivityTime);
+				log.finer("Starting point: " + startingPoint + "; Last activity: " + lastActivityTime);
 
 				bis.skip(startingPoint);
 
 				while (continueRunning && !needsRestart) {
 					while (paused) {
+						log.finer("Pausing...");
 						try {
 							synchronized (runnerThread) {
 								runnerThread.wait();
@@ -353,20 +353,19 @@ public class FileFollower {
 						} catch (InterruptedException e) {
 							// back to work
 						}
-						paused = false;
 					}
 
-					lastActivityTime = System.currentTimeMillis();
-
 					numBytesRead = bis.read(byteArray, 0, byteArray.length);
-
 					boolean dataWasFound = (numBytesRead > 0);
 
-					log.finer("Bytes read: " + numBytesRead
-							+ "; dataWasFound: " + dataWasFound);
+					log.finer("numBytesRead: " + numBytesRead + "; dataWasFound: " + dataWasFound + "; lastActivityTime: " + lastActivityTime);
 
 					// if data was found, print it and log activity time
 					if (dataWasFound) {
+						// record our activity time
+						lastActivityTime = System.currentTimeMillis();
+
+						// get something to output
 						String output = new String(byteArray, 0, numBytesRead);
 
 						// print the output to the listeners
@@ -382,6 +381,7 @@ public class FileFollower {
 						// && (file_.length() > 0);
 						boolean fileHasChanged = file.lastModified() > lastActivityTime;
 
+						log.finer("fileExists: " + fileExists + "; fileHasChanged: " + fileHasChanged + "[" + file.lastModified() + "]");
 						if (fileExists && fileHasChanged) {
 							log.finer("Needs restart [fileExists=" + fileExists
 									+ "; fileHasChanged=" + fileHasChanged
@@ -392,11 +392,17 @@ public class FileFollower {
 
 					boolean allDataRead = (numBytesRead < byteArray.length);
 
+					log.finer("allDataRead: " + allDataRead + " && !needsRestart: " + needsRestart);
 					if (allDataRead && !needsRestart) {
 						log.finer("Sleeping for " + latency
 								+ "ms [allDataRead:" + allDataRead
 								+ "; needsRestart:" + needsRestart + "]");
-						sleep();
+						try {
+							Thread.sleep(latency);
+						} catch (InterruptedException e) {
+							// Interrupt may be thrown manually by stop()
+							log.finer("DIED IN MY SLEEP");
+						}
 					}
 				}
 				log.finer("exiting Runner.runAction [continueRunning="
@@ -406,15 +412,6 @@ public class FileFollower {
 				fis.close();
 			} catch (IOException e) {
 				log.log(Level.SEVERE, "IOException while following file", e);
-			}
-		}
-
-		private void sleep() {
-			try {
-				Thread.sleep(latency);
-			} catch (InterruptedException e) {
-				// Interrupt may be thrown manually by stop()
-				log.finer("DIED IN MY SLEEP");
 			}
 		}
 	}

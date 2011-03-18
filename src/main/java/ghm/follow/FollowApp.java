@@ -30,6 +30,7 @@ import ghm.follow.gui.Debug;
 import ghm.follow.gui.Delete;
 import ghm.follow.gui.DeleteAll;
 import ghm.follow.gui.DndFileOpener;
+import ghm.follow.gui.DraggableTabbedPane;
 import ghm.follow.gui.Edit;
 import ghm.follow.gui.Exit;
 import ghm.follow.gui.FileFollowingPane;
@@ -216,7 +217,7 @@ public class FollowApp {
 
 		// initialize tabbedPane, but wait to open files until after frame
 		// initialization
-		tabbedPane = new TabbedPane(attributes);
+		tabbedPane = new DraggableTabbedPane(attributes);
 		enableDragAndDrop(tabbedPane);
 		closeOnMiddleClick(tabbedPane);
 

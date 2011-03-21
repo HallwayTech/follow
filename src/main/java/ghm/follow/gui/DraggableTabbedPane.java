@@ -117,8 +117,7 @@ public class DraggableTabbedPane extends TabbedPane {
 		// Are we dragging?
 		if (dragging && currentMouseLocation != null && tabImage != null) {
 			// Draw the dragged tab
-			g.drawImage(tabImage, currentMouseLocation.x,
-					currentMouseLocation.y, this);
+			g.drawImage(tabImage, Math.min(Math.max(0, currentMouseLocation.x), getWidth() - tabImage.getWidth(null)), 0, this);
 		}
 	}
 }

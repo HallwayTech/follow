@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2011 Follow
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package ghm.follow.search;
 
 import ghm.follow.gui.FileFollowingPane;
@@ -161,6 +177,8 @@ public class FindDialog extends JDialog {
 		contentPane.add(findPanel, BorderLayout.NORTH);
 		contentPane.add(buttonPanel, BorderLayout.CENTER);
 		contentPane.add(statusPanel, BorderLayout.SOUTH);
+
+		resultsLabel = FollowApp.getResourceString("dialog.Find.results.label");
 	}
 
 	public void initFocus() {
@@ -199,18 +217,15 @@ public class FindDialog extends JDialog {
 				statusBar.setText("Search term not found.");
 			} else {
 				JList resultList = showResults(results);
-				resultList
-						.addListSelectionListener(new ListSelectionListener() {
-							/**
-							 * Catches selection events and sets the caret
-							 * within the view so that the screen scrolls
-							 * 
-							 * @author Carl Hall (carl.hall@gmail.com)
-							 */
-							public void valueChanged(ListSelectionEvent ev) {
-								resultList_changed(ev);
-							}
-						});
+				resultList.addListSelectionListener(new ListSelectionListener() {
+						/**
+						 * Catches selection events and sets the caret
+						 * within the view so that the screen scrolls
+						 */
+						public void valueChanged(ListSelectionEvent ev) {
+							resultList_changed(ev);
+						}
+					});
 			}
 		}
 		findAction.getApp().setCursor(Cursor.DEFAULT_CURSOR);

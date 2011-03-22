@@ -42,7 +42,6 @@ import ghm.follow.gui.Pause;
 import ghm.follow.gui.PopupMenu;
 import ghm.follow.gui.Reset;
 import ghm.follow.gui.StartupStatus;
-import ghm.follow.gui.TabbedPane;
 import ghm.follow.gui.ToolBar;
 import ghm.follow.nav.Bottom;
 import ghm.follow.nav.NextTab;
@@ -60,6 +59,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.TextField;
 import java.awt.Window;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
@@ -113,7 +113,7 @@ public class FollowApp {
 	private Cursor defaultCursor;
 	private Cursor waitCursor;
 	private final Map<File, FileFollowingPane> fileToFollowingPaneMap = new HashMap<File, FileFollowingPane>();
-	private final JTabbedPane tabbedPane;
+	private final DraggableTabbedPane tabbedPane;
 	private final ToolBar toolBar;
 	private final PopupMenu popupMenu;
 	private final Menu recentFilesMenu;
@@ -714,6 +714,7 @@ public class FollowApp {
 
 		JPanel pnl = new JPanel();
 		pnl.setOpaque(false);
+		pnl.add(new TextField("file"));
 		pnl.add(tabCloseButton);
 		tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, pnl);
 	}

@@ -5,6 +5,9 @@
 		<author email="carl@hallwaytech.com">Carl Hall</author>
 	</properties>
 	<body>
+		<release date="" version="1.7.6">
+			<action type="fix">"null" showing in the status bar of the Find dialog.</action>
+		</release>
 		<release date="2011-03-22" version="1.7.5">
 			<action type="fix">File follower didn't restart when file did.</action>
 			<action type="update">Changed pause action to use java thread wait()/notify().</action>

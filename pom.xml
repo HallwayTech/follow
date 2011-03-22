@@ -6,18 +6,18 @@
 	<artifactId>follow</artifactId>
 	<name>Follow</name>
 	<packaging>jar</packaging>
-	<version>1.7.5-SNAPSHOT</version>
-	<url>http://follow.sf.net</url>
+	<version>1.7.5</version>
+	<url>http://hallwaytech.github.com/follow</url>
 	<description>Follow is a Java application which allows a user to monitor ("follow") several log files concurrently. The name and behavior of this application are inspired by the "f" (follow) flag of the UNIX command "tail".</description>
 	<issueManagement>
-		<system>SourceForge</system>
-		<url>http://sourceforge.net/tracker/?group_id=11206</url>
+		<system>GitHub Issues</system>
+		<url>https://github.com/HallwayTech/follow/issues</url>
 	</issueManagement>
 	<developers>
 		<developer>
-			<id>bigdaddydsp</id>
+			<id>bigdaddydsp,thecarlhall</id>
 			<name>Carl Hall</name>
-			<email>carl.hall@gmail.com</email>
+			<email>carl@hallwaytech.com</email>
 			<roles>
 				<role>Project Admin</role>
 			</roles>
@@ -40,15 +40,6 @@
 			</roles>
 		</developer>
 	</developers>
-	<mailingLists>
-		<mailingList>
-			<name>Follow Users</name>
-			<subscribe>https://lists.sourceforge.net/lists/listinfo/follow-users</subscribe>
-			<unsubscribe>https://lists.sourceforge.net/lists/listinfo/follow-users</unsubscribe>
-			<post>follow-users@sourceforge.net</post>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=follow-users</archive>
-		</mailingList>
-	</mailingLists>
 	<licenses>
 		<license>
 			<name>GNU General Public License, version 2</name>
@@ -56,9 +47,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:svn:https://follow.svn.sourceforge.net/svnroot/follow</connection>
-		<developerConnection>scm:svn:https://follow.svn.sourceforge.net/svnroot/follow</developerConnection>
-		<url>scm:svn:http://follow.svn.sourceforge.net/viewvc/follow/</url>
+		<connection>scm:git:git://github.com/HallwayTech/follow.git</connection>
+		<developerConnection>scm:git:git@github.com:HallwayTech/follow.git</developerConnection>
+		<url>https://github.com/HallwayTech/follow</url>
 	</scm>
 	<reporting>
 		<plugins>

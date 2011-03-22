@@ -6,7 +6,7 @@
 	<artifactId>follow</artifactId>
 	<name>Follow</name>
 	<packaging>jar</packaging>
-	<version>1.7.5</version>
+	<version>1.7.6-SNAPSHOT</version>
 	<url>http://hallwaytech.github.com/follow</url>
 	<description>Follow is a Java application which allows a user to
 		monitor ("follow") several log files concurrently. The name and

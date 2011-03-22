@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Follow - </title>
+    <title>Follow - Team list</title>
     <style type="text/css" media="all">
       @import url("./css/maven-base.css");
       @import url("./css/maven-theme.css");
@@ -65,8 +65,8 @@
                           <a href="project-info.html" title="Project Information">Project Information</a>
                     <ul>
                       <li class="none">
-            <strong>About</strong>
-          </li>
+                          <a href="index.html" title="About">About</a>
+            </li>
                       <li class="none">
                           <a href="integration.html" title="Continuous Integration">Continuous Integration</a>
             </li>
@@ -95,8 +95,8 @@
                           <a href="project-summary.html" title="Project Summary">Project Summary</a>
             </li>
                       <li class="none">
-                          <a href="team-list.html" title="Project Team">Project Team</a>
-            </li>
+            <strong>Project Team</strong>
+          </li>
                       <li class="none">
                           <a href="source-repository.html" title="Source Repository">Source Repository</a>
             </li>
@@ -115,7 +115,23 @@
     </div>
     <div id="bodyColumn">
       <div id="contentBox">
-        <div class="section"><h2>Features<a name="Features"></a></h2><ul><li>Monitor (&quot;follow&quot;) text files to which information is being appended asynchronously (e.g. log files)</li><li>Jump quickly to the top or bottom of followed files</li><li>Clear the contents of the text areas which display the contents of followed files (singly or all-at-once)</li><li>Delete the contents of followed files (singly or all-at-once)</li><li>Configure the buffering strategy &amp; latency of the threads which follow files</li><li>Open files using Drag-and-Drop</li><li>Maintain session data across invocations of Follow (i.e. Follow remembers which files a user opens so it can re-open those files the next time it runs)</li><li>Pause log files and replay where paused</li><li>Highlight &amp; search for text within a log file</li><li>Restart a log while following</li></ul></div><div class="section"><h2>Screenshots<a name="Screenshots"></a></h2><ul><li><a class="externalLink" href="http://hallwaytech.github.com/follow/images/mainApplicationWindow.png">Main application window</a></li><li><a class="externalLink" href="http://hallwaytech.github.com/follow/images/configurationDialog.png">Configuration dialog</a></li></ul></div>
+        <div class="section"><h2>The Team<a name="The_Team"></a></h2><a name="The_Team"></a><p>A successful project requires many people to play many roles. Some members write code or documentation, while others are valuable as testers, submitting patches and suggestions.</p><p>The team is comprised of Members and Contributors. Members have direct access to the source of a project and actively evolve the code-base. Contributors improve the project through submission of patches and suggestions to the Members. The number of Contributors to the project is unbounded. Get involved today. All contributions to the project are greatly appreciated.</p><div class="section"><h3>Members<a name="Members"></a></h3><a name="Members"></a><p>The following is a list of developers with commit privileges that have directly contributed to the project in one way or another.</p><table border="0" class="bodyTable"><tr class="a"><th>Id</th><th>Name</th><th>Email</th><th>Roles</th><th>Time Zone</th><th>Actual Time (GMT)</th></tr><tr class="b"><td><a name="bigdaddydsp,thecarlhall"></a>bigdaddydsp,thecarlhall</td><td>Carl Hall</td><td><a class="externalLink" href="mailto:carl@hallwaytech.com">carl@hallwaytech.com</a></td><td>Project Admin</td><td>-5</td><td><span id="developer-0">-5</span></td></tr><tr class="a"><td><a name="murali_ca_us"></a>murali_ca_us</td><td>Murali Krishnan</td><td><a class="externalLink" href="mailto:murali_sourceforge@hotmail.com">murali_sourceforge@hotmail.com</a></td><td>Project Admin</td><td>-</td><td><span id="developer-1">-</span></td></tr><tr class="b"><td><a name="greghmerrill"></a>greghmerrill</td><td>Greg Merrill</td><td><a class="externalLink" href="mailto:greghmerrill@yahoo.com">greghmerrill@yahoo.com</a></td><td>Creator</td><td>-</td><td><span id="developer-2">-</span></td></tr></table></div><div class="section"><h3>Contributors<a name="Contributors"></a></h3><a name="Contributors"></a><p>There are no contributors listed for this project. Please check back again later.</p><script type="text/javascript">
+function offsetDate(id, offset) {
+    var now = new Date();
+    var nowTime = now.getTime();
+    var localOffset = now.getTimezoneOffset();
+    var developerTime = nowTime + ( offset * 60 * 60 * 1000 )+ ( localOffset * 60 * 1000 );
+    var developerDate = new Date(developerTime);
+
+    document.getElementById(id).innerHTML = developerDate;
+}
+
+function init(){
+    offsetDate('developer-0', '-5');
+}
+
+window.onLoad = init();
+</script></div></div>
       </div>
     </div>
     <div class="clear">

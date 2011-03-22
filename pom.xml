@@ -8,7 +8,10 @@
 	<packaging>jar</packaging>
 	<version>1.7.5</version>
 	<url>http://hallwaytech.github.com/follow</url>
-	<description>Follow is a Java application which allows a user to monitor ("follow") several log files concurrently. The name and behavior of this application are inspired by the "f" (follow) flag of the UNIX command "tail".</description>
+	<description>Follow is a Java application which allows a user to
+		monitor ("follow") several log files concurrently. The name and
+		behavior of this application are inspired by the "f" (follow) flag of
+		the UNIX command "tail".</description>
 	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/HallwayTech/follow/issues</url>
@@ -47,9 +50,11 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git://github.com/HallwayTech/follow.git</connection>
-		<developerConnection>scm:git:git@github.com:HallwayTech/follow.git</developerConnection>
 		<url>https://github.com/HallwayTech/follow</url>
+		<connection>scm:git clone git://github.com/HallwayTech/follow.git
+		</connection>
+		<developerConnection>scm:git clone
+			git@github.com:HallwayTech/follow.git</developerConnection>
 	</scm>
 	<reporting>
 		<plugins>
@@ -77,8 +82,15 @@
 				<artifactId>maven-surefire-report-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>changes-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changes-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -88,15 +100,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<!--
-					below is the default configuration but is listed here for clarity
-					of options being used.
-				-->
-				<!--
-				<configuration>
-					<configLocation>config/sun_checks.xml</configLocation>
-				</configuration>
-				-->
+				<!-- below is the default configuration but is listed here for clarity 
+					of options being used. -->
+				<!-- <configuration> <configLocation>config/sun_checks.xml</configLocation> 
+					</configuration> -->
 			</plugin>
 		</plugins>
 	</reporting>
@@ -133,7 +140,8 @@
 					<source>1.5</source>
 					<target>1.5</target>
 					<showDeprecation>true</showDeprecation>
-					<compilerArgument>-Xlint:unchecked,deprecation,fallthrough,finally</compilerArgument>
+					<compilerArgument>-Xlint:unchecked,deprecation,fallthrough,finally
+					</compilerArgument>
 					<fork>true</fork>
 				</configuration>
 			</plugin>
@@ -147,6 +155,23 @@
 						</manifest>
 					</archive>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>2.1.1</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.doxia</groupId>
+						<artifactId>doxia-sink-api</artifactId>
+						<version>1.1.3</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.doxia</groupId>
+						<artifactId>doxia-core</artifactId>
+						<version>1.1.3</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

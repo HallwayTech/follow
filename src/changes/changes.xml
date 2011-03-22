@@ -2,9 +2,15 @@
 <document>
 	<properties>
 		<title>Follow</title>
-		<author email="carl.hall@gmail.com">Carl Hall</author>
+		<author email="carl@hallwaytech.com">Carl Hall</author>
 	</properties>
 	<body>
+		<release date="2011-03-22" version="1.7.5">
+			<action type="fix">File follower didn't restart when file did.</action>
+			<action type="update">Changed pause action to use java thread wait()/notify().</action>
+			<action type="add" dueto="Alectrus">Added middle mouse click as a way to close a tab.</action>
+			<action type="add" dueto="Alectrus">Added draggable tab ordering.</action>
+		</release>
 		<release date="2008-12-14" version="1.7.4">
 			<action type="cleanup">Cleaned up the code for consistency.</action>
 			<action type="update">Updated the application icons to use Silk Icons.</action>

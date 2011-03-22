@@ -1,16 +1,16 @@
 Install
 
-	Once you have {{{http://sourceforge.net/project/platformdownload.php?group_id=11206&sel_platform=1217}downloaded Follow}}, and assuming you have installed Java, no installation is necessary.
-	To start Follow, simple invoke:
+	Once you have {{{https://github.com/downloads/HallwayTech/follow/follow-1.7.5.jar}downloaded Follow}}, and assuming you have installed Java, no installation is necessary.
+	To start Follow, simply invoke:
 
-	* java -jar follow-1.7.4.jar
+	* java -jar follow-1.7.5.jar
 
-	Depending on how your environment is set up, you may have to type the absolute path to the java executable (for example "{$JAVA_HOME}/JRE/1.5.0/bin/java" -jar follow-1.7.4.jar).
+	Depending on how your environment is set up, you may have to type the absolute path to the java executable (for example "{$JAVA_HOME}/JRE/1.5.0/bin/java" -jar follow-1.7.5.jar).
 
 Uninstall
 
 	To "uninstall" Follow:
 
-	[[1]] Remove follow1.7.4.jar from your machine
+	[[1]] Remove follow-1.7.5.jar from your machine
 
 	[[2]] Go to your user directory and delete the file named .followApp.properties. This file contains your preference settings for Follow. (It is created the first time you start the application.) 

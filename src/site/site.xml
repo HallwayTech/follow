@@ -3,25 +3,19 @@
 	<bannerLeft>
 		<name>Follow</name>
 		<src>images/follow.png</src>
-		<href>http://follow.sourceforge.net</href>
+		<href>http://hallwaytech.github.com/follow</href>
 	</bannerLeft>
 	<bannerRight>
-		<name>SourceForge</name>
-		<src>http://sflogo.sourceforge.net/sflogo.php?group_id=11206&amp;type=2</src>
-		<href>http://sourceforge.net</href>
+		<name>GitHub</name>
+		<src>http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" style="position: absolute; top: 0; right: 0; border: 0;</src>
+		<href>https://github.com/organizations/HallwayTech</href>
 	</bannerRight>
 	<body>
-		<links>
-			<item name="Maven" href="http://maven.apache.org/" />
-			<item name="Apache" href="http://www.apache.org/" />
-		</links>
-
 		<menu name="Follow">
-			<item name="Download" href="http://sourceforge.net/project/platformdownload.php?group_id&#61;11206&amp;sel_platform&#61;1217" />
+			<item name="Download" href="https://github.com/downloads/HallwayTech/follow/follow-${project.version}.jar" />
 			<item name="Install/Uninstall" href="install.html" />
 			<item name="Version History" href="changes-report.html" />
 			<item name="Javadocs" href="apidocs/index.html" />
-			<item name="SourceForge Project Page" href="http://sourceforge.net/projects/follow" />
 		</menu>
 		<menu ref="reports" />
 		<menu ref="modules" />

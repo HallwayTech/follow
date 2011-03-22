@@ -15,7 +15,7 @@
       <desktop/>
       <menu/>
     </shortcut>
-   <offline-allowed/>
+    <offline-allowed/>
   </information>
   <security>
     <all-permissions/>

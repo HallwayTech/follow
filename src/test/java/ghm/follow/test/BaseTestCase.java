@@ -15,6 +15,9 @@ public abstract class BaseTestCase {
 	protected Writer followedFileWriter;
 
 	public void setUp() throws Exception {
+		System.setProperty("user.home", System.getProperty("java.io.tmpdir"));
+		System.out.println("Using ${user.home} = " + System.getProperty("user.home"));
+
 		followedFile = createTempFile();
 		followedFile.deleteOnExit();
 		followedFileWriter = new BufferedWriter(new FileWriter(followedFile));
